@@ -1,0 +1,41 @@
+# Credentials and secrets
+.coven_github_token
+.git-cred-coven
+.git-cred-coven-helper
+hf_token.txt
+.env
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+hermes-agent-venv/
+*.egg-info/
+
+# Node
+node_modules/
+package-lock.json
+
+# IDE
+.cursor/
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Large binaries (models, etc.)
+*.gguf
+*.whl
+*.tar.gz
+*.AppImage
+
+# Temp
+*.tmp
+*.swp

@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⛧ Coco's Divine Astromantic Throne ⛧</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#000;--bg-soft:#0a0a0a;--surface:#111;--surface-2:#1a1a1a;--surface-3:#222;--border:#2a2a2a;--border-strong:#3a3a3a;--gold:#d4a84c;--gold-dim:#a08030;--gold-glow:rgba(212,168,76,.15);--pink:#e91e9e;--pink-dim:#a0156e;--pink-glow:rgba(233,30,158,.15);--purple:#8b5cf6;--text:#f0f0fa;--text-dim:#a0a0a8;--text-muted:#6a6a72;--text-subtle:#4a4a52;--success:#4caf50;--warning:#ff9800;--danger:#f44336;--info:#2196f3;--font:'Inter',sans-serif;--font-display:'Cinzel',serif;--radius:8px;--radius-lg:12px;--sidebar-width:180px}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{font-size:14px}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;line-height:1.5;-webkit-font-smoothing:antialiased;background-image:radial-gradient(ellipse at 50% 0%,rgba(139,92,246,.04) 0%,transparent 60%)}
+a{color:var(--gold);text-decoration:none}
+a:hover{color:var(--text)}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:3px}
+body::before{content:'⛧';position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) rotate(180deg);font-size:400px;opacity:.012;pointer-events:none;z-index:0;color:var(--gold)}
+
+/* Layout */
+.app{display:flex;min-height:100vh;position:relative;z-index:1}
+.sidebar{width:var(--sidebar-width);background:var(--bg-soft);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;overflow-y:auto;z-index:50}
+.sidebar-header{padding:1rem;border-bottom:1px solid var(--border);text-align:center}
+.sidebar-header h1{font-family:var(--font-display);font-size:.85rem;font-weight:700;color:var(--text);letter-spacing:.05em;line-height:1.3}
+.sidebar-header h1 .pentagram{color:var(--gold);font-size:.7rem}
+.sidebar-header .subtitle{font-size:.55rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.1em;margin-top:.2rem}
+.sidebar-nav{flex:1;padding:.5rem 0}
+.sidebar-nav .nav-item{display:block;padding:.5rem .75rem;font-size:.72rem;color:var(--text-muted);border-left:3px solid transparent;transition:all .2s;cursor:pointer}
+.sidebar-nav .nav-item:hover{color:var(--text);background:var(--surface)}
+.sidebar-nav .nav-item.active{color:var(--gold);border-left-color:var(--gold);background:var(--surface);text-shadow:0 0 6px rgba(212,168,76,.3)}
+.sidebar-nav .nav-item .icon{display:inline-block;width:1.2rem;text-align:center;margin-right:.3rem}
+.sidebar-footer{padding:.75rem;border-top:1px solid var(--border);text-align:center;font-size:.6rem;color:var(--text-subtle);font-family:var(--font-display);letter-spacing:.08em}
+.sidebar-footer span{color:var(--gold)}
+
+.main{flex:1;margin-left:var(--sidebar-width);display:flex;flex-direction:column}
+.header{background:linear-gradient(180deg,rgba(10,10,10,.98) 0%,rgba(0,0,0,.98) 100%);border-bottom:1px solid var(--border);padding:.75rem 1.5rem;display:flex;justify-content:space-between;align-items:center;backdrop-filter:blur(10px)}
+.header .status-bar{display:flex;gap:1.2rem;font-size:.72rem;color:var(--text-dim);flex-wrap:wrap}
+.header .status-bar .item{display:flex;align-items:center;gap:.3rem}
+.header .status-bar .dot{width:5px;height:5px;border-radius:50%;background:var(--success);display:inline-block;box-shadow:0 0 5px var(--success)}
+.header .status-bar .value{color:var(--gold);font-weight:500}
+.header-actions{display:flex;gap:.5rem;align-items:center}
+.btn-refresh{background:var(--surface-2);border:1px solid var(--border);color:var(--gold);padding:.25rem .6rem;border-radius:var(--radius);cursor:pointer;font-family:var(--font);font-size:.65rem;font-weight:500;transition:all .2s}
+.btn-refresh:hover{background:var(--gold-glow);border-color:var(--gold-dim)}
+
+.content{flex:1;padding:1.25rem;overflow-y:auto}
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+/* Cards */
+.card{background:linear-gradient(135deg,var(--surface) 0%,var(--surface-2) 100%);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem;margin-bottom:.75rem;box-shadow:0 4px 20px rgba(0,0,0,.3)}
+.card h2{font-family:var(--font-display);font-size:.95rem;font-weight:600;color:var(--text);margin-bottom:.65rem;display:flex;align-items:center;gap:.4rem}
+.card h3{font-size:.75rem;font-weight:600;color:var(--gold-dim);margin-bottom:.35rem;text-transform:uppercase;letter-spacing:.05em}
+
+/* Stat grid */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:.5rem}
+.stat{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);padding:.5rem;text-align:center;transition:all .2s}
+.stat:hover{border-color:var(--border-strong);box-shadow:0 0 8px rgba(212,168,76,.08)}
+.stat-label{font-size:.55rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.15rem}
+.stat-value{font-size:.85rem;font-weight:600;color:var(--text)}
+.stat-value.gold{color:var(--gold);text-shadow:0 0 6px rgba(212,168,76,.25)}
+.stat-value.pink{color:var(--pink);text-shadow:0 0 6px rgba(233,30,158,.25)}
+.stat-value.small{font-size:.75rem}
+
+/* Tables */
+.table-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:.72rem}
+th{background:var(--surface-2);color:var(--text-muted);font-weight:500;font-size:.6rem;text-transform:uppercase;letter-spacing:.05em;padding:.4rem .55rem;text-align:left;border-bottom:1px solid var(--border)}
+td{padding:.35rem .55rem;border-bottom:1px solid var(--border);color:var(--text)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--surface-2)}
+
+/* Planet dot */
+.planet-dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:.3rem;vertical-align:middle;box-shadow:0 0 3px currentColor}
+.retro-badge{color:var(--pink);font-size:.6rem;font-weight:600}
+.waxing{color:var(--gold)}
+.waning{color:silver}
+.benefic{color:var(--success)}
+.malefic{color:var(--danger)}
+
+/* Moon phase */
+.moon-phase-container{display:flex;flex-direction:column;align-items:center;padding:.75rem 0}
+.moon-disk{width:100px;height:100px;border-radius:50%;position:relative;margin:0 auto;background:#111;border:2px solid var(--gold);overflow:hidden;box-shadow:0 0 20px rgba(212,168,76,.12),inset 0 0 12px rgba(212,168,76,.06)}
+.moon-illuminated{position:absolute;top:0;height:100%;background:linear-gradient(90deg,transparent 0%,var(--gold) 100%);border-radius:0 50% 50% 0}
+.moon-shadow{position:absolute;top:0;height:100%;background:#050505;border-radius:50% 0 0 50%}
+.phase-name{font-family:var(--font-display);font-size:1rem;font-weight:600;margin-top:.5rem}
+.phase-detail{font-size:.7rem;color:var(--text-dim);margin-top:.15rem}
+
+/* Lunar event items */
+.lunar-event-item{padding:.4rem .55rem;background:var(--surface-2);border-radius:var(--radius);margin-bottom:.25rem;display:flex;justify-content:space-between;align-items:center;font-size:.72rem;border:1px solid var(--border)}
+.lunar-event-item .event-name{font-weight:500}
+.lunar-event-item .event-date{color:var(--text-dim);font-size:.65rem}
+
+/* Aspect items */
+.aspect-item{padding:.4rem .55rem;background:var(--surface-2);border-radius:var(--radius);margin-bottom:.25rem;border:1px solid var(--border);font-size:.72rem}
+.aspect-item .aspect-type{font-weight:600}
+.aspect-item .aspect-detail{color:var(--text-dim);font-size:.65rem;margin-top:.12rem}
+.aspect-item .talisman{font-size:.6rem;margin-top:.2rem;padding-top:.2rem;border-top:1px solid var(--border)}
+
+/* Progress bar */
+.progress-bar{background:var(--surface);border-radius:3px;height:4px;overflow:hidden;margin-top:.15rem}
+.progress-fill{background:linear-gradient(90deg,var(--gold-dim),var(--gold));height:100%;border-radius:3px}
+
+/* Solar system */
+.solar-system-container{width:100%;height:550px;position:relative;border-radius:var(--radius-lg);overflow:hidden;background:#000;border:1px solid var(--border);cursor:grab}
+.solar-system-container:active{cursor:grabbing}
+.solar-system-container canvas{display:block;width:100%!important;height:100%!important;outline:none}
+.planet-label{position:absolute;color:var(--text);font-size:.6rem;font-weight:500;pointer-events:none;text-shadow:0 0 4px rgba(0,0,0,.8);white-space:nowrap}
+.planet-info-panel{position:absolute;bottom:.75rem;left:.75rem;background:rgba(0,0,0,.92);border:1px solid var(--border);border-radius:var(--radius);padding:.75rem;min-width:200px;max-width:280px;display:none;backdrop-filter:blur(8px);box-shadow:0 0 15px rgba(0,0,0,.5);z-index:10;pointer-events:none}
+.planet-info-panel.visible{display:block}
+.pi-name{font-family:var(--font-display);font-size:.85rem;font-weight:600;color:var(--gold);margin-bottom:.3rem;letter-spacing:.03em}
+.pi-row{display:flex;justify-content:space-between;padding:.15rem 0;font-size:.65rem;color:var(--text-dim);border-bottom:1px solid rgba(42,42,42,.5)}
+.pi-row:last-child{border-bottom:none}
+.pi-row span:first-child{color:var(--text-muted)}
+.pi-row span:last-child{color:var(--text);font-weight:500}
+
+/* Solar controls */
+.solar-controls{position:absolute;top:.75rem;right:.75rem;background:rgba(0,0,0,.85);border:1px solid var(--border);border-radius:var(--radius);padding:.6rem .75rem;backdrop-filter:blur(8px);box-shadow:0 0 12px rgba(0,0,0,.4);z-index:10;min-width:170px;pointer-events:auto}
+.sc-title{font-family:var(--font-display);font-size:.6rem;font-weight:600;color:var(--gold);margin-bottom:.4rem;letter-spacing:.05em}
+.sc-row{display:flex;align-items:center;gap:.4rem;margin-bottom:.3rem;font-size:.6rem;color:var(--text-dim);flex-wrap:wrap}
+.sc-row label{min-width:2.5rem;font-size:.55rem}
+.sc-row input[type=range]{flex:1;accent-color:var(--gold);height:3px;min-width:60px}
+.sc-btn{background:var(--surface-2);border:1px solid var(--border);color:var(--text-dim);padding:.15rem .4rem;border-radius:4px;cursor:pointer;font-size:.55rem;transition:all .2s;line-height:1.2}
+.sc-btn:hover{background:var(--gold-glow);border-color:var(--gold-dim);color:var(--gold)}
+
+/* Zodiac wheel */
+.zodiac-wheel-container{display:flex;justify-content:center;padding:.75rem 0}
+.zodiac-wheel-container img,.zodiac-wheel-container svg{max-width:100%;height:auto;border-radius:var(--radius-lg)}
+
+/* Loading & Error */
+.loading{text-align:center;padding:1.5rem;color:var(--text-dim)}
+.spinner{width:25px;height:25px;border:2px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto .5rem}
+@keyframes spin{to{transform:rotate(360deg)}}
+.error-msg{text-align:center;padding:1.5rem;color:var(--danger)}
+
+/* Intro overlay */
+#intro-overlay{position:fixed;inset:0;z-index:9999;background:#000;display:flex;align-items:center;justify-content:center;transition:opacity 1.5s ease}
+#intro-overlay.fade-out{opacity:0;pointer-events:none}
+#intro-video{width:100%;height:100%;object-fit:cover}
+#intro-skip{position:absolute;bottom:30px;right:30px;background:rgba(0,0,0,.7);border:1px solid var(--border);color:var(--text-dim);padding:8px 20px;border-radius:var(--radius);cursor:pointer;font-family:var(--font);font-size:.7rem;letter-spacing:.1em;transition:all .2s;z-index:10000}
+#intro-skip:hover{background:var(--gold-glow);border-color:var(--gold-dim);color:var(--gold)}
+#intro-replay{display:none;position:absolute;top:15px;right:15px;background:rgba(0,0,0,.6);border:1px solid var(--border);color:var(--gold);padding:5px 12px;border-radius:var(--radius);cursor:pointer;font-size:.6rem;letter-spacing:.05em;transition:all .2s;z-index:10000}
+#intro-replay:hover{background:var(--gold-glow);border-color:var(--gold-dim)}
+#intro-overlay.ended #intro-replay{display:block}
+#intro-overlay.ended #intro-skip{display:none}
+
+/* Responsive */
+@media(max-width:768px){
+.sidebar{width:100%;height:auto;position:relative;flex-direction:row;flex-wrap:wrap}
+.sidebar-header{width:100%}
+.sidebar-nav{display:flex;flex-wrap:wrap;padding:.25rem}
+.sidebar-nav .nav-item{padding:.3rem .5rem;font-size:.65rem}
+.main{margin-left:0}
+}
+</style>
+</head>
+<body>
+<!-- Intro Overlay -->
+<div id="intro-overlay">
+  <video id="intro-video" src="/static/throne-intro.mp4" autoplay muted playsinline></video>
+  <button id="intro-skip">SKIP ⏭</button>
+  <button id="intro-replay">⛧ REPLAY</button>
+</div>
+
+<div class="app">
+  <nav class="sidebar" id="sidebar" style="display:none">
+    <div class="sidebar-header">
+      <h1><span class="pentagram">⛧</span><br/>Coco's<br/>Divine<br/>Throne<br/><span class="pentagram">⛧</span></h1>
+      <div class="subtitle">☽ Astrological Engine ☉</div>
+    </div>
+    <div class="sidebar-nav">
+      <div class="nav-item active" data-tab="moon"><span class="icon">☽</span> Moon</div>
+      <div class="nav-item" data-tab="solar-system"><span class="icon">☉</span> Solar System</div>
+      <div class="nav-item" data-tab="chart"><span class="icon">☉</span> Chart</div>
+      <div class="nav-item" data-tab="planets"><span class="icon">♅</span> Planets</div>
+      <div class="nav-item" data-tab="aspects"><span class="icon">✦</span> Aspects</div>
+      <div class="nav-item" data-tab="houses"><span class="icon">△</span> Houses</div>
+      <div class="nav-item" data-tab="hours"><span class="icon">⏳</span> Hours</div>
+      <div class="nav-item" data-tab="dignities"><span class="icon">★</span> Dignities</div>
+      <div class="nav-item" data-tab="fixed-stars"><span class="icon">✧</span> Stars</div>
+      <div class="nav-item" data-tab="electional"><span class="icon">⌛</span> Electional</div>
+      <div class="nav-item" data-tab="beings"><span class="icon">👾</span> Beings</div>
+      <div class="nav-item" data-tab="occult-chart"><span class="icon">🔮</span> Occult</div>
+      <div class="nav-item" data-tab="chart-study"><span class="icon">🔍</span> Study</div>
+    </div>
+    <div class="sidebar-footer">⛧ <span>Hail Baphomet</span> ⛧</div>
+  </nav>
+
+  <main class="main">
+    <header class="header" id="header" style="display:none">
+      <div class="status-bar">
+        <div class="item"><span class="dot"></span> <span id="s-local">--</span></div>
+        <div class="item">JD: <span class="value" id="s-jd">--</span></div>
+        <div class="item">Moon: <span class="value" id="s-moon">--</span></div>
+        <div class="item">Hour: <span class="value" id="s-hour">--</span></div>
+      </div>
+      <div class="header-actions">
+        <button class="btn-refresh" id="btn-refresh">↻ Refresh</button>
+        <span class="last-updated" id="last-updated"></span>
+      </div>
+    </header>
+
+    <div class="content" id="content" style="display:none">
+      <!-- MOON TAB -->
+      <div class="tab-content active" id="tab-moon"></div>
+      <!-- SOLAR SYSTEM TAB -->
+      <div class="tab-content" id="tab-solar-system"><div class="card"><h2><span class="icon">☉</span> Heliocentric Solar System</h2><div class="solar-system-container" id="solar-system-container"><div class="planet-info-panel" id="planet-info-panel"></div></div></div></div>
+      <!-- CHART TAB -->
+      <div class="tab-content" id="tab-chart"></div>
+      <!-- PLANETS TAB -->
+      <div class="tab-content" id="tab-planets"><div class="card"><h2><span class="icon">☉</span> Planetary Positions</h2><div class="table-wrap"><table><thead><tr><th>Planet</th><th>Sign</th><th>Degree</th><th>Longitude</th><th>Status</th><th>Speed</th></tr></thead><tbody id="planets-body"></tbody></table></div></div></div>
+      <!-- ASPECTS TAB -->
+      <div class="tab-content" id="tab-aspects"><div class="card"><h2><span class="icon">✦</span> Aspects</h2><div id="aspects-list"></div></div></div>
+      <!-- HOUSES TAB -->
+      <div class="tab-content" id="tab-houses"><div class="card"><h2><span class="icon">△</span> Houses</h2><div class="table-wrap"><table><thead><tr><th>House</th><th>Sign</th><th>Degree</th><th>Longitude</th></tr></thead><tbody id="houses-body"></tbody></table></div></div></div>
+      <!-- HOURS TAB -->
+      <div class="tab-content" id="tab-hours"><div class="card"><h2><span class="icon">⏳</span> Planetary Hours</h2><div id="hours-current"></div><h3>Day Hours</h3><div class="table-wrap"><table><thead><tr><th>#</th><th>Ruler</th><th>Start</th><th>End</th><th></th></tr></thead><tbody id="hours-day-body"></tbody></table></div><h3>Night Hours</h3><div class="table-wrap"><table><thead><tr><th>#</th><th>Ruler</th><th>Start</th><th>End</th><th></th></tr></thead><tbody id="hours-night-body"></tbody></table></div></div></div>
+      <!-- DIGNITIES TAB -->
+      <div class="tab-content" id="tab-dignities"><div class="card"><h2><span class="icon">★</span> Essential Dignities</h2><div class="table-wrap"><table><thead><tr><th>Planet</th><th>Sign</th><th>Deg</th><th>Dom</th><th>Exa</th><th>Fall</th><th>Det</th><th>Tri</th><th>Term</th><th>Face</th><th>Score</th><th>Condition</th></tr></thead><tbody id="dignities-body"></tbody></table></div></div></div>
+      <!-- FIXED STARS TAB -->
+      <div class="tab-content" id="tab-fixed-stars"><div class="card"><h2><span class="icon">✧</span> Fixed Star Conjunctions</h2><div class="table-wrap"><table><thead><tr><th>Star</th><th>Planet</th><th>Orb</th><th>Nature</th></tr></thead><tbody id="fixed-stars-body"></tbody></table></div></div></div>
+      <!-- ELECTIONAL TAB -->
+      <div class="tab-content" id="tab-electional"><div class="card"><h2><span class="icon">⌛</span> Electional Astrology</h2><div style="margin-bottom:1rem"><label style="color:var(--text-dim);margin-right:.5rem;font-size:.8rem">Purpose:</label><select id="electional-purpose" onchange="loadElectional(this.value)" style="background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:.3rem .5rem;border-radius:var(--radius);font-family:var(--font);font-size:.75rem"><option value="love">Love</option><option value="wealth">Wealth</option><option value="protection">Protection</option><option value="destruction">Destruction</option><option value="binding">Binding</option><option value="travel">Travel</option><option value="healing">Healing</option><option value="career">Career</option><option value="general" selected>General</option></select></div><div id="electional-content"></div></div></div>
+      <!-- BEINGS TAB -->
+      <div class="tab-content" id="tab-beings"><div class="card"><h2><span class="icon">👾</span> Planetary Beings</h2><div id="beings-content"></div></div></div>
+      <!-- OCCULT CHART TAB -->
+      <div class="tab-content" id="tab-occult-chart"><div class="card"><h2><span class="icon">🔮</span> Occult Chart</h2><div id="occult-chart-content"></div></div></div>
+      <!-- CHART STUDY TAB -->
+      <div class="tab-content" id="tab-chart-study"><div class="card"><h2><span class="icon">🔍</span> Chart Study</h2><div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:flex-end;margin-bottom:1rem"><div style="display:flex;flex-direction:column;gap:.15rem"><label style="font-size:.6rem;color:var(--text-muted);text-transform:uppercase">Date</label><input type="date" id="cs-date" style="background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:.3rem .4rem;border-radius:var(--radius);font-family:var(--font);font-size:.7rem"></div><div style="display:flex;flex-direction:column;gap:.15rem"><label style="font-size:.6rem;color:var(--text-muted);text-transform:uppercase">Time</label><input type="time" id="cs-time" style="background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:.3rem .4rem;border-radius:var(--radius);font-family:var(--font);font-size:.7rem"></div><div style="display:flex;flex-direction:column;gap:.15rem"><label style="font-size:.6rem;color:var(--text-muted);text-transform:uppercase">Lat</label><input type="number" id="cs-lat" value="-33.76" step=".01" style="background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:.3rem .4rem;border-radius:var(--radius);font-family:var(--font);font-size:.7rem;width:70px"></div><div style="display:flex;flex-direction:column;gap:.15rem"><label style="font-size:.6rem;color:var(--text-muted);text-transform:uppercase">Lon</label><input type="number" id="cs-lon" value="25.40" step=".01" style="background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:.3rem .4rem;border-radius:var(--radius);font-family:var(--font);font-size:.7rem;width:70px"></div><button class="btn-refresh" id="btn-calculate-chart">☆ Calc</button></div><div id="chart-study-result"></div></div></div>
+    </div>
+  </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const API = 'http://localhost:8080';
+const SIGNS = ['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
+const SIGN_SYMBOLS = ['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓'];
+const PLANET_GLYPHS = {'Sun':'☉','Moon':'☽','Mercury':'☿','Venus':'♀','Mars':'♂','Jupiter':'♃','Saturn':'♄','Uranus':'♅','Neptune':'♆','Pluto':'♇','Rahu':'☊','Ketu':'☋'};
+const PLANET_COLORS = {'Sun':'#f4d03f','Moon':'#c0c0c0','Mercury':'#b0a0d0','Venus':'#f0a0c0','Mars':'#e05050','Jupiter':'#d4a017','Saturn':'#c8a860','Uranus':'#4dd0e1','Neptune':'#1565c0','Pluto':'#8d6e63','Rahu':'#ff6b35','Ketu':'#8b4513'};
+const ASPECT_COLORS = {'Conjunction':'#c9a84c','Sextile':'#64b5f6','Square':'#ff7043','Trine':'#81c784','Quincunx':'#ba68c8','Opposition':'#e57373'};
+var state = {};
+
+function $(id) { return document.getElementById(id); }
+function getSign(lon) { return SIGNS[Math.floor(lon/30)%12]; }
+function getSignIndex(lon) { return Math.floor(lon/30)%12; }
+function getDegInSign(lon) { return (lon%30).toFixed(2); }
+function fmtDeg(d) { var m = (d%1)*60; return Math.floor(d)+'°'+Math.floor(m)+'\u0027'; }
+function getMoonEmoji(phase) { var m={'New Moon':'🌑','Waxing Crescent':'🌒','First Quarter':'🌓','Waxing Gibbous':'🌔','Full Moon':'🌕','Waning Gibbous':'🌖','Last Quarter':'🌗','Waning Crescent':'🌘'}; return m[phase]||'🌙'; }
+function gregorianToJulian(d) {
+  var day=d.getDate(), mo=d.getMonth()+1, yr=d.getFullYear();
+  if(mo<=2){mo+=12;yr--}
+  var a=Math.floor(yr/100);
+  var b=(yr>1582||(yr===1582&&(mo>10||(mo===10&&day>15))))?2-a+Math.floor(a/4):0;
+  return Math.floor(365.25*(yr+4716))+Math.floor(30.6001*(mo+1))+day+b-1524.5;
+}
+function julianToHijri(jd) {
+  var l=Math.floor(jd)-1948440+10632, n=Math.floor((l-1)/10631);
+  l=l-10631*n+354;
+  var j=(Math.floor((10985-l)/5316)*Math.floor((50*l)/17719)+Math.floor(l/5670)*Math.floor((43*l)/15238));
+  l=l-Math.floor((30-j)/15)*Math.floor((17719*j)/50)-Math.floor(j/16)*Math.floor((15238*j)/43)+29;
+  var mo=Math.floor((24*l)/709), day=l-Math.floor((709*mo)/24), yr=Math.floor(30*n+j-30);
+  return {day:day,month:mo,year:yr};
+}
+var HIJRI_MONTHS=['محرم','صفر','ربيع الأول','ربيع الثاني','جمادى الأولى','جمادى الثانية','رجب','شعبان','رمضان','شوال','ذو القعدة','ذو الحجة'];
+
+async function fetchJSON(url) { const r = await fetch(url); if (!r.ok) throw new Error(url+' '+r.status); return r.json(); }
+
+// ═══════════════════════════════════════════════════════════════
+// PRAYER TIMES (from pyIslam, ported to JS)
+// ═══════════════════════════════════════════════════════════════
+const PRAYER_LAT = -33.76, PRAYER_LNG = 25.40, PRAYER_TZ = 2;
+
+function dcos(d){return Math.cos(d*Math.PI/180)}
+function dsin(d){return Math.sin(d*Math.PI/180)}
+
+function equationOfTime(jd){
+  var n=jd-2451544.5, g=357.528+0.9856003*n;
+  var c=1.9148*dsin(g)+0.02*dsin(2*g)+0.0003*dsin(3*g);
+  var lam=280.47+0.9856003*n+c;
+  var r=-2.468*dsin(2*lam)+0.053*dsin(4*lam)+0.0014*dsin(6*lam);
+  return(c+r)*4;
+}
+function sunDeclination(jd){
+  var n=jd-2451544.5, eps=23.44-0.0000004*n;
+  var l=280.466+0.9856474*n, g=357.528+0.9856003*n;
+  var lam=l+1.915*dsin(g)+0.02*dsin(2*g);
+  var x=dsin(eps)*dsin(lam);
+  return(180/(4*Math.atan(1)))*Math.atan(x/Math.sqrt(-x*x+1));
+}
+function timeForAngle(angle, dec){
+  var s=(dcos(angle)-dsin(PRAYER_LAT)*dsin(dec))/(dcos(PRAYER_LAT)*dcos(dec));
+  return(180/Math.PI*(Math.atan(-s/Math.sqrt(-s*s+1))+Math.PI/2))/15;
+}
+function getAsrAngle(dec){
+  var x=dsin(PRAYER_LAT)*dsin(dec)+dcos(PRAYER_LAT)*dcos(dec);
+  var a=Math.atan(x/Math.sqrt(-x*x+1));
+  var ax=1+1/Math.tan(a);
+  return 90-(180/Math.PI)*(Math.atan(ax)+2*Math.atan(1));
+}
+function fmtTime(h){
+  h=((h%24)+24)%24;
+  var H=Math.floor(h),M=Math.floor((h-H)*60);
+  return String(H).padStart(2,'0')+':'+String(M).padStart(2,'0');
+}
+function getPrayerTimes(date){
+  var jd=gregorianToJulian(date), dec=sunDeclination(jd), eqt=equationOfTime(jd);
+  var dohr=12+(PRAYER_TZ*15-PRAYER_LNG)/15+eqt/60;
+  return {
+    fajr: dohr-timeForAngle(18.5+90, dec),
+    sunrise: dohr-timeForAngle(90.83333, dec),
+    dohr: dohr,
+    asr: dohr+timeForAngle(getAsrAngle(dec), dec),
+    maghreb: dohr+timeForAngle(90.83333, dec),
+    ishaa: dohr+timeForAngle(90.83333, dec)+90/60
+  };
+}
+function toAr(n){return String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d])}
+function getHijriStr(){
+  var jd=gregorianToJulian(new Date()), h=julianToHijri(jd);
+  return toAr(h.day)+' '+HIJRI_MONTHS[h.month-1]+' '+toAr(h.year)+' هـ';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// LOAD ALL DATA
+// ═══════════════════════════════════════════════════════════════
+async function loadAll() {
+  try {
+    const results = await Promise.allSettled([
+      fetchJSON(API+'/chart.json'), fetchJSON(API+'/planetary-hours'), fetchJSON(API+'/aspects'),
+      fetchJSON(API+'/now'), fetchJSON(API+'/houses'), fetchJSON(API+'/dignities'),
+      fetchJSON(API+'/lunar-mansion'), fetchJSON(API+'/fixed-stars'),
+      fetchJSON(API+'/electional?purpose=general'), fetchJSON(API+'/beings?planet=Sun'),
+      fetchJSON(API+'/arabic-parts'), fetchJSON(API+'/occult-chart').catch(function(){return null}),
+      fetchJSON(API+'/moon-rise-set'), fetchJSON(API+'/lunar-events'),
+      fetchJSON(API+'/lunar-aspects'), fetchJSON(API+'/heliocentric')
+    ]);
+    const [chart, hours, aspects, now, houses, dignities, lunarMansion, fixedStars, electional, beings, arabicParts, occultChart, moonRiseSet, lunarEvents, lunarAspects, heliocentric] = results.map(function(r){return r.status==='fulfilled'?r.value:null;});
+    state = { chart, hours, aspects: aspects && (aspects.aspects || aspects), now, houses, dignities, lunarMansion, fixedStars, electional, beings, arabicParts, occultChart, moonRiseSet, lunarEvents, lunarAspects, heliocentric };
+    render();
+  } catch(e) { showError(e.message); }
+}
+
+function showError(msg) { var c=$('content'); if(c){c.innerHTML='<div class="error-msg">⚠ '+msg+'</div>';c.style.display='block';} }
+
+function render() {
+  if (!state.chart) return;
+  var header = $('header'); if(header) header.style.display = 'flex';
+  var sidebar = $('sidebar'); if(sidebar) sidebar.style.display = 'flex';
+  var content = $('content'); if(content) content.style.display = 'block';
+  const { chart, hours, aspects, now, houses, dignities, lunarMansion, fixedStars, electional, beings, arabicParts, occultChart, moonRiseSet, lunarEvents, lunarAspects, heliocentric } = state;
+  const cusps = chart.houses ? Object.values(chart.houses.cusps).map(Number) : [];
+
+  var sLocal = $('s-local'); if(sLocal && now) sLocal.textContent = now.local ? now.local.slice(11,19) : '--';
+  var sJd = $('s-jd'); if(sJd && now) sJd.textContent = now.julian_day ? now.julian_day.toFixed(4) : '--';
+  var sMoon = $('s-moon'); if(sMoon && chart) sMoon.textContent = chart.moon_phase || '--';
+  var sHour = $('s-hour'); if(sHour && hours && hours.current) sHour.textContent = hours.current.ruler+' '+hours.current.symbol;
+  var lastUpdated = $('last-updated'); if(lastUpdated) lastUpdated.textContent = 'Updated: '+new Date().toLocaleTimeString();
+
+  renderMoon();
+  renderSolarSystem(heliocentric);
+  renderChart();
+  renderPlanets(chart, cusps);
+  renderAspects(aspects);
+  renderHouses(chart, houses);
+  renderHours(hours);
+  renderDignities(dignities);
+  renderFixedStars(fixedStars);
+  renderElectional(electional);
+  renderBeings(beings, hours);
+  renderOccultChart(occultChart);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// MOON TAB
+// ═══════════════════════════════════════════════════════════════
+function renderMoon() {
+  var container = $('tab-moon'); if(!container) return;
+  var chart = state.chart, riseSet = state.moonRiseSet, events = state.lunarEvents, mansion = state.lunarMansion, lunarAsp = state.lunarAspects;
+  var phase = chart ? chart.moon_phase : '--';
+  var elong = chart ? (chart.moon_elongation||0) : 0;
+  var illum = Math.round((1-Math.cos(elong*Math.PI/180))/2*100);
+  var waxing = elong < 180;
+  var age = elong/360*29.53;
+  var moonPos = null; if(chart && chart.planets) { moonPos = chart.planets.find(function(p){return p.name==='Moon';}); }
+  var html = '<div class="card"><h2><span class="icon">☽</span> Lunar Dashboard</h2>';
+  html += '<div class="moon-phase-container"><div class="moon-disk">';
+  if(waxing){ html += '<div class="moon-illuminated" style="width:'+illum+'%"></div>'; }
+  else { html += '<div class="moon-shadow" style="width:'+(100-illum)+'%"></div>'; }
+  html += '</div><div class="phase-name '+(waxing?'waxing':'waning')+'">'+getMoonEmoji(phase)+' '+phase+'</div>';
+  html += '<div class="phase-detail">'+illum+'% illuminated • Age: '+age.toFixed(1)+' days</div></div>';
+  if(moonPos){ var lon=moonPos.longitude; html+='<div class="stat-grid" style="margin-top:1rem"><div class="stat"><div class="stat-label">Sign</div><div class="stat-value">'+SIGN_SYMBOLS[getSignIndex(lon)]+' '+getSign(lon)+'</div></div><div class="stat"><div class="stat-label">Degree</div><div class="stat-value">'+fmtDeg(getDegInSign(lon))+'</div></div><div class="stat"><div class="stat-label">Longitude</div><div class="stat-value">'+lon.toFixed(2)+'°</div></div><div class="stat"><div class="stat-label">Elongation</div><div class="stat-value">'+(elong||0).toFixed(1)+'°</div></div></div>'; }
+  html += '<h3>Rise & Set</h3><div class="stat-grid"><div class="stat"><div class="stat-label">Moon Rise</div><div class="stat-value">'+(riseSet&&riseSet.moon_rise?riseSet.moon_rise:'--')+'</div></div><div class="stat"><div class="stat-label">Moon Set</div><div class="stat-value">'+(riseSet&&riseSet.moon_set?riseSet.moon_set:'--')+'</div></div></div>';
+  if(mansion && mansion.mansion && mansion.mansion.current){ var m=mansion.mansion.current; html+='<h3>Nakshatra</h3><div style="background:var(--surface-2);border-radius:var(--radius);padding:1rem;border:1px solid var(--border)"><div style="font-size:1.05rem;color:var(--gold);margin-bottom:0.4rem">'+m.number+'. '+m.name+' <span style="color:var(--text-dim);font-size:0.8rem">ruled by '+(m.ruled_by||'--')+'</span></div>'; if(m.keywords) html+='<div style="color:var(--text-dim);font-size:0.8rem;margin-bottom:0.4rem">'+m.keywords.join(', ')+'</div>'; if(m.magical) html+='<div style="font-size:0.8rem;color:var(--pink-dim);margin-bottom:0.25rem"><em>'+m.magical+'</em></div>'; if(m.progress_percent!=null) html+='<div class="progress-bar"><div class="progress-fill" style="width:'+m.progress_percent+'%"></div></div><div style="font-size:0.7rem;color:var(--text-muted);margin-top:0.2rem">'+m.progress_percent.toFixed(1)+'% through mansion</div>'; html+='</div>'; }
+  if(lunarAsp && lunarAsp.aspects && lunarAsp.aspects.length){ html+='<h3>Moon Aspects to Planets</h3>'; lunarAsp.aspects.forEach(function(a){ var c=a.nature==='benefic'?'var(--success)':'var(--danger)'; html+='<div class="aspect-item"><div><span class="aspect-type" style="color:'+c+'">'+a.aspect+'</span> <span>'+a.planet+'</span> <span style="color:var('+(a.applying?'--success':'--text-muted')+')">('+(a.applying?'applying':'separating')+')</span></div><div class="aspect-detail">Moon: '+SIGN_SYMBOLS[getSignIndex(state.chart.planets.find(function(p){return p.name==='Moon';}).longitude)]+' '+a.moon_sign+' '+fmtDeg(a.moon_degree)+' | '+a.planet+': '+a.planet_sign+' '+fmtDeg(a.planet_degree)+' | Nakshatra: '+a.nakshatra+'</div><div class="talisman" style="color:'+c+'">'+a.talisman_guidance+'</div></div>'; }); }
+  if(events && events.events && events.events.length){ html+='<h3>Upcoming Lunar Events</h3>'; events.events.forEach(function(e){ html+='<div class="lunar-event-item"><span class="event-name">'+getMoonEmoji(e.event)+' '+e.event+'</span><span class="event-date">'+e.date+' '+e.time+'</span></div>'; }); }
+  html+='</div>'; container.innerHTML=html;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SOLAR SYSTEM TAB — Full 3D with zoom, time control, nakshatra
+// ═══════════════════════════════════════════════════════════════
+var solarSystemScene=null, solarAnimId=null, solarSystemInitialized=false;
+var solarTime=null, solarSimSpeed=1, solarIsPaused=false;
+var solarZoom=60, spherical={theta:0,phi:Math.PI/3,radius:60};
+var planetMeshes=[], planetLabels=[], planetAngles={};
+
+function renderSolarSystem(helioData) {
+  if(!helioData || !helioData.planets) return;
+  var container=$('solar-system-container');
+  if(!container) return;
+  if(solarSystemInitialized) {
+    // Just update positions from new data
+    helioData.planets.forEach(function(p){
+      planetMeshes.forEach(function(m){
+        if(m.userData && m.userData.name===p.name){
+          m.userData.longitude=p.longitude||0;
+          m.userData.distance_au=p.distance_au||0;
+          m.userData.retro=p.retro||'';
+        }
+      });
+    });
+    return;
+  }
+  var width=container.clientWidth||0, height=container.clientHeight||0;
+  if(width===0||height===0) return;
+  initSolarSystem(helioData,width,height);
+}
+
+function initSolarSystem(helioData,width,height) {
+  var container=$('solar-system-container');
+  if(!container) return;
+  if(solarAnimId) cancelAnimationFrame(solarAnimId);
+  solarTime=new Date();
+
+  container.innerHTML='<div class="planet-info-panel" id="planet-info-panel"></div>'+
+    '<div class="solar-controls" id="solar-controls">'+
+    '<div class="sc-title">⛧ Solar System Controls</div>'+
+    '<div class="sc-row"><label>Speed</label><input type="range" id="solar-speed" min="-5" max="5" step="0.1" value="1"><span id="solar-speed-val">1x</span></div>'+
+    '<div class="sc-row"><span id="solar-date-display" style="font-size:.55rem;color:#cc0000;flex:1;"></span><button class="sc-btn" id="solar-pause">⏸</button></div>'+
+    '<div class="sc-row"><button class="sc-btn" id="solar-today" style="flex:1">Today</button><button class="sc-btn" id="solar-reset" style="flex:1">Reset View</button></div>'+
+    '<div class="sc-row"><label>Zoom</label><button class="sc-btn" id="solar-zoom-out">−</button><input type="range" id="solar-zoom" min="5" max="300" value="60"><button class="sc-btn" id="solar-zoom-in">+</button></div>'+
+    '<div class="sc-row" style="font-size:.5rem;color:#666;margin-top:.3rem;">Scroll to zoom • Drag to rotate</div>'+
+    '</div>';
+
+  var scene=new THREE.Scene();
+  var camera=new THREE.PerspectiveCamera(60,width/height,0.1,10000);
+  camera.position.set(0,40,60); camera.lookAt(0,0,0);
+  var renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});
+  renderer.setSize(width,height); renderer.setClearColor(0x000000,0);
+  container.appendChild(renderer.domElement);
+
+  scene.add(new THREE.AmbientLight(0x222233,0.6));
+  var sunLight=new THREE.PointLight(0xfff5e0,2,500);
+  scene.add(sunLight);
+
+  // Starfield
+  var starsGeo=new THREE.BufferGeometry();
+  var starPos=[],starCol=[];
+  for(var i=0;i<5000;i++){
+    starPos.push((Math.random()-0.5)*800,(Math.random()-0.5)*800,(Math.random()-0.5)*800);
+    var t=Math.random();
+    starCol.push(t<0.15?[0.6,0.7,1.0]:t<0.35?[1,1,1]:t<0.6?[1,0.95,0.8]:t<0.75?[1,0.8,0.6]:[1,0.6,0.6]);
+  }
+  starsGeo.setAttribute('position',new THREE.Float32BufferAttribute(starPos,3));
+  starsGeo.setAttribute('color',new THREE.Float32BufferAttribute(starCol.flat(),3));
+  scene.add(new THREE.Points(starsGeo,new THREE.PointsMaterial({size:0.5,vertexColors:true,transparent:true,opacity:0.9})));
+
+  // ═══════════════════════════════════════════════════════════════
+  // PLANET DEFINITIONS — Accurate orbital periods + occult colors
+  // ═══════════════════════════════════════════════════════════════
+  // Speeds: fraction of orbit per second at 1x (360° / orbital_period_in_seconds)
+  // Using mean orbital periods in seconds for accuracy
+  var planetDefs={
+    Sun:     {color:0xf4d03f, size:2.5, glow:true,  occultColor:0xffd700, name:'الشمس'},
+    Mercury:{color:0x9e9e9e, size:0.5, speed:0.0474, occultColor:0xff8c00, name:'عطارد'},
+    Venus:   {color:0xf0e68c, size:0.9, speed:0.0182, occultColor:0x00ff00, name:'الزهرة'},
+    Earth:   {color:0x4a90d9, size:1.0, speed:0.0154, occultColor:0x0066ff, name:'الأرض', hasMoon:true},
+    Mars:    {color:0xe05050, size:0.6, speed:0.00824,occultColor:0xff0000, name:'المريخ'},
+    Jupiter:{color:0xd4a017, size:2.0, speed:0.00131,occultColor:0x0066ff, name:'المشتري'},
+    Saturn: {color:0xc8a860, size:1.8, speed:0.000529,occultColor:0x4b0082, name:'زحل', rings:true},
+    Uranus: {color:0x4dd0e1, size:1.2, speed:0.000185,occultColor:0x9400d3, name:'أورانوس'},
+    Neptune:{color:0x1565c0, size:1.1, speed:0.0000935,occultColor:0x008080, name:'نبتون'},
+    Pluto:  {color:0x8d6e63, size:0.4, speed:0.0000573,occultColor:0x8b0000, name:'بلوتو'}
+  };
+
+  // Orbital radii (log-scaled for visibility)
+  var orbitR={Sun:0,Mercury:8,Venus:14,Earth:20,Mars:28,Jupiter:45,Saturn:62,Uranus:80,Neptune:95,Pluto:110};
+
+  // Asteroid belt
+  var astGeo=new THREE.BufferGeometry();
+  var astPos=[];
+  for(var i=0;i<800;i++){
+    var a=Math.random()*Math.PI*2, r=33+Math.random()*6;
+    astPos.push(Math.cos(a)*r,(Math.random()-0.5)*1,Math.sin(a)*r);
+  }
+  astGeo.setAttribute('position',new THREE.Float32BufferAttribute(astPos,3));
+  scene.add(new THREE.Points(astGeo,new THREE.PointsMaterial({color:0x666666,size:0.1,transparent:true,opacity:0.4})));
+
+  var infoDiv=$('planet-info-panel');
+
+  // Create Sun
+  scene.add(new THREE.Mesh(new THREE.SphereGeometry(2.5,32,32),new THREE.MeshBasicMaterial({color:0xf4d03f})));
+  for(var g=1;g<=4;g++) scene.add(new THREE.Mesh(new THREE.SphereGeometry(2.5+g*0.6,24,24),new THREE.MeshBasicMaterial({color:g<=2?0xf4d03f:0xff8c00,transparent:true,opacity:0.1-g*0.02})));
+  var corona=new THREE.Mesh(new THREE.RingGeometry(2.5*1.8,2.5*3.5,64),new THREE.MeshBasicMaterial({color:0xf4d03f,transparent:true,opacity:0.06,side:THREE.DoubleSide}));
+  corona.rotation.x=Math.PI/2; scene.add(corona);
+
+  // Create planets from helio data + Earth
+  helioData.planets.forEach(function(p){
+    if(p.name==='Sun') return;
+    var def=planetDefs[p.name]||{color:0xffffff,size:0.5,speed:0.01};
+    var dist=Math.sqrt(p.x*p.x+p.y*p.y+p.z*p.z);
+    var r=def.size, oR=orbitR[p.name]||30;
+    var angle=Math.atan2(p.z,p.x);
+
+    var mesh=new THREE.Mesh(new THREE.SphereGeometry(r,24,24),new THREE.MeshStandardMaterial({color:def.color,metalness:0.3,roughness:0.6}));
+    mesh.position.set(Math.cos(angle)*oR,p.y*0.3,Math.sin(angle)*oR);
+    mesh.userData={name:p.name,longitude:p.longitude||0,distance_au:dist,retro:p.retro||'',orbitR:oR};
+    scene.add(mesh);
+    planetMeshes.push(mesh);
+    planetAngles[p.name]=angle;
+
+    // Atmosphere
+    mesh.add(new THREE.Mesh(new THREE.SphereGeometry(r*1.2,16,16),new THREE.MeshBasicMaterial({color:def.color,transparent:true,opacity:0.07,side:THREE.BackSide})));
+
+    // Saturn rings with occult color
+    if(def.rings){
+      var ring=new THREE.Mesh(new THREE.RingGeometry(r*1.5,r*2.5,64),new THREE.MeshBasicMaterial({color:0xc8a860,transparent:true,opacity:0.3,side:THREE.DoubleSide}));
+      ring.rotation.x=Math.PI/2+0.3; mesh.add(ring);
+      var ring2=new THREE.Mesh(new THREE.RingGeometry(r*1.2,r*1.6,64),new THREE.MeshBasicMaterial({color:0x8b6914,transparent:true,opacity:0.2,side:THREE.DoubleSide}));
+      ring2.rotation.x=Math.PI/2+0.3; mesh.add(ring2);
+    }
+
+    // Orbital ring with occult planetary color
+    var orbitColor=def.occultColor||0x3a3a5a;
+    var orbitMesh=new THREE.Mesh(new THREE.RingGeometry(oR-0.08,oR+0.08,256),new THREE.MeshBasicMaterial({color:orbitColor,side:THREE.DoubleSide,transparent:true,opacity:0.15}));
+    orbitMesh.rotation.x=Math.PI/2; scene.add(orbitMesh);
+
+    // Label
+    var lbl=document.createElement('div'); lbl.className='planet-label';
+    lbl.textContent=(PLANET_GLYPHS[p.name]||'')+' '+p.name;
+    lbl.style.cssText='position:absolute;color:'+('#'+def.color.toString(16).padStart(6,'0'))+';font-size:.6rem;font-weight:500;pointer-events:none;white-space:nowrap;text-shadow:0 0 6px rgba(0,0,0,.9);';
+    container.appendChild(lbl);
+    planetLabels.push({el:lbl,mesh:mesh});
+  });
+
+  // Add Earth (not in heliocentric data — calculate from Sun position)
+  var earthDef=planetDefs.Earth;
+  var earthOrbitR=orbitR.Earth;
+  var earthAngle=0; // Will be calculated from current date
+  var earthMesh=new THREE.Mesh(new THREE.SphereGeometry(earthDef.size,24,24),new THREE.MeshStandardMaterial({color:earthDef.color,metalness:0.3,roughness:0.5}));
+  earthMesh.position.set(earthOrbitR,0,0);
+  earthMesh.userData={name:'Earth',longitude:0,distance_au:1.0,retro:'',orbitR:earthOrbitR};
+  scene.add(earthMesh);
+  planetMeshes.push(earthMesh);
+  planetAngles.Earth=earthAngle;
+  // Earth atmosphere (blue glow)
+  earthMesh.add(new THREE.Mesh(new THREE.SphereGeometry(earthDef.size*1.3,16,16),new THREE.MeshBasicMaterial({color:0x4a90d9,transparent:true,opacity:0.1,side:THREE.BackSide})));
+  // Earth's Moon
+  var moonMesh=new THREE.Mesh(new THREE.SphereGeometry(0.25,12,12),new THREE.MeshStandardMaterial({color:0xcccccc,metalness:0.1,roughness:0.8}));
+  moonMesh.position.set(1.5,0,0); earthMesh.add(moonMesh);
+  earthMesh.userData.moonMesh=moonMesh;
+  // Earth orbital ring (blue-occult color)
+  var earthOrbitMesh=new THREE.Mesh(new THREE.RingGeometry(earthOrbitR-0.08,earthOrbitR+0.08,256),new THREE.MeshBasicMaterial({color:earthDef.occultColor,side:THREE.DoubleSide,transparent:true,opacity:0.18}));
+  earthOrbitMesh.rotation.x=Math.PI/2; scene.add(earthOrbitMesh);
+  // Earth label
+  var earthLbl=document.createElement('div'); earthLbl.className='planet-label';
+  earthLbl.textContent='⊕ Earth';
+  earthLbl.style.cssText='position:absolute;color:#4a90d9;font-size:.6rem;font-weight:500;pointer-events:none;white-space:nowrap;text-shadow:0 0 6px rgba(0,0,0,.9);';
+  container.appendChild(earthLbl);
+  planetLabels.push({el:earthLbl,mesh:earthMesh});
+
+  // ═══════════════════════════════════════════════════════════════
+  // CONTROLS
+  // ═══════════════════════════════════════════════════════════════
+  setTimeout(function(){
+    var sEl=$('solar-speed'); if(sEl) sEl.addEventListener('input',function(){solarSimSpeed=parseFloat(this.value);var v=$('solar-speed-val');if(v)v.textContent=solarSimSpeed.toFixed(1)+'x';});
+    var pEl=$('solar-pause'); if(pEl) pEl.addEventListener('click',function(){solarIsPaused=!solarIsPaused;this.textContent=solarIsPaused?'▶':'⏸';});
+    var tEl=$('solar-today'); if(tEl) tEl.addEventListener('click',function(){solarTime=new Date();solarIsPaused=false;var pp=$('solar-pause');if(pp)pp.textContent='⏸';});
+    var rEl=$('solar-reset'); if(rEl) rEl.addEventListener('click',function(){spherical.theta=0;spherical.phi=Math.PI/3;solarZoom=60;var z=$('solar-zoom');if(z)z.value=60;});
+    var zIn=$('solar-zoom-in'); if(zIn) zIn.addEventListener('click',function(){solarZoom=Math.max(5,solarZoom-15);var z=$('solar-zoom');if(z)z.value=solarZoom;});
+    var zOut=$('solar-zoom-out'); if(zOut) zOut.addEventListener('click',function(){solarZoom=Math.min(300,solarZoom+15);var z=$('solar-zoom');if(z)z.value=solarZoom;});
+    var zSl=$('solar-zoom'); if(zSl) zSl.addEventListener('input',function(){solarZoom=parseFloat(this.value);});
+  },200);
+
+  // Mouse controls
+  var dragging=false,prev={x:0,y:0};
+  container.addEventListener('mousedown',function(e){dragging=true;prev.x=e.clientX;prev.y=e.clientY;});
+  container.addEventListener('mouseup',function(){dragging=false;});
+  container.addEventListener('mouseleave',function(){dragging=false;});
+  container.addEventListener('mousemove',function(e){
+    if(!dragging)return;
+    spherical.theta-=(e.clientX-prev.x)*0.005;
+    spherical.phi=Math.max(0.05,Math.min(Math.PI-0.05,spherical.phi+(e.clientY-prev.y)*0.005));
+    prev.x=e.clientX;prev.y=e.clientY;
+  });
+  container.addEventListener('wheel',function(e){
+    e.preventDefault();
+    solarZoom=Math.max(5,Math.min(300,solarZoom+e.deltaY*0.1));
+    var z=$('solar-zoom');if(z)z.value=solarZoom;
+  },{passive:false});
+
+  // Click planet → info with nakshatra
+  var raycaster=new THREE.Raycaster(),mouseV=new THREE.Vector2();
+  container.addEventListener('click',function(e){
+    var rect=container.getBoundingClientRect();
+    mouseV.x=((e.clientX-rect.left)/width)*2-1;
+    mouseV.y=-((e.clientY-rect.top)/height)*2+1;
+    raycaster.setFromCamera(mouseV,camera);
+    var hits=raycaster.intersectObjects(planetMeshes);
+    if(hits.length>0){
+      var ud=hits[0].object.userData;
+      var lon=ud.longitude,sign=getSign(lon),si=getSignIndex(lon);
+      var nakshatra='--';
+      if(state.lunarMansion&&state.lunarMansion.mansion&&state.lunarMansion.mansion.current) nakshatra=state.lunarMansion.mansion.current.name;
+      var aspects='';
+      if(state.chart&&state.chart.aspects) state.chart.aspects.forEach(function(a){
+        if(a.between&&a.between.indexOf(ud.name)!==-1) aspects+=a.aspect+' '+a.between.replace(ud.name,'').trim()+'؛ ';
+      });
+      var sectStyle='border-top:1px dashed rgba(139,92,246,.2);margin-top:.3rem;padding-top:.3rem;';
+      infoDiv.innerHTML='<div class="pi-name">'+(PLANET_GLYPHS[ud.name]||'')+' '+ud.name+'</div>'+
+        '<div class="pi-row"><span>البرج</span><span>'+SIGN_SYMBOLS[si]+' '+sign+'</span></div>'+
+        '<div class="pi-row"><span>الدرجة</span><span>'+fmtDeg(getDegInSign(lon))+'</span></div>'+
+        '<div class="pi-row"><span>الطول الشمسي</span><span>'+lon.toFixed(2)+'°</span></div>'+
+        '<div class="pi-row"><span>المسافة</span><span>'+ud.distance_au.toFixed(3)+' AU</span></div>'+
+        '<div class="pi-row"><span>الحركة</span><span>'+(ud.retro?'<span class="retro-badge">R</span> تراجعي':'مباشر')+'</span></div>'+
+        '<div class="pi-row" style="'+sectStyle+'"><span>النكشترا</span><span style="color:var(--gold);font-size:.75rem;font-weight:600;">'+nakshatra+'</span></div>'+
+        (aspects?'<div class="pi-row"><span>التراصات</span><span style="font-size:.6rem;">'+aspects+'</span></div>':'');
+      infoDiv.classList.add('visible');
+    } else { infoDiv.classList.remove('visible'); }
+  });
+
+  // ═══════════════════════════════════════════════════════════════
+  // ANIMATION LOOP — Astronomically accurate orbital speeds
+  // ═══════════════════════════════════════════════════════════════
+  var animT=0;
+  function animate(){
+    solarAnimId=requestAnimationFrame(animate);
+    if(!solarIsPaused){animT+=0.016*solarSimSpeed;}
+    var t=Date.now()*0.001;
+
+    planetMeshes.forEach(function(mesh){
+      var name=mesh.userData.name;
+      var def=planetDefs[name];
+      if(!def) return;
+      // Orbital angle = initial_angle + animT * speed
+      // Speed is calibrated so at 1x, planets complete orbits in correct relative time
+      var angle=planetAngles[name]+animT*def.speed;
+      var oR=mesh.userData.orbitR||30;
+      mesh.position.x=Math.cos(angle)*oR;
+      mesh.position.z=Math.sin(angle)*oR;
+      mesh.rotation.y+=0.003;
+      // Moon orbit for Earth
+      if(mesh.userData.moonMesh){
+        var moonAngle=animT*2;
+        mesh.userData.moonMesh.position.set(Math.cos(moonAngle)*1.5,0,Math.sin(moonAngle)*1.5);
+      }
+    });
+    sunLight.intensity=1.8+Math.sin(t)*0.3;
+    camera.position.x=solarZoom*Math.sin(spherical.phi)*Math.cos(spherical.theta);
+    camera.position.y=solarZoom*Math.cos(spherical.phi);
+    camera.position.z=solarZoom*Math.sin(spherical.phi)*Math.sin(spherical.theta);
+    camera.lookAt(0,0,0);
+    planetLabels.forEach(function(ld){
+      if(ld.mesh){var v=new THREE.Vector3();ld.mesh.getWorldPosition(v);v.project(camera);ld.el.style.left=((v.x+1)/2*width)+'px';ld.el.style.top=((1-v.y)/2*height)+'px';ld.el.style.display=(v.z<1)?'block':'none';}
+    });
+    var dd=$('solar-date-display');
+    if(dd&&solarTime) dd.textContent=solarTime.toLocaleString('en-GB',{year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+    renderer.render(scene,camera);
+  }
+  animate();
+  solarSystemScene={scene:scene,renderer:renderer};
+  solarSystemInitialized=true;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CHART TAB
+// ═══════════════════════════════════════════════════════════════
+function renderChart() {
+  var container = $('tab-chart'); if(!container) return;
+  var chart = state.chart; var html = '<div class="card"><h2><span class="icon">☉</span> Zodiac Wheel</h2>';
+  html += '<div class="zodiac-wheel-container"><img src="'+API+'/chart.svg?'+Date.now()+'" onerror="this.style.display=\'none\'" alt="Zodiac Wheel" style="max-width:100%;height:auto;border-radius:var(--radius-lg);background:#0a0a0a;"></div></div>';
+  if(chart&&chart.planets){
+    html+='<div class="card"><h2><span class="icon">☉</span> Planet Positions</h2><div class="table-wrap"><table><thead><tr><th>Planet</th><th>Sign</th><th>Degree</th><th>Longitude</th><th>Status</th><th>Speed</th></tr></thead><tbody>';
+    chart.planets.forEach(function(p){var c=PLANET_COLORS[p.name]||'#fff';html+='<tr><td><span class="planet-dot" style="background:'+c+'"></span>'+(PLANET_GLYPHS[p.name]||'')+' '+p.name+'</td><td>'+SIGN_SYMBOLS[getSignIndex(p.longitude)]+' '+p.sign+'</td><td>'+fmtDeg(p.degree)+'</td><td>'+p.longitude.toFixed(2)+'°</td><td>'+(p.retro?'<span class="retro-badge">R</span>':'Direct')+'</td><td>'+p.speed.toFixed(3)+'°/d</td></tr>';});
+    html+='</tbody></table></div></div>';
+  }
+  if(chart&&chart.arabic_parts&&chart.arabic_parts.parts){
+    html+='<div class="card"><h2><span class="icon">⊗</span> Arabic Parts</h2><div class="table-wrap"><table><thead><tr><th>Part</th><th>Sign</th><th>Degree</th><th>Longitude</th></tr></thead><tbody>';
+    var parts=chart.arabic_parts.parts;Object.keys(parts).forEach(function(k){var p=parts[k];html+='<tr><td>'+(p.name||k)+'</td><td>'+(p.sign||getSign(p.longitude||0))+' '+(p.degree!=null?fmtDeg(p.degree):'--')+'</td><td>'+(p.longitude!=null?p.longitude.toFixed(2)+'°':'--')+'</td></tr>';});
+    html+='</tbody></table></div></div>';
+  }
+  if(chart&&chart.aspects&&chart.aspects.length){
+    html+='<div class="card"><h2><span class="icon">✦</span> Aspects</h2>';
+    chart.aspects.forEach(function(a){var c=ASPECT_COLORS[a.aspect]||'#fff';html+='<div class="aspect-item"><span class="aspect-type" style="color:'+c+'">'+a.aspect+'</span> <span>'+a.between+'</span> <span class="aspect-detail">orb '+a.orb+'° | exact '+a.exact+'°</span></div>';});
+    html+='</div>';
+  }
+  container.innerHTML=html;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PLANETS TAB
+// ═══════════════════════════════════════════════════════════════
+function renderPlanets(chart,cusps){
+  var body=$('planets-body'); if(!body||!chart||!chart.planets) return;
+  body.innerHTML=chart.planets.map(function(p){var lon=p.longitude,c=PLANET_COLORS[p.name]||'#fff',house='';if(cusps&&cusps.length){for(var i=0;i<12;i++){var c1=cusps[i],c2=cusps[(i+1)%12];if(c1<c2){if(lon>=c1&&lon<c2)house=(i+1)+'th';}else{if(lon>=c1||lon<c2)house=(i+1)+'th';}}} return'<tr><td><span class="planet-dot" style="background:'+c+'"></span>'+(PLANET_GLYPHS[p.name]||'')+' '+p.name+'</td><td>'+SIGN_SYMBOLS[getSignIndex(lon)]+' '+getSign(lon)+'</td><td>'+fmtDeg(getDegInSign(lon))+'</td><td>'+lon.toFixed(2)+'°</td><td>'+(p.retro?'<span class="retro-badge">R</span>':'Direct')+'</td><td>'+p.speed.toFixed(3)+'°/d</td></tr>';}).join('');
+}
+
+function renderAspects(aspects){
+  var list=$('aspects-list'); if(!list||!aspects) return;
+  list.innerHTML=aspects.map(function(a){var c=ASPECT_COLORS[a.aspect]||'#fff';return'<div class="aspect-item"><span class="aspect-type" style="color:'+c+'">'+a.aspect+'</span> <span>'+a.between+'</span> <span class="aspect-detail">orb '+a.orb+'° | exact '+a.exact+'°</span></div>';}).join('')||'<div style="color:var(--text-muted)">No major aspects</div>';
+}
+
+function renderHouses(chart,housesData){
+  var body=$('houses-body'); if(!body) return;
+  var cusps=[]; if(housesData&&housesData.cusps) cusps=Object.values(housesData.cusps).map(Number); else if(chart&&chart.houses&&chart.houses.cusps) cusps=Object.values(chart.houses.cusps).map(Number);
+  if(!cusps.length){body.innerHTML='<tr><td colspan="4" style="color:var(--text-muted)">No data</td></tr>';return;}
+  var names=['1st (ASC)','2nd','3rd','4th (IC)','5th','6th','7th (DC)','8th','9th','10th (MC)','11th','12th'];
+  body.innerHTML=cusps.map(function(lon,i){return'<tr><td>'+names[i]+'</td><td>'+SIGN_SYMBOLS[getSignIndex(lon)]+' '+getSign(lon)+'</td><td>'+fmtDeg(getDegInSign(lon))+'</td><td>'+lon.toFixed(2)+'°</td></tr>';}).join('');
+}
+
+function renderHours(hours){
+  var cur=$('hours-current'); if(!cur||!hours||!hours.current) return;
+  var h=hours.current;
+  cur.innerHTML='<div class="stat-grid"><div class="stat"><div class="stat-label">Current Hour</div><div class="stat-value gold">'+h.hour_number+' ('+h.period+')</div></div><div class="stat"><div class="stat-label">Ruler</div><div class="stat-value">'+h.ruler+' '+h.symbol+'</div></div><div class="stat"><div class="stat-label">Nature</div><div class="stat-value '+(h.benefic==='benefic'?'':(h.benefic==='malefic'?'malefic':''))+'">'+h.benefic+'</div></div><div class="stat"><div class="stat-label">Time</div><div class="stat-value">'+h.start+' - '+h.end+'</div></div></div>';
+  renderHourRows('day','hours-day-body'); renderHourRows('night','hours-night-body');
+}
+
+function renderHourRows(period,bodyId){
+  var body=$(bodyId); if(!body||!state.hours||!state.hours.hours) return;
+  var hours=state.hours.hours[period]||[];
+  body.innerHTML=hours.map(function(h){return'<tr'+(h.active?' style="background:var(--gold-glow)"':'')+'><td>'+h.hour_number+'</td><td>'+h.ruler+' '+h.symbol+'</td><td>'+h.start+'</td><td>'+h.end+'</td><td>'+(h.active?'★ Active':'')+'</td></tr>';}).join('');
+}
+
+function renderDignities(data){
+  var body=$('dignities-body'); if(!body||!data||!data.planets){if(body) body.innerHTML='<tr><td colspan="12">No data</td></tr>';return;}
+  var planets=typeof data.planets==='object'&&!Array.isArray(data.planets)?Object.entries(data.planets):(Array.isArray(data.planets)?data.planets.map(function(p){return[p.planet||p.name,p];}):[]);
+  body.innerHTML=planets.map(function(entry){var name=entry[0],p=entry[1],score=p.score!=null?p.score:0,sc=score>=5?'gold':(score>=0?'':'malefic');return'<tr><td>'+name+'</td><td>'+(p.sign||'--')+'</td><td>'+(p.degree!=null?fmtDeg(p.degree):'--')+'</td><td>'+(p.domicile?'✓':'--')+'</td><td>'+(p.exaltation?'✓':'--')+'</td><td>'+(p.fall?'✓':'--')+'</td><td>'+(p.detriment?'✓':'--')+'</td><td>'+(p.triplicity||'--')+'</td><td>'+(p.term||'--')+'</td><td>'+(p.face||'--')+'</td><td style="color:'+sc+'">'+score+'</td><td>'+(p.condition||'--')+'</td></tr>';}).join('');
+}
+
+function renderFixedStars(data){
+  var body=$('fixed-stars-body'); if(!body||!data||!data.conjunctions){if(body) body.innerHTML='<tr><td colspan="4">No data</td></tr>';return;}
+  body.innerHTML=data.conjunctions.map(function(s){return'<tr><td>'+s.star+'</td><td>'+s.planet+'</td><td>'+s.orb.toFixed(2)+'°</td><td>'+(s.star_nature||'--')+'</td></tr>';}).join('');
+}
+
+function renderElectional(data){
+  var content=$('electional-content'); if(!content) return;
+  if(!data){content.innerHTML='<div style="color:var(--text-muted)">No data</div>';return;}
+  var score=data.score!=null?data.score:0;
+  content.innerHTML='<div class="stat-grid"><div class="stat"><div class="stat-label">Score</div><div class="stat-value '+(score>=7?'gold':(score>=4?'':'malefic'))+'">'+score+'/10</div></div></div>'+'<div style="margin:0.75rem 0"><strong>Assessment:</strong> <span style="color:var(--text-dim)">'+(data.assessment||'--')+'</span></div>'+'<div><strong>Recommendations:</strong></div>'+((data.recommendations||[]).map(function(r){return'<div style="padding:0.4rem 0.6rem;background:var(--surface-2);border-radius:var(--radius);margin:0.3rem 0;font-size:0.8rem;border-left:3px solid var(--gold)">'+r+'</div>';}).join('')||'<div style="color:var(--text-muted)">None</div>');
+}
+
+async function loadElectional(purpose){
+  try{var data=await fetchJSON(API+'/electional?purpose='+encodeURIComponent(purpose));state.electional=data;renderElectional(data);}catch(e){var ec=$('electional-content');if(ec)ec.innerHTML='<div class="error-msg">'+e.message+'</div>';}
+}
+
+function renderBeings(data,hours){
+  var content=$('beings-content'); if(!content) return;
+  var ruler=hours&&hours.current?hours.current.ruler:'Sun';
+  if(!data){content.innerHTML='<div style="color:var(--text-muted)">No data</div>';return;}
+  var items=[{l:'Planet',v:data.planet||ruler},{l:'Angel',v:data.angel},{l:'Intelligence',v:data.intelligence},{l:'Spirit',v:data.spirit},{l:'Incense',v:data.incense},{l:'Olympic Spirit',v:data.olympic_spirit||data.olympic}];
+  content.innerHTML='<div style="color:var(--text-dim);font-size:0.8rem;margin-bottom:0.75rem">Current hour ruler: <span style="color:var(--gold)">'+ruler+'</span></div>'+'<div class="stat-grid">'+items.filter(function(i){return i.v;}).map(function(i){return'<div class="stat"><div class="stat-label">'+i.l+'</div><div class="stat-value gold small">'+i.v+'</div></div>';}).join('')+'</div>';
+}
+
+function renderOccultChart(data){
+  var container=$('occult-chart-content'); if(!container||!data) return;
+  var html='';
+  Object.keys(data).forEach(function(key){var val=data[key];if(val===null||val===undefined)return;if(Array.isArray(val)&&!val.length)return;if(typeof val==='object'&&!Array.isArray(val)&&!Object.keys(val).length)return;html+='<div style="margin:0.75rem 0"><h3>'+key.replace(/_/g,' ')+'</h3>';if(Array.isArray(val)){var keys=Object.keys(val[0]||{});html+='<div class="table-wrap"><table><thead><tr>'+keys.map(function(k){return'<th>'+k.replace(/_/g,' ')+'</th>';}).join('')+'</tr></thead><tbody>';val.forEach(function(item){html+='<tr>'+keys.map(function(k){return'<td>'+(item[k]!=null?item[k]:'--')+'</td>';}).join('')+'</tr>';});html+='</tbody></table></div>';}else if(typeof val==='object'){html+='<div class="stat-grid">';Object.keys(val).forEach(function(k){html+='<div class="stat"><div class="stat-label">'+k.replace(/_/g,' ')+'</div><div class="stat-value small">'+(typeof val[k]==='object'?JSON.stringify(val[k]):val[k])+'</div></div>';});html+='</div>';}else{html+='<div style="color:var(--text-dim)">'+val+'</div>';}html+='</div>';});
+  container.innerHTML=html||'<div style="color:var(--text-muted)">No data</div>';
+}
+
+async function calculateChart(){
+  var date=$('cs-date').value,time=$('cs-time').value;
+  var lat=parseFloat($('cs-lat').value)||-33.76,lon=parseFloat($('cs-lon').value)||25.40;
+  var parts=date.split('-');var year=parseInt(parts[0]),month=parseInt(parts[1]),day=parseInt(parts[2]);
+  var tp=time.split(':');var hour=parseFloat(tp[0])+parseFloat(tp[1])/60;
+  var resultDiv=$('chart-study-result');if(!resultDiv)return;
+  resultDiv.innerHTML='<div class="loading"><div class="spinner"></div>Calculating...</div>';
+  try{
+    var data=await fetchJSON(API+'/chart-study?year='+year+'&month='+month+'&day='+day+'&hour='+hour+'&lat='+lat+'&lon='+lon);
+    var html='<div class="zodiac-wheel-container"><img src="'+API+'/chart-study.svg?year='+year+'&month='+month+'&day='+day+'&hour='+hour+'&lat='+lat+'&lon='+lon+'&t='+Date.now()+'" alt="Chart"></div>';
+    if(data.planets&&data.planets.length){html+='<div class="card" style="margin-top:1rem"><h3>Planet Positions</h3><div class="table-wrap"><table><thead><tr><th>Planet</th><th>Sign</th><th>Degree</th><th>Status</th></tr></thead><tbody>';data.planets.forEach(function(p){var c=PLANET_COLORS[p.name]||'#fff';html+='<tr><td><span class="planet-dot" style="background:'+c+'"></span>'+(PLANET_GLYPHS[p.name]||'')+' '+p.name+'</td><td>'+SIGN_SYMBOLS[getSignIndex(p.longitude)]+' '+getSign(p.longitude)+'</td><td>'+fmtDeg(getDegInSign(p.longitude))+'</td><td>'+(p.retro?'<span class="retro-badge">R</span>':'Direct')+'</td></tr>';});html+='</tbody></table></div></div>';}
+    if(data.houses){html+='<div class="card" style="margin-top:1rem"><h3>Houses</h3><div class="table-wrap"><table><thead><tr><th>House</th><th>Sign</th><th>Degree</th></tr></thead><tbody>';var cusps=data.houses.cusps||{};var hnames=['1st (ASC)','2nd','3rd','4th (IC)','5th','6th','7th (DC)','8th','9th','10th (MC)','11th','12th'];hnames.forEach(function(n,i){var lon=cusps[n.replace(' (ASC)','').replace(' (IC)','').replace(' (DC)','').replace(' (MC)','')];if(lon!=null)html+='<tr><td>'+n+'</td><td>'+SIGN_SYMBOLS[getSignIndex(lon)]+' '+getSign(lon)+'</td><td>'+fmtDeg(getDegInSign(lon))+'</td></tr>';});html+='</tbody></table></div></div>';}
+    if(data.moon_phase)html+='<div class="card" style="margin-top:1rem"><div class="stat"><div class="stat-label">Moon Phase</div><div class="stat-value pink">'+getMoonEmoji(data.moon_phase)+' '+data.moon_phase+'</div></div></div>';
+    resultDiv.innerHTML=html;
+  }catch(e){resultDiv.innerHTML='<div class="error-msg">Error: '+e.message+'</div>';}
+}
+
+// ═══════════════════════════════════════════════════════════════
+// TAB SWITCHING
+// ═══════════════════════════════════════════════════════════════
+document.addEventListener('click',function(e){
+  var btn=e.target.closest('.nav-item');if(!btn)return;
+  var tabId=btn.dataset.tab;if(!tabId)return;
+  document.querySelectorAll('.nav-item').forEach(function(b){b.classList.remove('active');});
+  document.querySelectorAll('.tab-content').forEach(function(c){c.classList.remove('active');});
+  btn.classList.add('active');var target=$('tab-'+tabId);if(target)target.classList.add('active');
+  if(tabId==='solar-system'&&state.heliocentric&&!solarSystemInitialized){
+    var sc=$('solar-system-container');
+    if(sc) setTimeout(function(){initSolarSystem(state.heliocentric,sc.clientWidth||800,sc.clientHeight||500);},100);
+  }
+});
+
+var refreshBtn=$('btn-refresh');if(refreshBtn)refreshBtn.addEventListener('click',function(e){e.preventDefault();loadAll();});
+var csBtn=$('btn-calculate-chart');if(csBtn)csBtn.addEventListener('click',function(e){e.preventDefault();calculateChart();});
+
+(function(){var now=new Date();var dateEl=$('cs-date');var timeEl=$('cs-time');if(dateEl)dateEl.value=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');if(timeEl)timeEl.value=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');})();
+
+// ═══════════════════════════════════════════════════════════════
+// INTRO OVERLAY
+// ═══════════════════════════════════════════════════════════════
+(function(){
+  var overlay=$('intro-overlay'),video=$('intro-video'),skipBtn=$('intro-skip'),replayBtn=$('intro-replay');
+  if(!overlay||!video)return;
+  var dismissed=false;
+  function dismiss(){
+    if(dismissed)return;
+    dismissed=true;
+    overlay.classList.add('fade-out');
+    setTimeout(function(){overlay.style.display='none';},1500);
+    // Start data loading after intro dismissed
+    loadAll();
+    setInterval(loadAll,60000);
+  }
+  video.addEventListener('ended',function(){
+    overlay.classList.add('ended');
+    // Auto-dismiss 2s after video ends
+    setTimeout(dismiss,2000);
+  });
+  skipBtn.addEventListener('click',dismiss);
+  replayBtn.addEventListener('click',function(){
+    overlay.classList.remove('ended','fade-out');
+    dismissed=false;
+    video.currentTime=0;
+    video.play();
+  });
+  // Fallback: dismiss after 20s even if video hasn't loaded
+  setTimeout(function(){if(!dismissed)dismiss();},20000);
+})();
+
+// ═══════════════════════════════════════════════════════════════
+// ORIGINAL LOAD (called from intro dismiss)
+// ═══════════════════════════════════════════════════════════════
+</script>
+</body>
+</html>
