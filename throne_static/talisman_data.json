@@ -1,0 +1,591 @@
+{
+  "sephiroth": [
+    {
+      "name": "Kether",
+      "hebrew": "\u05db\u05ea\u05e8",
+      "title": "Crown",
+      "constant": 1168,
+      "planet": "Neptune/Uranus",
+      "page": 24,
+      "color": "White",
+      "stone": "Diamond"
+    },
+    {
+      "name": "Chokmah",
+      "hebrew": "\u05d7\u05db\u05de\u05d4",
+      "title": "Wisdom",
+      "constant": 93,
+      "planet": "Uranus/Saturn",
+      "page": 47,
+      "color": "Grey/Silver",
+      "stone": "Star Ruby"
+    },
+    {
+      "name": "Binah",
+      "hebrew": "\u05d1\u05d9\u05e0\u05d4",
+      "title": "Understanding",
+      "constant": 184,
+      "planet": "Saturn",
+      "page": 70,
+      "color": "Black",
+      "stone": "Pearl"
+    },
+    {
+      "name": "Chesed",
+      "hebrew": "\u05d7\u05e1\u05d3",
+      "title": "Mercy",
+      "constant": null,
+      "planet": "Jupiter",
+      "page": 93,
+      "color": "Blue",
+      "stone": "Sapphire"
+    },
+    {
+      "name": "Geburah",
+      "hebrew": "\u05d2\u05d1\u05d5\u05e8\u05d4",
+      "title": "Strength",
+      "constant": null,
+      "planet": "Mars",
+      "page": 116,
+      "color": "Red",
+      "stone": "Ruby"
+    },
+    {
+      "name": "Tiphereth",
+      "hebrew": "\u05ea\u05e4\u05d0\u05e8\u05ea",
+      "title": "Beauty",
+      "constant": null,
+      "planet": "Sun",
+      "page": 139,
+      "color": "Gold/Yellow",
+      "stone": "Topaz"
+    },
+    {
+      "name": "Netzach",
+      "hebrew": "\u05e0\u05e6\u05d7",
+      "title": "Victory",
+      "constant": null,
+      "planet": "Venus",
+      "page": 162,
+      "color": "Green",
+      "stone": "Emerald"
+    },
+    {
+      "name": "Hod",
+      "hebrew": "\u05d4\u05d5\u05d3",
+      "title": "Splendor",
+      "constant": null,
+      "planet": "Mercury",
+      "page": 185,
+      "color": "Orange",
+      "stone": "Opal"
+    },
+    {
+      "name": "Yesod",
+      "hebrew": "\u05d9\u05e1\u05d5\u05d3",
+      "title": "Foundation",
+      "constant": null,
+      "planet": "Moon",
+      "page": 208,
+      "color": "Purple",
+      "stone": "Moonstone"
+    },
+    {
+      "name": "Malkuth",
+      "hebrew": "\u05de\u05dc\u05db\u05d5\u05ea",
+      "title": "Kingdom",
+      "constant": null,
+      "planet": "Earth",
+      "page": 231,
+      "color": "Citrine/Olive",
+      "stone": "Rock Crystal"
+    }
+  ],
+  "planetary_squares": {
+    "Saturn": {
+      "order": 3,
+      "constant": 15,
+      "grid": [
+        [
+          8,
+          1,
+          6
+        ],
+        [
+          3,
+          5,
+          7
+        ],
+        [
+          4,
+          9,
+          2
+        ]
+      ],
+      "planet": "Saturn",
+      "day": "Saturday",
+      "metal": "Lead"
+    },
+    "Jupiter": {
+      "order": 4,
+      "constant": 34,
+      "grid": [
+        [
+          16,
+          2,
+          3,
+          13
+        ],
+        [
+          5,
+          11,
+          10,
+          8
+        ],
+        [
+          9,
+          7,
+          6,
+          12
+        ],
+        [
+          4,
+          14,
+          15,
+          1
+        ]
+      ],
+      "planet": "Jupiter",
+      "day": "Thursday",
+      "metal": "Tin"
+    },
+    "Mars": {
+      "order": 5,
+      "constant": 65,
+      "grid": [
+        [
+          17,
+          24,
+          1,
+          8,
+          15
+        ],
+        [
+          23,
+          5,
+          7,
+          14,
+          16
+        ],
+        [
+          4,
+          6,
+          13,
+          20,
+          22
+        ],
+        [
+          10,
+          12,
+          19,
+          21,
+          3
+        ],
+        [
+          11,
+          18,
+          25,
+          2,
+          9
+        ]
+      ],
+      "planet": "Mars",
+      "day": "Tuesday",
+      "metal": "Iron"
+    },
+    "Sun": {
+      "order": 6,
+      "constant": 111,
+      "grid": [
+        [
+          35,
+          1,
+          6,
+          26,
+          19,
+          24
+        ],
+        [
+          3,
+          32,
+          7,
+          21,
+          23,
+          25
+        ],
+        [
+          31,
+          9,
+          2,
+          22,
+          27,
+          20
+        ],
+        [
+          8,
+          28,
+          33,
+          17,
+          10,
+          15
+        ],
+        [
+          30,
+          5,
+          34,
+          12,
+          14,
+          16
+        ],
+        [
+          4,
+          36,
+          29,
+          13,
+          18,
+          11
+        ]
+      ],
+      "planet": "Sun",
+      "day": "Sunday",
+      "metal": "Gold"
+    },
+    "Venus": {
+      "order": 7,
+      "constant": 175,
+      "grid": [
+        [
+          30,
+          39,
+          48,
+          1,
+          10,
+          19,
+          28
+        ],
+        [
+          38,
+          47,
+          7,
+          9,
+          18,
+          27,
+          29
+        ],
+        [
+          46,
+          6,
+          8,
+          17,
+          26,
+          35,
+          37
+        ],
+        [
+          5,
+          14,
+          16,
+          25,
+          34,
+          36,
+          45
+        ],
+        [
+          13,
+          15,
+          24,
+          33,
+          42,
+          44,
+          4
+        ],
+        [
+          21,
+          23,
+          32,
+          41,
+          43,
+          3,
+          12
+        ],
+        [
+          22,
+          31,
+          40,
+          49,
+          2,
+          11,
+          20
+        ]
+      ],
+      "planet": "Venus",
+      "day": "Friday",
+      "metal": "Copper"
+    },
+    "Mercury": {
+      "order": 8,
+      "constant": 260,
+      "grid": [
+        [
+          64,
+          2,
+          3,
+          61,
+          60,
+          6,
+          7,
+          57
+        ],
+        [
+          9,
+          55,
+          54,
+          12,
+          13,
+          51,
+          50,
+          16
+        ],
+        [
+          17,
+          47,
+          46,
+          20,
+          21,
+          43,
+          42,
+          24
+        ],
+        [
+          40,
+          26,
+          27,
+          37,
+          36,
+          30,
+          31,
+          33
+        ],
+        [
+          32,
+          34,
+          35,
+          29,
+          28,
+          38,
+          39,
+          25
+        ],
+        [
+          41,
+          23,
+          22,
+          44,
+          45,
+          19,
+          18,
+          48
+        ],
+        [
+          49,
+          15,
+          14,
+          52,
+          53,
+          11,
+          10,
+          56
+        ],
+        [
+          8,
+          58,
+          59,
+          5,
+          4,
+          62,
+          63,
+          1
+        ]
+      ],
+      "planet": "Mercury",
+      "day": "Wednesday",
+      "metal": "Mercury"
+    },
+    "Moon": {
+      "order": 9,
+      "constant": 369,
+      "grid": [
+        [
+          47,
+          58,
+          69,
+          80,
+          1,
+          12,
+          23,
+          34,
+          45
+        ],
+        [
+          57,
+          68,
+          79,
+          9,
+          11,
+          22,
+          33,
+          44,
+          46
+        ],
+        [
+          67,
+          78,
+          8,
+          10,
+          21,
+          32,
+          43,
+          54,
+          56
+        ],
+        [
+          77,
+          7,
+          18,
+          20,
+          31,
+          42,
+          53,
+          55,
+          66
+        ],
+        [
+          6,
+          17,
+          19,
+          30,
+          41,
+          52,
+          63,
+          65,
+          76
+        ],
+        [
+          16,
+          27,
+          29,
+          40,
+          51,
+          62,
+          64,
+          75,
+          5
+        ],
+        [
+          26,
+          28,
+          39,
+          50,
+          61,
+          72,
+          74,
+          4,
+          15
+        ],
+        [
+          36,
+          38,
+          49,
+          60,
+          71,
+          73,
+          3,
+          14,
+          25
+        ],
+        [
+          37,
+          48,
+          59,
+          70,
+          81,
+          2,
+          13,
+          24,
+          35
+        ]
+      ],
+      "planet": "Moon",
+      "day": "Monday",
+      "metal": "Silver"
+    }
+  },
+  "intents": {
+    "wealth": {
+      "sephirah": "Chesed",
+      "planet": "Jupiter",
+      "square": 4,
+      "incense": "Saffron",
+      "color": "Blue"
+    },
+    "strength": {
+      "sephirah": "Geburah",
+      "planet": "Mars",
+      "square": 5,
+      "incense": "Dragon's Blood",
+      "color": "Red"
+    },
+    "love": {
+      "sephirah": "Netzach",
+      "planet": "Venus",
+      "square": 7,
+      "incense": "Rose",
+      "color": "Green"
+    },
+    "wisdom": {
+      "sephirah": "Chokmah",
+      "planet": "Mercury",
+      "square": 8,
+      "incense": "Frankincense",
+      "color": "Silver"
+    },
+    "protection": {
+      "sephirah": "Binah",
+      "planet": "Saturn",
+      "square": 3,
+      "incense": "Myrrh",
+      "color": "Black"
+    },
+    "glory": {
+      "sephirah": "Tiphereth",
+      "planet": "Sun",
+      "square": 6,
+      "incense": "Cinnamon",
+      "color": "Gold"
+    },
+    "foundation": {
+      "sephirah": "Yesod",
+      "planet": "Moon",
+      "square": 9,
+      "incense": "Jasmine",
+      "color": "Purple"
+    },
+    "crown": {
+      "sephirah": "Kether",
+      "planet": "Neptune",
+      "square": 100,
+      "incense": "Amber",
+      "color": "White"
+    }
+  }
+}

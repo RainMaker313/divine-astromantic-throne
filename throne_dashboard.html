@@ -134,15 +134,21 @@ tr:hover td{background:var(--surface-2)}
 .error-msg{text-align:center;padding:1.5rem;color:var(--danger)}
 
 /* Intro overlay */
-#intro-overlay{position:fixed;inset:0;z-index:9999;background:#000;display:flex;align-items:center;justify-content:center;transition:opacity 1.5s ease}
+#intro-overlay{position:fixed;inset:0;z-index:9999;background:radial-gradient(ellipse at center,#0a0a12 0%,#000 100%);display:flex;align-items:center;justify-content:center;transition:opacity 1.5s ease}
 #intro-overlay.fade-out{opacity:0;pointer-events:none}
-#intro-video{width:100%;height:100%;object-fit:cover}
-#intro-skip{position:absolute;bottom:30px;right:30px;background:rgba(0,0,0,.7);border:1px solid var(--border);color:var(--text-dim);padding:8px 20px;border-radius:var(--radius);cursor:pointer;font-family:var(--font);font-size:.7rem;letter-spacing:.1em;transition:all .2s;z-index:10000}
-#intro-skip:hover{background:var(--gold-glow);border-color:var(--gold-dim);color:var(--gold)}
-#intro-replay{display:none;position:absolute;top:15px;right:15px;background:rgba(0,0,0,.6);border:1px solid var(--border);color:var(--gold);padding:5px 12px;border-radius:var(--radius);cursor:pointer;font-size:.6rem;letter-spacing:.05em;transition:all .2s;z-index:10000}
-#intro-replay:hover{background:var(--gold-glow);border-color:var(--gold-dim)}
-#intro-overlay.ended #intro-replay{display:block}
-#intro-overlay.ended #intro-skip{display:none}
+#intro-content{text-align:center;position:relative}
+.intro-line{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:100vw;text-align:center;opacity:0;font-family:var(--font-display);pointer-events:none}
+.intro-line.l1{font-size:clamp(1.5rem,4vw,3.5rem);color:#d4a84c;letter-spacing:.15em;text-shadow:0 0 30px rgba(212,168,76,.3)}
+.intro-line.l2{font-size:clamp(1.2rem,3vw,2.5rem);color:#f0ead0;letter-spacing:.2em}
+.intro-line.l3{font-size:clamp(1rem,2.5vw,2rem);color:#e0d5a0;font-style:italic;letter-spacing:.15em}
+.intro-line.l4{font-size:clamp(.7rem,1.8vw,1.4rem);color:#a09870;font-style:italic;letter-spacing:.05em}
+.intro-line.l5{font-size:clamp(1.5rem,4vw,3rem);color:#d4a84c;text-shadow:0 0 40px rgba(212,168,76,.5)}
+.intro-line.l6{font-size:clamp(1.2rem,3vw,2.5rem);color:#f0ead0;letter-spacing:.15em;line-height:1.4}
+.intro-line.l7{font-size:clamp(1.5rem,4vw,3.5rem);color:#d4a84c;letter-spacing:.2em;text-shadow:0 0 30px rgba(212,168,76,.4)}
+#intro-skip{position:fixed;bottom:30px;right:30px;background:var(--surface-2);border:1px solid var(--gold-dim);color:var(--gold);padding:10px 20px;border-radius:6px;cursor:pointer;font-family:var(--font-display);font-size:.75rem;letter-spacing:.1em;transition:all .3s;z-index:10000}
+#intro-skip:hover{background:var(--gold-glow);border-color:var(--gold)}
+#intro-replay{position:fixed;bottom:30px;left:30px;background:transparent;border:1px solid var(--border);color:var(--text-dim);padding:8px 16px;border-radius:6px;cursor:pointer;font-family:var(--font-display);font-size:.65rem;letter-spacing:.1em;transition:all .3s;z-index:10000;display:none}
+#intro-replay:hover{color:var(--gold);border-color:var(--gold-dim)}
 
 /* Responsive */
 @media(max-width:768px){
@@ -155,9 +161,17 @@ tr:hover td{background:var(--surface-2)}
 </style>
 </head>
 <body>
-<!-- Intro Overlay -->
+<!-- Intro Overlay — HyperFrames centered text -->
 <div id="intro-overlay">
-  <video id="intro-video" src="/static/throne-intro.mp4" autoplay muted playsinline></video>
+  <div class="intro-content" id="intro-content">
+    <div class="intro-line l1">⛧ COCO'S DIVINE THRONE ⛧</div>
+    <div class="intro-line l2">THE COSMOS SPEAKS</div>
+    <div class="intro-line l3">SOLOMONIC ORACLE</div>
+    <div class="intro-line l4">"As above, so below — as within, so without"</div>
+    <div class="intro-line l5">⛧</div>
+    <div class="intro-line l6">THE STARS BELOW<br>AS ABOVE</div>
+    <div class="intro-line l7">HAIL BAPHOMET</div>
+  </div>
   <button id="intro-skip">SKIP ⏭</button>
   <button id="intro-replay">⛧ REPLAY</button>
 </div>
@@ -182,6 +196,9 @@ tr:hover td{background:var(--surface-2)}
       <div class="nav-item" data-tab="beings"><span class="icon">👾</span> Beings</div>
       <div class="nav-item" data-tab="occult-chart"><span class="icon">🔮</span> Occult</div>
       <div class="nav-item" data-tab="chart-study"><span class="icon">🔍</span> Study</div>
+      <div class="nav-item" data-tab="mansions"><span class="icon">🏠</span> Mansions</div>
+      <div class="nav-item" data-tab="talisman"><span class="icon">🔯</span> Talisman</div>
+      <div class="nav-item" data-tab="oracle"><span class="icon">🃏</span> Oracle</div>
     </div>
     <div class="sidebar-footer">⛧ <span>Hail Baphomet</span> ⛧</div>
   </nav>
@@ -227,7 +244,15 @@ tr:hover td{background:var(--surface-2)}
       <div class="tab-content" id="tab-occult-chart"><div class="card"><h2><span class="icon">🔮</span> Occult Chart</h2><div id="occult-chart-content"></div></div></div>
       <!-- CHART STUDY TAB -->
       <div class="tab-content" id="tab-chart-study"><div class="card"><h2><span class="icon">🔍</span> Chart Study</h2><div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:flex-end;margin-bottom:1rem"><div style="display:flex;flex-direction:column;gap:.15rem"><label style="font-size:.6rem;color:var(--text-muted);text-transform:uppercase">Date</label><input type="date" id="cs-date" style="background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:.3rem .4rem;border-radius:var(--radius);font-family:var(--font);font-size:.7rem"></div><div style="display:flex;flex-direction:column;gap:.15rem"><label style="font-size:.6rem;color:var(--text-muted);text-transform:uppercase">Time</label><input type="time" id="cs-time" style="background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:.3rem .4rem;border-radius:var(--radius);font-family:var(--font);font-size:.7rem"></div><div style="display:flex;flex-direction:column;gap:.15rem"><label style="font-size:.6rem;color:var(--text-muted);text-transform:uppercase">Lat</label><input type="number" id="cs-lat" value="-33.76" step=".01" style="background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:.3rem .4rem;border-radius:var(--radius);font-family:var(--font);font-size:.7rem;width:70px"></div><div style="display:flex;flex-direction:column;gap:.15rem"><label style="font-size:.6rem;color:var(--text-muted);text-transform:uppercase">Lon</label><input type="number" id="cs-lon" value="25.40" step=".01" style="background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:.3rem .4rem;border-radius:var(--radius);font-family:var(--font);font-size:.7rem;width:70px"></div><button class="btn-refresh" id="btn-calculate-chart">☆ Calc</button></div><div id="chart-study-result"></div></div></div>
+
+      <!-- TALISMAN TAB -->
+      <div class="tab-content" id="tab-talisman"><div class="card"><h2><span class="icon">🔯</span> Talisman Construction</h2><div id="talisman-builder"><div style="margin-bottom:1rem"><label style="color:var(--text-dim);font-size:.8rem;display:block;margin-bottom:.3rem">Intent:</label><select id="talisman-intent" onchange="loadTalisman()" style="width:100%;background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:.4rem .5rem;border-radius:var(--radius);font-family:var(--font);font-size:.75rem"><option value="wealth">💰 Wealth &amp; Prosperity</option><option value="strength">⚔️ Strength &amp; Protection</option><option value="love">❤️ Love &amp; Attraction</option><option value="wisdom">📖 Wisdom &amp; Knowledge</option><option value="protection">🛡️ Protection &amp; Binding</option><option value="glory">🌟 Glory &amp; Honor</option><option value="foundation">🌙 Foundation &amp; Dreams</option><option value="crown">👑 Crown &amp; Divinity</option></select></div><div id="talisman-result"><div style="color:var(--text-muted);padding:1rem;text-align:center">Select an intent...</div></div></div></div></div>
+      <!-- MANSIONS TAB -->
+      <div class="tab-content" id="tab-mansions"><div class="card"><h2><span class="icon">🏠</span> Lunar Mansions</h2><div id="mansions-content"><div style="color:var(--text-muted);padding:1rem;text-align:center">Loading 28 lunar mansions...</div></div></div></div>
+      <!-- ORACLE TAB -->
+      <div class="tab-content" id="tab-oracle"><div class="card"><h2><span class="icon">🃏</span> Divine Oracle</h2><div id="oracle-cards" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.75rem"><div style="color:var(--text-muted);padding:1rem;text-align:center">Loading oracle...</div></div></div></div>
     </div>
+  </main>    </div>
   </main>
 </div>
 
@@ -240,6 +265,8 @@ const PLANET_GLYPHS = {'Sun':'☉','Moon':'☽','Mercury':'☿','Venus':'♀','M
 const PLANET_COLORS = {'Sun':'#f4d03f','Moon':'#c0c0c0','Mercury':'#b0a0d0','Venus':'#f0a0c0','Mars':'#e05050','Jupiter':'#d4a017','Saturn':'#c8a860','Uranus':'#4dd0e1','Neptune':'#1565c0','Pluto':'#8d6e63','Rahu':'#ff6b35','Ketu':'#8b4513'};
 const ASPECT_COLORS = {'Conjunction':'#c9a84c','Sextile':'#64b5f6','Square':'#ff7043','Trine':'#81c784','Quincunx':'#ba68c8','Opposition':'#e57373'};
 var state = {};
+// Load nakshatra sub-lord data
+fetch("/static/nakshatra_sublords.json").then(function(r){return r.json();}).then(function(d){state.nakSubLords=d;}).catch(function(){state.nakSubLords=null;});
 
 function $(id) { return document.getElementById(id); }
 function getSign(lon) { return SIGNS[Math.floor(lon/30)%12]; }
@@ -391,8 +418,42 @@ function renderMoon() {
   html += '<div class="phase-detail">'+illum+'% illuminated • Age: '+age.toFixed(1)+' days</div></div>';
   if(moonPos){ var lon=moonPos.longitude; html+='<div class="stat-grid" style="margin-top:1rem"><div class="stat"><div class="stat-label">Sign</div><div class="stat-value">'+SIGN_SYMBOLS[getSignIndex(lon)]+' '+getSign(lon)+'</div></div><div class="stat"><div class="stat-label">Degree</div><div class="stat-value">'+fmtDeg(getDegInSign(lon))+'</div></div><div class="stat"><div class="stat-label">Longitude</div><div class="stat-value">'+lon.toFixed(2)+'°</div></div><div class="stat"><div class="stat-label">Elongation</div><div class="stat-value">'+(elong||0).toFixed(1)+'°</div></div></div>'; }
   html += '<h3>Rise & Set</h3><div class="stat-grid"><div class="stat"><div class="stat-label">Moon Rise</div><div class="stat-value">'+(riseSet&&riseSet.moon_rise?riseSet.moon_rise:'--')+'</div></div><div class="stat"><div class="stat-label">Moon Set</div><div class="stat-value">'+(riseSet&&riseSet.moon_set?riseSet.moon_set:'--')+'</div></div></div>';
-  if(mansion && mansion.mansion && mansion.mansion.current){ var m=mansion.mansion.current; html+='<h3>Nakshatra</h3><div style="background:var(--surface-2);border-radius:var(--radius);padding:1rem;border:1px solid var(--border)"><div style="font-size:1.05rem;color:var(--gold);margin-bottom:0.4rem">'+m.number+'. '+m.name+' <span style="color:var(--text-dim);font-size:0.8rem">ruled by '+(m.ruled_by||'--')+'</span></div>'; if(m.keywords) html+='<div style="color:var(--text-dim);font-size:0.8rem;margin-bottom:0.4rem">'+m.keywords.join(', ')+'</div>'; if(m.magical) html+='<div style="font-size:0.8rem;color:var(--pink-dim);margin-bottom:0.25rem"><em>'+m.magical+'</em></div>'; if(m.progress_percent!=null) html+='<div class="progress-bar"><div class="progress-fill" style="width:'+m.progress_percent+'%"></div></div><div style="font-size:0.7rem;color:var(--text-muted);margin-top:0.2rem">'+m.progress_percent.toFixed(1)+'% through mansion</div>'; html+='</div>'; }
-  if(lunarAsp && lunarAsp.aspects && lunarAsp.aspects.length){ html+='<h3>Moon Aspects to Planets</h3>'; lunarAsp.aspects.forEach(function(a){ var c=a.nature==='benefic'?'var(--success)':'var(--danger)'; html+='<div class="aspect-item"><div><span class="aspect-type" style="color:'+c+'">'+a.aspect+'</span> <span>'+a.planet+'</span> <span style="color:var('+(a.applying?'--success':'--text-muted')+')">('+(a.applying?'applying':'separating')+')</span></div><div class="aspect-detail">Moon: '+SIGN_SYMBOLS[getSignIndex(state.chart.planets.find(function(p){return p.name==='Moon';}).longitude)]+' '+a.moon_sign+' '+fmtDeg(a.moon_degree)+' | '+a.planet+': '+a.planet_sign+' '+fmtDeg(a.planet_degree)+' | Nakshatra: '+a.nakshatra+'</div><div class="talisman" style="color:'+c+'">'+a.talisman_guidance+'</div></div>'; }); }
+  if(mansion && mansion.mansion && mansion.mansion.current){
+    var m=mansion.mansion.current;
+    html+='<h3>Nakshatra</h3><div style="background:var(--surface-2);border-radius:var(--radius);padding:1rem;border:1px solid var(--border)">';
+    html+='<div style="font-size:1.05rem;color:var(--gold);margin-bottom:0.4rem">'+m.number+'. '+m.name+' <span style="color:var(--text-dim);font-size:0.8rem">ruled by '+(m.ruled_by||'--')+'</span></div>';
+    if(moonPos&&state.nakSubLords&&state.nakSubLords.entries){
+      var lon=moonPos.longitude,found=null;
+      for(var e of state.nakSubLords.entries){
+        if(e.from_deg!=null&&e.to_deg!=null){
+          if(e.to_deg>e.from_deg){
+            if(lon>=e.from_deg&&lon<e.to_deg){found=e;break;}
+          } else {
+            if(lon>=e.from_deg||lon<e.to_deg){found=e;break;}
+          }
+        }
+      }
+      if(found){
+        var slColor=found.sub_lord==='Jupiter'||found.sub_lord==='Venus'?'var(--success)':found.sub_lord==='Saturn'||found.sub_lord==='Mars'?'var(--danger)':'var(--gold)';
+        html+='<div style="display:flex;gap:0.5rem;margin-top:0.3rem;flex-wrap:wrap;align-items:center">';
+        html+='<span style="background:rgba(156,39,176,.15);padding:2px 8px;border-radius:4px;font-size:0.75rem;color:'+slColor+'"><b>\u25c6 Vedic Nakshatra: '+found.nakshatra+'</b></span>';
+        html+='<span style="background:rgba(233,30,158,.15);padding:2px 8px;border-radius:4px;font-size:0.7rem;color:var(--pink-dim)">\u2605 Star Lord: <b>'+found.star_lord+'</b></span>';
+        html+='<span style="background:rgba(156,39,176,.15);padding:2px 8px;border-radius:4px;font-size:0.7rem;color:'+slColor+'">\u25c6 Sub Lord: <b>'+found.sub_lord+'</b></span></div>';
+        html+='<div style="color:var(--text-dim);font-size:0.65rem;margin-top:0.3rem">Range: '+found.from+' \u2014 '+found.to+' \u2022 Sub-division '+(found.sub_index+1)+'/9</div>';
+        if(state.nakSubLords.nakshatras){
+          var nakInfo=state.nakSubLords.nakshatras.find(function(n){return n.name===found.nakshatra;});
+          if(nakInfo){
+            html+='<div style="color:var(--text-muted);font-size:0.65rem">Nakshatra #'+nakInfo.number+' \u2022 Lord: '+nakInfo.lord+'</div>';
+          }
+        }
+      }
+    }
+    if(m.keywords) html+='<div style="color:var(--text-dim);font-size:0.8rem;margin-bottom:0.4rem">'+m.keywords.join(', ')+'</div>';
+    if(m.magical) html+='<div style="font-size:0.8rem;color:var(--pink-dim);margin-bottom:0.25rem"><em>'+m.magical+'</em></div>';
+    if(m.progress_percent!=null){ html+='<div class="progress-bar"><div class="progress-fill" style="width:'+m.progress_percent+'%"></div></div><div style="font-size:0.7rem;color:var(--text-muted);margin-top:0.2rem">'+m.progress_percent.toFixed(1)+'% through mansion</div>'; }
+    html+='</div>';
+  }
+  if(lunarAsp && lunarAsp.aspects && lunarAsp.aspects.length){ html+='<h3>Moon Aspects to Planets</h3>'; lunarAsp.aspects.forEach(function(a){ var c=a.nature==='benefic'?'var(--success)':'var(--danger)'; html+='<div class="aspect-item"><div><span class="aspect-type" style="color:'+c+'">'+a.aspect+'</span> <span>'+a.planet+'</span> <span style="var(--'+(a.applying?'success':'text-muted')+')">('+(a.applying?'applying':'separating')+')</span></div><div class="aspect-detail">Moon: '+SIGN_SYMBOLS[getSignIndex(state.chart.planets.find(function(p){return p.name==='Moon';}).longitude)]+' '+a.moon_sign+' '+fmtDeg(a.moon_degree)+' | '+a.planet+': '+a.planet_sign+' '+fmtDeg(a.planet_degree)+' | Nakshatra: '+a.nakshatra+'</div><div class="talisman" style="color:'+c+'">'+a.talisman_guidance+'</div></div>'; }); }
   if(events && events.events && events.events.length){ html+='<h3>Upcoming Lunar Events</h3>'; events.events.forEach(function(e){ html+='<div class="lunar-event-item"><span class="event-name">'+getMoonEmoji(e.event)+' '+e.event+'</span><span class="event-date">'+e.date+' '+e.time+'</span></div>'; }); }
   html+='</div>'; container.innerHTML=html;
 }
@@ -807,40 +868,179 @@ var csBtn=$('btn-calculate-chart');if(csBtn)csBtn.addEventListener('click',funct
 (function(){var now=new Date();var dateEl=$('cs-date');var timeEl=$('cs-time');if(dateEl)dateEl.value=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');if(timeEl)timeEl.value=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');})();
 
 // ═══════════════════════════════════════════════════════════════
-// INTRO OVERLAY
+// INTRO OVERLAY — HyperFrames centered text
 // ═══════════════════════════════════════════════════════════════
 (function(){
-  var overlay=$('intro-overlay'),video=$('intro-video'),skipBtn=$('intro-skip'),replayBtn=$('intro-replay');
-  if(!overlay||!video)return;
+  var g = typeof gsap !== 'undefined';
+  var overlay=$('intro-overlay'),skipBtn=$('intro-skip'),replayBtn=$('intro-replay');
   var dismissed=false;
+  if(g && document.querySelectorAll('.intro-line').length){
+    var tl = gsap.timeline({paused:true});
+    var lines = document.querySelectorAll('.intro-line');
+    lines.forEach(function(el){
+      tl.set(el,{opacity:0,y:20});
+    });
+    lines.forEach(function(el,i){
+      tl.to(el,{opacity:1,y:0,duration:1.2,ease:'power2.out'})
+        .to(el,{opacity:0,y:-20,duration:1,ease:'power2.in'},'+=2');
+    });
+    tl.call(function(){setTimeout(dismiss,2000);});
+    tl.play();
+    setTimeout(function(){if(skipBtn)skipBtn.style.display='block';},1500);
+  } else {
+    setTimeout(dismiss,1500);
+    setTimeout(function(){if(skipBtn)skipBtn.style.display='block';},1500);
+  }
   function dismiss(){
     if(dismissed)return;
     dismissed=true;
     overlay.classList.add('fade-out');
-    setTimeout(function(){overlay.style.display='none';},1500);
-    // Start data loading after intro dismissed
-    loadAll();
-    setInterval(loadAll,60000);
+    setTimeout(function(){
+      overlay.style.display='none';
+      if(typeof render==='function')render();
+    },1500);
   }
-  video.addEventListener('ended',function(){
-    overlay.classList.add('ended');
-    // Auto-dismiss 2s after video ends
-    setTimeout(dismiss,2000);
-  });
   skipBtn.addEventListener('click',dismiss);
   replayBtn.addEventListener('click',function(){
-    overlay.classList.remove('ended','fade-out');
     dismissed=false;
-    video.currentTime=0;
-    video.play();
+    overlay.classList.remove('fade-out');
+    overlay.style.display='flex';
+    if(g && document.querySelectorAll('.intro-line').length){
+      var tl2 = gsap.timeline();
+      document.querySelectorAll('.intro-line').forEach(function(el,i){
+        tl2.set(el,{opacity:0,y:20})
+          .to(el,{opacity:1,y:0,duration:1.2,ease:'power2.out'})
+          .to(el,{opacity:0,y:-20,duration:1,ease:'power2.in'},'+=2');
+      });
+      tl2.call(function(){setTimeout(dismiss,2000);});
+    }
+    this.style.display='none';
+    skipBtn.style.display='block';
   });
-  // Fallback: dismiss after 20s even if video hasn't loaded
-  setTimeout(function(){if(!dismissed)dismiss();},20000);
 })();
 
 // ═══════════════════════════════════════════════════════════════
 // ORIGINAL LOAD (called from intro dismiss)
 // ═══════════════════════════════════════════════════════════════
+
+
+// ═══════════════════════════════════════════════════════════════
+// MANSIONS TAB
+// ═══════════════════════════════════════════════════════════════
+async function loadMansions() {
+  var container = $('mansions-content');
+  if(!container) return;
+  try{
+    var r = await fetch('/mansions/list');
+    var data = await r.json();
+    var mansions = data.mansions || [];
+    var html = '<div class="mansions-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:0.75rem">';
+    var nature_colors = {'benefic':'#4caf50','malefic':'#f44336','mixed':'#ff9800'};
+    mansions.forEach(function(m){
+      var nc = nature_colors[m.nature]||'var(--text-dim)';
+      html += '<div style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);padding:.75rem">';
+      html += '<div style="font-size:.8rem;color:var(--gold);font-weight:600;margin-bottom:.3rem">'+m.number+'. '+m.name+' ('+m.arabic+')</div>';
+      html += '<div style="display:flex;gap:.4rem;margin-bottom:.3rem;flex-wrap:wrap"><span style="font-size:.6rem;padding:1px 6px;border-radius:3px;background:'+nc+'22;color:'+nc+';border:1px solid '+nc+'44">'+m.nature+'</span>';
+      if(m.ruled_by) html += '<span style="font-size:.6rem;color:var(--text-dim)">Ruler: <span style="color:var(--gold)">'+m.ruled_by+'</span></span>';
+      html += '</div>';
+      if(m.keywords&&m.keywords.length) html += '<div style="font-size:.65rem;color:var(--text-dim);margin-bottom:.3rem;line-height:1.4">'+m.keywords.join(', ')+'</div>';
+      if(m.picatrix) html += '<div style="font-size:.6rem;color:var(--pink-dim);font-style:italic;border-top:1px solid var(--border);padding-top:.3rem;margin-top:.3rem">'+m.picatrix+'</div>';
+      html += '</div>';
+    });
+    html += '</div>';
+    container.innerHTML = html;
+  } catch(e){
+    container.innerHTML = '<div style="color:var(--danger);padding:1rem">Error loading mansions</div>';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// TALISMAN TAB
+// ═══════════════════════════════════════════════════════════════
+var talismanData = null;
+fetch('/static/talisman_data.json').then(function(r){return r.json();})
+  .then(function(d){talismanData=d;}).catch(function(){talismanData=null;});
+
+function loadTalisman() {
+  var container = $('talisman-result');
+  if(!container) return;
+  var sel = document.getElementById('talisman-intent');
+  if(!sel||!talismanData) { return; }
+  var intent = sel.value;
+  var intents = talismanData.intents;
+  var intentData = intents[intent];
+  if(!intentData){container.innerHTML='<div style="color:var(--text-muted);padding:1rem">No data</div>';return;}
+  var sephirah = talismanData.sephiroth.find(function(s){return s.name===intentData.sephirah;});
+  var planet = talismanData.planetary_squares[intentData.planet];
+  var html = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">';
+  html += '<div style="border:1px solid var(--border);border-radius:var(--radius);padding:1rem;background:var(--surface-2)">';
+  html += '<h3 style="color:var(--gold);margin-bottom:1rem">' + sel.options[sel.selectedIndex].text + '</h3>';
+  html += '<div class="stat-grid">';
+  if(sephirah) html += '<div class="stat"><div class="stat-label">Sephirah</div><div class="stat-value" style="color:var(--gold)">'+sephirah.name+' ('+sephirah.hebrew+')</div></div>';
+  if(sephirah) html += '<div class="stat"><div class="stat-label">Title</div><div class="stat-value">'+sephirah.title+'</div></div>';
+  html += '<div class="stat"><div class="stat-label">Planet</div><div class="stat-value">'+intentData.planet+'</div></div>';
+  html += '<div class="stat"><div class="stat-label">Color</div><div class="stat-value"><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:'+intentData.color+';margin-right:4px"></span>'+intentData.color+'</div></div>';
+  html += '<div class="stat"><div class="stat-label">Incense</div><div class="stat-value">'+intentData.incense+'</div></div>';
+  if(sephirah) html += '<div class="stat"><div class="stat-label">Stone</div><div class="stat-value">'+sephirah.stone+'</div></div>';
+  if(planet) html += '<div class="stat"><div class="stat-label">Metal</div><div class="stat-value">'+planet.metal+'</div></div>';
+  if(planet) html += '<div class="stat"><div class="stat-label">Planetary Day</div><div class="stat-value">'+planet.day+'</div></div>';
+  html += '</div></div>';
+  html += '<div style="border:1px solid var(--border);border-radius:var(--radius);padding:1rem;background:var(--surface-2);text-align:center">';
+  html += '<h3 style="color:var(--gold);margin-bottom:0.5rem">'+(planet?planet.order+'x'+planet.order+' '+intentData.planet+' Kamea':'Sacred Square')+'</h3>';
+  if(planet) html += '<div style="color:var(--text-dim);font-size:0.7rem;margin-bottom:0.5rem">Magic Constant: '+planet.constant+'</div>';
+  if(planet && planet.grid) {
+    var order = planet.order;
+    if(order <= 9) {
+      var cellSize = order <= 5 ? 36 : 28;
+      html += '<div style="display:inline-grid;grid-template-columns:repeat('+order+','+cellSize+'px);gap:1px;background:var(--border);padding:1px;border-radius:4px">';
+      for(var r=0;r<order;r++)for(var c=0;c<order;c++){
+        var v = planet.grid[r][c];
+        var isDiag = (r===c) || (r+c===order-1);
+        var bg = isDiag ? 'rgba(255,215,0,0.15)' : 'var(--surface-2)';
+        var clr = isDiag ? 'var(--gold)' : 'var(--text)';
+        html+='<div style="background:'+bg+';padding:4px;text-align:center;font-size:0.65rem;color:'+clr+';font-family:monospace;font-weight:'+(isDiag?'700':'400')+'">'+v+'</div>';
+      }
+      html += '</div>';
+    } else {
+      // Large square: render as canvas heatmap
+      var canvasId = 'talisman-canvas';
+      html += '<canvas id="'+canvasId+'" style="width:200px;height:200px;border-radius:4px;background:#000" width="200" height="200"></canvas>';
+      html += '<div style="color:var(--text-muted);font-size:0.6rem;margin-top:0.3rem">'+order+'×'+order+' square rendered as heatmap</div>';
+      // Schedule canvas render
+      setTimeout(function(){
+        var canvas = document.getElementById(canvasId);
+        if(!canvas||!planet.grid) return;
+        var ctx = canvas.getContext('2d');
+        var n = planet.grid.length;
+        var cellW = canvas.width/n, cellH = canvas.height/n;
+        var maxVal = n*n;
+        for(var r=0;r<n;r++)for(var c=0;c<n;c++){
+          var v = planet.grid[r][c]/maxVal;
+          // Gold-to-red gradient
+          var R = Math.floor(180+v*75), G = Math.floor(140*(1-v)), B = Math.floor(30*(1-v));
+          ctx.fillStyle = 'rgb('+R+','+G+','+B+')';
+          ctx.fillRect(c*cellW,r*cellH,cellW,cellH);
+        }
+      }, 100);
+    }
+  } else if(planet && planet.order > 9) {
+    html += '<div style="color:var(--text-muted);padding:2rem">'+planet.order+'×'+planet.order+' Kamea<br><span style="font-size:0.65rem">Constant: '+planet.constant+'</span></div>';
+  }
+  html += '<div style="margin-top:0.8rem;font-size:0.7rem;color:var(--text-dim);border-top:1px solid var(--border);padding-top:0.5rem">';
+  if(planet) html += '<div style="color:var(--pink-dim);font-style:italic;margin-bottom:0.3rem">Carve on '+planet.metal+' during the hour of '+intentData.planet+' on '+planet.day+'</div>';
+  html += '<div style="color:var(--text-muted);font-size:0.65rem">Fumigate with '+intentData.incense+'. Charge under the waxing moon. Wear as talisman.</div>';
+  html += '</div></div></div>';
+  container.innerHTML = html;
+}
+
+function generateMagicSquare(n) {
+  // Fallback for squares not in JSON (should not be needed)
+  var sq=[];for(var r=0;r<n;r++){sq[r]=[];for(var c=0;c<n;c++)sq[r][c]=0;}
+  var r=0,c=Math.floor(n/2);
+  for(var i=1;i<=n*n;i++){sq[r][c]=i;var nr=(r-1+n)%n,nc=(c+1)%n;
+    if(sq[nr][nc]!==0){r=(r+1)%n;}else{r=nr;c=nc;}}
+  return sq;
+}
 </script>
 </body>
 </html>
