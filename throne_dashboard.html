@@ -252,7 +252,17 @@ tr:hover td{background:var(--surface-2)}
       <div class="tab-content" id="tab-magic-square-kings"><div class="card"><h2><span class="icon">🜶</span> Magic Square Kings</h2><div id="magic-square-kings-content"></div></div></div>
       <!-- PLANETARY HOURS TALISMANS TAB -->
       <div class="tab-content" id="tab-planetary-hours-talismans"><div class="card"><h2><span class="icon">🕐</span> Planetary Hours Talismans</h2><div id="planetary-hours-talismans-content"></div></div></div>
-            <div class="tab-content" id="tab-beings"><div class="card"><h2><span class="icon">👾</span> Planetary Beings</h2><div id="beings-content"></div></div></div>
+      <div class="tab-content" id="tab-beings">
+        <div class="card"><h2><span class="icon">👾</span> Planetary Beings &amp; Current Hour Ruler</h2><div id="beings-content"></div></div>
+        <div class="card"><h2><span class="icon">👼</span> Seven Celestial Angels (ملائكة السبعة السماوية)</h2><p style="color:var(--text-dim);font-size:.7rem;margin-bottom:.5rem">The seven primary angels governing the seven heavens, each with a seal (خاتم). Source: Kitab Al-Ajnas.</p><div id="celestial-angels-content"></div></div>
+        <div class="card"><h2><span class="icon">⚔️</span> Seven Terrestrial Jinn Kings (ملوك الأرضية)</h2><p style="color:var(--text-dim);font-size:.7rem;margin-bottom:.5rem">The seven earthly jinn kings, each ruling a day of the week. Source: Kitab Al-Ajnas.</p><div id="terrestrial-kings-content"></div></div>
+        <div class="card"><h2><span class="icon">🏛️</span> Seven Heavens (السموات السبعة)</h2><p style="color:var(--text-dim);font-size:.7rem;margin-bottom:.5rem">Each heaven ruled by a planet, with divine names that created it. Source: Kitab Al-Ajnas.</p><div id="heavens-content"></div></div>
+        <div class="card"><h2><span class="icon">✋</span> Four Archangels of Solomon's Temple (البلاطة)</h2><p style="color:var(--text-dim);font-size:.7rem;margin-bottom:.5rem">The four archangels who stood on Solomon's temple tablet when he made covenant with the spirits.</p><div id="archangels-content"></div></div>
+        <div class="card"><h2><span class="icon">📿</span> Divine Names (أسماء الله الحسنى)</h2><p style="color:var(--text-dim);font-size:.7rem;margin-bottom:.5rem">The sacred divine names and their powers. Source: Kitab Al-Ajnas.</p><div id="divine-names-content"></div></div>
+        <div class="card"><h2><span class="icon">🔮</span> Solomon's Artifacts</h2><p style="color:var(--text-dim);font-size:.7rem;margin-bottom:.5rem">Artifacts belonging to Solomon (عليه السلام) mentioned in the book.</p><div id="artifacts-content"></div></div>
+        <div class="card"><h2><span class="icon">👻</span> Spirit Types (أنواع الأرواح)</h2><div id="spirit-types-content"></div></div>
+        <div class="card"><h2><span class="icon">📜</span> Prophets &amp; Figures</h2><div id="prophets-content"></div></div>
+      </div>
       <!-- OCCULT CHART TAB -->
       <div class="tab-content" id="tab-occult-chart"><div class="card"><h2><span class="icon">🔮</span> Occult Chart</h2><div id="occult-chart-content"></div></div></div>
       <!-- CHART STUDY TAB -->
@@ -379,10 +389,12 @@ async function loadAll() {
       fetchJSON(API+'/planetary-hours-talismans'),
       fetchJSON(API+'/arabic-parts'), fetchJSON(API+'/occult-chart').catch(function(){return null}),
       fetchJSON(API+'/moon-rise-set'), fetchJSON(API+'/lunar-events'),
-      fetchJSON(API+'/lunar-aspects'), fetchJSON(API+'/heliocentric')
+      fetchJSON(API+'/lunar-aspects'), fetchJSON(API+'/heliocentric'),
+      fetchJSON(API+'/kitab-al-ajnas-names').catch(function(){return null}),
+      fetchJSON(API+'/occult-encyclopedia').catch(function(){return null})
     ]);
-    const [chart, hours, aspects, now, houses, dignities, lunarMansion, fixedStars, electional, beings, jinnCommanders, tahatil, magicSquareKings, planetaryHoursTalismans, arabicParts, occultChart, moonRiseSet, lunarEvents, lunarAspects, heliocentric] = results.map(function(r){return r.value||null;});
-    state = { chart, hours, aspects: aspects && (aspects.aspects || aspects), now, houses, dignities, lunarMansion, fixedStars, electional, beings, arabicParts, occultChart, moonRiseSet, lunarEvents, lunarAspects, heliocentric, jinnCommanders, tahatil, magicSquareKings, planetaryHoursTalismans };
+    const [chart, hours, aspects, now, houses, dignities, lunarMansion, fixedStars, electional, beings, jinnCommanders, tahatil, magicSquareKings, planetaryHoursTalismans, arabicParts, occultChart, moonRiseSet, lunarEvents, lunarAspects, heliocentric, kitabAlAjnasNames, occultEncyclopedia] = results.map(function(r){return r.value||null;});
+    state = { chart, hours, aspects: aspects && (aspects.aspects || aspects), now, houses, dignities, lunarMansion, fixedStars, electional, beings, arabicParts, occultChart, moonRiseSet, lunarEvents, lunarAspects, heliocentric, jinnCommanders, tahatil, magicSquareKings, planetaryHoursTalismans, kitabAlAjnasNames, occultEncyclopedia };
     render();
   } catch(e) { showError(e.message); }
 }
@@ -419,6 +431,7 @@ function render() {
   renderMagicSquareKings(magicSquareKings);
   renderPlanetaryHoursTalismans(planetaryHoursTalismans);
   renderOccultChart(occultChart);
+  if(state.kitabAlAjnasNames) renderAllBeings(state.kitabAlAjnasNames);
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -901,6 +914,147 @@ function renderPlanetaryHoursTalismans(data){
   el.innerHTML=h;
 }
 
+function loadBeings(){
+  // Load all beings data
+  if(!state.kitabAlAjnasNames) {
+    fetchJSON(API+'/kitab-al-ajnas-names').then(function(data){
+      state.kitabAlAjnasNames=data;
+      renderAllBeings(data);
+    }).catch(function(){});
+  } else {
+    renderAllBeings(state.kitabAlAjnasNames);
+  }
+  // Also load occult encyclopedia data
+  if(!state.occultEncyclopedia) {
+    fetchJSON(API+'/occult-encyclopedia').then(function(data){
+      state.occultEncyclopedia=data;
+      renderOccultEncyclopedia(data);
+    }).catch(function(){});
+  } else {
+    renderOccultEncyclopedia(state.occultEncyclopedia);
+  }
+}
+
+function renderAllBeings(data){
+  if(!data) return;
+  renderCelestialAngels(data);
+  renderTerrestrialKings(data);
+  renderHeavens(data);
+  renderArchangels(data);
+  renderDivineNames(data);
+  renderArtifacts(data);
+  renderSpiritTypes(data);
+  renderProphets(data);
+}
+
+function renderCelestialAngels(data){
+  var el=$('celestial-angels-content');if(!el)return;
+  var h='<div class="table-wrap"><table><tr><th>#</th><th>Angel (Arabic)</th><th>Angel (English)</th><th>Title</th><th>Position / Heaven</th><th>Seal Day</th></tr>';
+  if(data.seven_celestial_angels && data.seven_celestial_angels.angels){
+    data.seven_celestial_angels.angels.forEach(function(a,i){
+      h+='<tr><td>'+(i+1)+'</td><td style="color:var(--gold);font-size:.85rem">'+(a.name||'')+'</td><td>'+(a.title||'')+'</td><td>'+(a.position||'')+'</td><td>'+(a.seal_day||'')+'</td></tr>';
+    });
+  }
+  h+='</table></div>';
+  el.innerHTML=h;
+}
+
+function renderTerrestrialKings(data){
+  var el=$('terrestrial-kings-content');if(!el)return;
+  var h='<div class="table-wrap"><table><tr><th>#</th><th>King (Arabic)</th><th>King (English)</th><th>Day</th><th>Planet</th><th>Description</th></tr>';
+  if(data.seven_terrestrial_jinn_kings && data.seven_terrestrial_jinn_kings.kings){
+    data.seven_terrestrial_jinn_kings.kings.forEach(function(k,i){
+      h+='<tr><td>'+(i+1)+'</td><td style="color:var(--gold-dim);font-size:.85rem">'+(k.name||'')+'</td><td>'+(k.day||'')+'</td><td>'+(k.planet||'')+'</td><td>'+(k.description||'')+'</td></tr>';
+    });
+  }
+  h+='</table></div>';
+  el.innerHTML=h;
+}
+
+function renderHeavens(data){
+  var el=$('heavens-content');if(!el)return;
+  var h='<div class="table-wrap"><table><tr><th>Heaven</th><th>Arabic Name</th><th>Ruler (Planet)</th><th>Section</th></tr>';
+  if(data.seven_heavens && data.seven_heavens.heavens){
+    data.seven_heavens.heavens.forEach(function(he){
+      h+='<tr><td style="color:var(--gold)">'+he.number+'</td><td style="font-size:.85rem">'+he.name+'</td><td>'+he.ruler+'</td><td style="font-size:.7rem;color:var(--text-dim)">'+he.section+'</td></tr>';
+    });
+  }
+  h+='</table></div>';
+  el.innerHTML=h;
+}
+
+function renderArchangels(data){
+  var el=$('archangels-content');if(!el)return;
+  var h='<div class="stat-grid">';
+  if(data.four_archangels_of_solomons_temple && data.four_archangels_of_solomons_temple.archangels){
+    data.four_archangels_of_solomons_temple.archangels.forEach(function(a){
+      h+='<div class="stat" style="text-align:left"><div class="stat-label">'+a+'</div></div>';
+    });
+  }
+  h+='</div>';
+  h+='<p style="color:var(--text-dim);font-size:.7rem;margin-top:.5rem">These four archangels sat on Solomon\'s temple tablet (البلاطة) when he made covenant with the spirits.</p>';
+  el.innerHTML=h;
+}
+
+function renderDivineNames(data){
+  var el=$('divine-names-content');if(!el)return;
+  var h='';
+  if(data.divine_names && data.divine_names.names){
+    data.divine_names.names.forEach(function(n){
+      h+='<div class="card" style="margin-bottom:.5rem;padding:.6rem">';
+      h+='<div style="color:var(--gold);font-weight:600;margin-bottom:.3rem">'+n.name+'</div>';
+      if(n.power) h+='<div style="font-size:.7rem;color:var(--text-dim);margin-bottom:.3rem">Power: '+n.power+'</div>';
+      if(n.names_foreign) h+='<div style="font-size:.65rem;color:var(--text-muted);direction:ltr;margin-bottom:.2rem">'+n.names_foreign+'</div>';
+      if(n.names_arabic_meaning) h+='<div style="font-size:.7rem;color:var(--text-dim)">'+n.names_arabic_meaning+'</div>';
+      h+='</div>';
+    });
+  }
+  el.innerHTML=h;
+}
+
+function renderArtifacts(data){
+  var el=$('artifacts-content');if(!el)return;
+  var h='';
+  if(data.solomonic_artifacts && data.solomonic_artifacts.artifacts){
+    data.solomonic_artifacts.artifacts.forEach(function(a){
+      h+='<div class="stat" style="text-align:left;margin-bottom:.3rem">';
+      h+='<div class="stat-label">'+a.name+'</div>';
+      h+='<div class="stat-value small">'+a.description+'</div>';
+      h+='</div>';
+    });
+  }
+  el.innerHTML=h;
+}
+
+function renderSpiritTypes(data){
+  var el=$('spirit-types-content');if(!el)return;
+  var h='<div class="stat-grid">';
+  if(data.spirit_types && data.spirit_types.types){
+    data.spirit_types.types.forEach(function(t){
+      h+='<div class="stat" style="text-align:left"><div class="stat-label">'+t.name+'</div><div class="stat-value small">'+t.description+'</div></div>';
+    });
+  }
+  h+='</div>';
+  el.innerHTML=h;
+}
+
+function renderProphets(data){
+  var el=$('prophets-content');if(!el)return;
+  var h='<div class="table-wrap"><table><tr><th>Figure</th><th>Role / Significance</th></tr>';
+  if(data.prophets_mentioned && data.prophets_mentioned.figures){
+    data.prophets_mentioned.figures.forEach(function(p){
+      h+='<tr><td style="color:var(--gold-dim)">'+p.name+'</td><td>'+p.role+'</td></tr>';
+    });
+  }
+  h+='</table></div>';
+  el.innerHTML=h;
+}
+
+function renderOccultEncyclopedia(data){
+  // This renders the zodiac/planetary angel tables from the Occult Encyclopedia
+  // We'll add this to a new section or expand the existing beings content
+}
+
 function loadSolomonicSeals(){
   var container=$('solomonic-seals-content');
   if(!container) return;
@@ -1026,6 +1180,7 @@ document.addEventListener('click',function(e){
   if(tabId==='quranic'&&typeof loadQuranic==='function')loadQuranic();
   if(tabId==='oracle'&&typeof loadOracle==='function')loadOracle();
   if(tabId==='solomonic-seals'&&typeof loadSolomonicSeals==='function')loadSolomonicSeals();
+  if(tabId==='beings'&&typeof loadBeings==='function')loadBeings();
   if(tabId==='jinn-commanders'&&typeof loadJinnCommanders==='function')loadJinnCommanders();
   if(tabId==='tahatil'&&typeof loadTahatil==='function')loadTahatil();
   if(tabId==='magic-square-kings'&&typeof loadMagicSquareKings==='function')loadMagicSquareKings();
