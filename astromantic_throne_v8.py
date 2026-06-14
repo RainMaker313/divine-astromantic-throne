@@ -1223,6 +1223,16 @@ async def kitab_al_ajnas():
             return json.load(f)
     return {"error": "Kitab Al-Ajnas data not found"}
 
+@app.get("/kitab-al-ajnas-names")
+async def kitab_al_ajnas_names():
+    """Return all named entities from Kitab Al-Ajnas: angels, jinn kings, heavens, seals, divine names, prophets, spirit types, and their positions of power."""
+    import json
+    data_path = "/home/mrmeow/Documents/ocr-output/kitab_al_ajnas_names.json"
+    if os.path.exists(data_path):
+        with open(data_path) as f:
+            return json.load(f)
+    return {"error": "Kitab Al-Ajnas names data not found"}
+
 @app.get("/occult-encyclopedia")
 async def occult_encyclopedia():
     """Return the complete angel/jinn value tables from the Occult Encyclopedia of Magick Squares.

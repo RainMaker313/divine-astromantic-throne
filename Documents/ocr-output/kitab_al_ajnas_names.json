@@ -1,0 +1,346 @@
+{
+  "source": "Asaph Ibn Berechiah - Kitab Al-Ajnas (كتاب الأجناس)",
+  "description": "Complete named entities: angels, jinn kings, heavens, seals, divine names, and their positions of power",
+  "seven_celestial_angels": {
+    "description": "The seven primary angels who govern the seven heavens, each with a seal",
+    "angels": [
+      {
+        "name": "ميططرون (Metatron)",
+        "title": "أول خاتم (First Seal)",
+        "position": "Highest heaven, nearest to divine presence",
+        "description": "Greatest of the angels, governs the divine chariot. Names taught to Moses, by which Elijah was raised to heaven.",
+        "sections": [
+          "القسم الأول لميططرون",
+          "القسم الثاني لميططرون",
+          "القسم الثالث لميططرون",
+          "القسم الرابع لميططرون",
+          "القسم الخامس لميططرون",
+          "القسم السادس لميططرون",
+          "القسم السابع لميططرون"
+        ]
+      },
+      {
+        "name": "رقيائيل (Rapaqel/Raqiel)",
+        "title": "خاتم رقيائيل الملك",
+        "position": "Seventh heaven (for the Sun)",
+        "description": "الدعوة العظمى لجميع الأرواح — the great invocation for all spirits",
+        "seal_material": "Gold or red agate",
+        "seal_day": "Sunday or Thursday"
+      },
+      {
+        "name": "جبرائيل (Jibra'el/Gabriel)",
+        "title": "خاتم جبرائيل عليه السلام",
+        "position": "First heaven, stands at the left side of divine power",
+        "description": "Angel of revelation, right-hand angel of the throne, governs divine communication. One of the four archangels who stood on Solomon's temple.",
+        "seal_material": "Silver",
+        "seal_day": "Monday"
+      },
+      {
+        "name": "ميكائيل (Meekaa'el/Michael)",
+        "title": "خاتم ميكائيل عليه السلام",
+        "position": "Second heaven",
+        "description": "Archangel of sustenance and mercy, guardian of souls. One of the four archangels on Solomon's temple.",
+        "seal_material": "Tin",
+        "seal_day": "Thursday"
+      },
+      {
+        "name": "عزرائيل (Azrael/Israfil)",
+        "title": "خاتم عزرائيل",
+        "position": "Third/Fourth heaven, stands at divine power",
+        "description": "Angel of death, takes souls at appointed time. One of the four archangels on Solomon's temple.",
+        "seal_material": "Copper",
+        "seal_day": "Friday"
+      },
+      {
+        "name": "سمسمائيل (Samsamaa'el/Shemeshmael)",
+        "title": "خاتم الملك سمسمائيل",
+        "position": "Under the heaven of the world, rules jinn and demons",
+        "description": "Terrestrial king — the White One (الأبيض). Earthly ruler of jinn, governs terrestrial spirits.",
+        "seal_material": "Lead",
+        "seal_day": "Saturday"
+      },
+      {
+        "name": "صرفيائيل (Sorfaya'el/Sarafiel)",
+        "title": "خاتم الملك صرفيائيل عليه السلام",
+        "position": "Heaven of the world",
+        "description": "Great benefits and swift obedience. Flying spirits in the air, governs revelation to mankind.",
+        "seal_material": "Iron/Copper",
+        "seal_day": "Tuesday"
+      }
+    ]
+  },
+  "seven_terrestrial_jinn_kings": {
+    "description": "The seven earthly jinn kings (ملوك الأرضية), each ruling a day of the week",
+    "kings": [
+      {
+        "name": "خندش (Khandash)",
+        "title": "خاتم خندش",
+        "day": "Saturday",
+        "planet": "Saturn",
+        "description": "Earthly king with specific seal and judgment. Co-king with Nikal.",
+        "helpers": [
+          "نيكل (Niql/Nikal)"
+        ],
+        "seal_material": "Lead"
+      },
+      {
+        "name": "أبا معبد زنبور (Abu Ma'bad Zanbur)",
+        "title": "خاتم أبا معبد زنبور",
+        "day": "Sunday",
+        "planet": "Sun",
+        "description": "King with specific seal, helpers, and great benefits"
+      },
+      {
+        "name": "ميمون أبا نوح (Maymun Aba Nuh)",
+        "title": "خاتم ميمون أبا نوح",
+        "day": "Monday",
+        "planet": "Moon",
+        "description": "ميمون أبا نوح — Father Noah, good answer, swift obedience. Chief of the Maymun subtypes.",
+        "subtypes": [
+          "Maymun al-Ghamami (Cloudy)",
+          "Maymun al-Sahabi (Companion)",
+          "Maymun al-Sayyaf (Swordsman)",
+          "Maymun al-Tayyar (Flying)",
+          "Maynoon al-Aswad (Black)",
+          "Maynoon al-Abyad (White)",
+          "Maynoon al-Azraq (Blue)",
+          "Maynoon al-Ahmar (Red)"
+        ],
+        "seal_material": "Copper",
+        "seal_day": "Friday"
+      },
+      {
+        "name": "الأحمر القرشي (al-Ahmar al-Qurashi)",
+        "title": "خاتم الأحمر القرشي",
+        "day": "Tuesday",
+        "planet": "Mars",
+        "description": "The Red One of Quraysh, prepared for everything. Great king, swift answer.",
+        "seal_material": "Iron/Copper",
+        "seal_day": "Tuesday"
+      },
+      {
+        "name": "برقان (Burqan/Barqan)",
+        "title": "خاتم برقان",
+        "day": "Wednesday",
+        "planet": "Mercury",
+        "description": "The Lightning. Great king, swift answer, spirits under his command beyond counting. Ruled by the angel Mikael.",
+        "seal_material": "Mercury (quicksilver)",
+        "seal_day": "Wednesday"
+      },
+      {
+        "name": "شهمورش (Shamhoorash/Shamhurish)",
+        "title": "شهمورش وعزائمه",
+        "day": "Thursday",
+        "planet": "Jupiter",
+        "description": "The Lofty. Swift answer, great obedience, flying spirits. Also called شمهوريش.",
+        "seal_material": "Tin",
+        "seal_day": "Thursday"
+      },
+      {
+        "name": "زوبعة (Zawba'ah)",
+        "title": "زوبعة وخاتمه",
+        "day": "Sunday",
+        "planet": "Sun",
+        "description": "The Cyclone/Whirlwind. Great obedience, angel of storms.",
+        "seal_material": "Gold/Red agate",
+        "seal_day": "Sunday"
+      }
+    ]
+  },
+  "four_archangels_of_solomons_temple": {
+    "description": "The four archangels who stood on Solomon's temple (البلاطة) when he made covenant with the spirits",
+    "archangels": [
+      "جبرائيل (Jibra'el)",
+      "ميكائيل (Meekaa'el)",
+      "إسرائيل (Israel)",
+      "عزرائيل (Azrael)"
+    ]
+  },
+  "seven_heavens": {
+    "description": "The seven heavens and their ruling angels, each with divine names that created them",
+    "heavens": [
+      {
+        "number": 7,
+        "name": "السماء السابعة",
+        "ruler": "الشمس (Sun)",
+        "angel": "ميططرون (Metatron)",
+        "section": "الفصل الأول — لأهل السماء السابعة (للشمس)"
+      },
+      {
+        "number": 6,
+        "name": "السماء السادسة",
+        "ruler": "المشتري (Jupiter)",
+        "section": "الفصل الثاني — لأهل السماء السادسة (للمشتري)"
+      },
+      {
+        "number": 5,
+        "name": "السماء الخامسة",
+        "ruler": "المريخ (Mars)",
+        "section": "الفصل الثالث — لأهل السماء الخامسة (للمريخ)"
+      },
+      {
+        "number": 4,
+        "name": "السماء الرابعة",
+        "ruler": "زحل (Saturn)",
+        "section": "الفصل الرابع — في الأسماء التي خلق الله بها ملائكة السماء الرابعة (لزحل)"
+      },
+      {
+        "number": 3,
+        "name": "السماء الثالثة",
+        "ruler": "الزهرة (Venus)",
+        "section": "الفصل الخامس — في الأسماء التي خلق الله بها ملائكة السماء الثالثة (للزهرة)"
+      },
+      {
+        "number": 2,
+        "name": "السماء الثانية",
+        "ruler": "عطارد (Mercury)",
+        "section": "الفصل السادس — لأهل السماء الثانية (لعطارد)"
+      },
+      {
+        "number": 1,
+        "name": "سماء الدنيا",
+        "ruler": "القمر (Moon)",
+        "section": "الفصل السابع — في الأسماء التي خلق الله بها سماء الدنيا (للقمر)"
+      }
+    ]
+  },
+  "divine_names": {
+    "description": "The divine names (أسماء الله الحسنى) mentioned in the book, with their powers",
+    "names": [
+      {
+        "name": "اسم الله الأعظم (The Greatest Name of God)",
+        "power": "By which God created all the heavens",
+        "location": "خاتم معادريوس"
+      },
+      {
+        "name": "أسماء حملة العرش (Names of the Throne Bearers)",
+        "power": "First obedience — obedience of the throne bearers. When spoken with purity, angels of light descend and heavens/earth tremble.",
+        "names_foreign": "بِهْمِيقَحِ بِجَمَّةِ يَغْفِرِ مِيهِقْرِ مَسِيلِ شُهُونِ شُهُونِ بِجَاهُونِ مَلِيهُونِ",
+        "names_arabic_meaning": "يا الله أنت الواحد أنت الصمد أنت القادر أنت الحي القيوم رب كل شيء"
+      },
+      {
+        "name": "أسماء سرادقات العظمة والكبرياء (Names of the Courts of Majesty)",
+        "power": "By which God created the angels of the courts of majesty. Spoken by Adam (عليه السلام), by which Jesus (عليه السلام) healed the sick.",
+        "names_foreign": "عنى بيرخ بيروج برخوا شيرخ شاروخ يتمخ شخايا موخ فاسخ شموخ شمخا مخيخا أريخا بيروخا بهيا يا بوما هورياومح مهاروت يا هوه شيمو ملسياميم مقنانا بشفهرز هرازر باروخ شرفيوخ بالوخا"
+      },
+      {
+        "name": "أسماء عصا موسى (Names of Moses' Staff)",
+        "power": "31 names on Moses' staff, 10 on each face. One name works miracles, opens locks, breaks magic, binds tongues, defeats tyrants, summons all earthly spirits.",
+        "names_foreign": "لَبْهايَم وبربْتِيَا يا عزيزي مَحْجُجْ سَكْلِعْ"
+      }
+    ]
+  },
+  "seal_construction_rules": {
+    "description": "Rules for constructing the seven planetary seals",
+    "materials": {
+      "gold": "For Sun and Jupiter seals — gold or red agate, Sunday or Thursday",
+      "silver": "For Moon and Venus seals — pure white silver, Friday",
+      "iron": "For Mars seals — steel iron, Saturday (for Mimun), Tuesday",
+      "copper": "For Venus seals — copper, Friday",
+      "lead": "For Saturn seals — lead, Saturday",
+      "tin": "For Jupiter seals — tin, Thursday"
+    },
+    "timing": "First hour after sunrise on the planet's day, in its exaltation",
+    "washing": "Wash seal with running water and salt after engraving",
+    "consecration": "Raise (tanjim) the seal according to seal-raising ritual — 7 days",
+    "silk_pouch": "Place consecrated seal in white silk pouch",
+    "incense": "Burn appropriate incense when using the seal"
+  },
+  "solomonic_artifacts": {
+    "description": "Artifacts mentioned in the book that belonged to Solomon (عليه السلام)",
+    "artifacts": [
+      {
+        "name": "البلاطة (The Tablet)",
+        "description": "The great temple tablet on which the four archangels sat when Solomon made covenant with the spirits",
+        "archangels": [
+          "جبرائيل",
+          "ميكائيل",
+          "إسرائيل",
+          "عزرائيل"
+        ]
+      },
+      {
+        "name": "المندل (The Mandel)",
+        "description": "Solomon's mandel — a tool for summoning spirits"
+      },
+      {
+        "name": "البساط (The Carpet)",
+        "description": "Solomon's flying carpet — by which he traveled between kingdoms"
+      },
+      {
+        "name": "خاتم سليمان (Solomon's Ring)",
+        "description": "The ring by which Solomon commanded jinn and wind"
+      }
+    ]
+  },
+  "prophets_mentioned": {
+    "description": "Prophets and figures mentioned in the book",
+    "figures": [
+      {
+        "name": "آدم (Adam)",
+        "role": "First prophet, spoke the names of the throne bearers"
+      },
+      {
+        "name": "موسى (Moses)",
+        "role": "Received the names on his staff, spoke to God"
+      },
+      {
+        "name": "عيسى بن مريم (Jesus)",
+        "role": "Healed the sick with the divine names"
+      },
+      {
+        "name": "يوشع بن نون (Joshua)",
+        "role": "Spoke the names that stopped the sun"
+      },
+      {
+        "name": "إيليا (Elijah)",
+        "role": "Raised to heaven by the divine names"
+      },
+      {
+        "name": "داوود (David)",
+        "role": "Father of Solomon"
+      },
+      {
+        "name": "سليمان بن داوود (Solomon)",
+        "role": "Master of jinn and wind, builder of the temple"
+      },
+      {
+        "name": "مريم (Mary)",
+        "role": "Mother of Jesus"
+      }
+    ]
+  },
+  "spirit_types": {
+    "description": "Types of spirits mentioned in the book",
+    "types": [
+      {
+        "name": "الأرواح العلوية (Upper Spirits)",
+        "description": "Celestial spirits of the heavens"
+      },
+      {
+        "name": "الأرواح السفلية (Lower Spirits)",
+        "description": "Earthly spirits, jinn and demons"
+      },
+      {
+        "name": "الأرواح الطيارين (Flying Spirits)",
+        "description": "Spirits that fly in the air"
+      },
+      {
+        "name": "روحانية الرعد (Thunder Spirits)",
+        "description": "Spirits of thunder and lightning"
+      },
+      {
+        "name": "الدناهشة",
+        "description": "A type of spirit — the Snatchers"
+      },
+      {
+        "name": "الشواخبة",
+        "description": "A type of spirit — the Piercers"
+      },
+      {
+        "name": "الفرزوقات",
+        "description": "A type of spirit — the Separators"
+      }
+    ]
+  }
+}
