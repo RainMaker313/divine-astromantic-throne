@@ -1,41 +1,44 @@
-# Credentials and secrets
-.coven_github_token
-.git-cred-coven
-.git-cred-coven-helper
-hf_token.txt
-.env
+# Sensitive files
+.hermes/.env
+.hermes/.env.backup.*
+.hermes/.env.bak.*
+.hermes/auth.json
+.hermes/auth.lock
+.hermes/.hermes_history
+.git-credentials
+.gitconfig
 
-# Python
-__pycache__/
-*.pyc
-.venv/
-venv/
-hermes-agent-venv/
-*.egg-info/
+# Caches
+.hermes/cache/
+.hermes/audio_cache/
+.EasyOCR/
+.cache/
+.bun/
+.bundle/
+.docker/
+.electron/
+.face
+.face.icon
+.gitnexus/
 
-# Node
-node_modules/
-package-lock.json
-
-# IDE
-.cursor/
-.vscode/
-.idea/
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Logs
-*.log
-npm-debug.log*
-
-# Large binaries (models, etc.)
-*.gguf
-*.whl
-*.tar.gz
-*.AppImage
+# System
+.bash_logout
+.bashrc
+.bashrc.original
+.gtkrc-2.0
 
 # Temp
-*.tmp
-*.swp
+/tmp/
+*.pyc
+__pycache__/
+
+# Large binary models (keep references, not binaries)
+*.gguf
+*.onnx
+*.bin
+*.safetensors
+fastsdcpu/
+.lmstudio/
+
+# OCR temp
+Documents/ocr-temp/
