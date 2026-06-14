@@ -107,31 +107,92 @@ def get_moon_phase(jd):
     return "Unknown", round(elongation, 2)
 
 
-def find_next_lunar_events(jd_start, max_days=45):
+def find_next_lunar_events(jd_start, max_days=365):
+    """Find upcoming lunar phases with high precision.
+    
+    Uses Swiss Ephemeris for accurate phase timing.
+    Searches forward from jd_start to find the FIRST crossing of each
+    target elongation, then refines with binary search.
+    Returns only future events sorted by date.
+    """
     targets = [("New Moon", 0), ("First Quarter", 90), ("Full Moon", 180), ("Last Quarter", 270)]
     events = []
+    
     for name, target_elong in targets:
-        best_jd = None
-        best_diff = 180.0
+        # Phase 1: Coarse search — find first elongation crossing (3-hour steps)
+        prev_elong = None
+        crossing_jd = None
+        
         for day in range(max_days):
-            jd = jd_start + day
-            for hour in range(0, 24, 2):
-                check_jd = jd + hour / 24.0
+            for hour in range(0, 24, 3):
+                check_jd = jd_start + day + hour / 24.0
                 sun_pos, _ = swe.calc_ut(check_jd, swe.SUN)
                 moon_pos, _ = swe.calc_ut(check_jd, swe.MOON)
                 elong = (moon_pos[0] - sun_pos[0]) % 360
-                diff = min(abs(elong - target_elong), 360 - abs(elong - target_elong))
-                if diff < best_diff:
-                    best_diff = diff
-                    best_jd = check_jd
-        if best_jd:
-            y, m, d, h = swe.revjul(best_jd)
+                
+                if prev_elong is not None:
+                    if target_elong == 0:
+                        # New Moon: detect wrap from ~360 to ~0
+                        if prev_elong > 300 and elong < 60:
+                            crossing_jd = check_jd
+                            break
+                    else:
+                        # Other phases: detect when elong crosses target upward
+                        if prev_elong < target_elong and elong >= target_elong:
+                            crossing_jd = check_jd
+                            break
+                
+                prev_elong = elong
+            
+            if crossing_jd:
+                break
+        
+        if not crossing_jd:
+            continue
+        
+        # Phase 2: Binary search for exact crossing (sub-minute precision)
+        lo = crossing_jd - 0.5
+        hi = crossing_jd + 0.5
+        for _ in range(30):
+            mid = (lo + hi) / 2
+            s, _ = swe.calc_ut(mid, swe.SUN)
+            m, _ = swe.calc_ut(mid, swe.MOON)
+            e_mid = (m[0] - s[0]) % 360
+            
+            if target_elong == 0:
+                # For New Moon: elong goes from ~360 down to ~0
+                # Before crossing: elong > 180 (near 360)
+                # After crossing: elong < 180 (near 0)
+                if e_mid > 180:
+                    lo = mid  # still before crossing
+                else:
+                    hi = mid  # after crossing
+            else:
+                # For other phases: elong increases through target
+                # Normalize: handle wrap-around at 360
+                if e_mid < target_elong:
+                    lo = mid  # before crossing
+                else:
+                    hi = mid  # after crossing
+        
+        best_jd = (lo + hi) / 2
+        
+        # Only include future events
+        if best_jd > jd_start:
+            y, mo, d, h = swe.revjul(best_jd)
+            # Calculate precision
+            sun_pos, _ = swe.calc_ut(best_jd, swe.SUN)
+            moon_pos, _ = swe.calc_ut(best_jd, swe.MOON)
+            actual_elong = (moon_pos[0] - sun_pos[0]) % 360
+            diff = min(abs(actual_elong - target_elong), 360 - abs(actual_elong - target_elong))
             events.append({
                 "event": name,
-                "date": f"{int(y):04d}-{int(m):02d}-{int(d):02d}",
+                "date": f"{int(y):04d}-{int(mo):02d}-{int(d):02d}",
                 "time": f"{int(h):02d}:{int((h % 1) * 60):02d}",
                 "elongation": round(target_elong, 1),
+                "precision_deg": round(diff, 4),
             })
+    
     return sorted(events, key=lambda e: e["date"])
 
 
@@ -829,6 +890,353 @@ async def occult_chart():
     })
 
 
+# ═══════════════════════════════════════════════════════════════
+# SEVEN HEAVENS — ANGELS RULING THE DAYS (Celestial Dominance)
+# Source: Arabic Solomonic tradition (al-Toukhi / Asif ibn Barkhiya system)
+# These are the Arabic archangel names for each day
+# ═══════════════════════════════════════════════════════════════
+
+SEVEN_HEAVENS = {
+    "Sunday": {
+        "planet": "Sun",
+        "archangel": "Rooqaya'eel (روقايل)",
+        "angels": ["Rooqaya'eel"],
+        "incense": "Red Sanders / Frankincense",
+        "colour": "Gold",
+        "metal": "Gold",
+        "nature": "Authority, success, illumination, healing",
+    },
+    "Monday": {
+        "planet": "Moon",
+        "archangel": "Jibra'eel (جبريل)",
+        "angels": ["Jibra'eel"],
+        "incense": "Aloes / Camphor",
+        "colour": "White/Silver",
+        "metal": "Silver",
+        "nature": "Secrets, dreams, travel, swift horses",
+    },
+    "Tuesday": {
+        "planet": "Mars",
+        "archangel": "Samsamaa'eel (سمسمايل)",
+        "angels": ["Samsamaa'eel"],
+        "incense": "Pepper / Dragon's Blood",
+        "colour": "Red",
+        "metal": "Iron",
+        "nature": "War, courage, destruction, victory",
+    },
+    "Wednesday": {
+        "planet": "Mercury",
+        "archangel": "Meekaa'eel (ميكائيل)",
+        "angels": ["Meekaa'eel"],
+        "incense": "Mastic / Storax",
+        "colour": "Orange/Mixed",
+        "metal": "Mercury",
+        "nature": "Knowledge, eloquence, sciences, healing",
+    },
+    "Thursday": {
+        "planet": "Jupiter",
+        "archangel": "Sorfaya'eel (سرفايل)",
+        "angels": ["Sorfaya'eel"],
+        "incense": "Saffron / Cedar",
+        "colour": "Blue/Purple",
+        "metal": "Tin",
+        "nature": "Wealth, fortune, honor, wisdom, expansion",
+    },
+    "Friday": {
+        "planet": "Venus",
+        "archangel": "Anya'eel (أنيايل)",
+        "angels": ["Anya'eel"],
+        "incense": "Sandalwood / Ambergris / Rose",
+        "colour": "Green",
+        "metal": "Copper",
+        "nature": "Love, beauty, pleasure, harmony, attraction",
+    },
+    "Saturday": {
+        "planet": "Saturn",
+        "archangel": "Kasfaya'eel (كسفايل)",
+        "angels": ["Kasfaya'eel"],
+        "incense": "Myrrh / Storax",
+        "colour": "Black/Indigo",
+        "metal": "Lead",
+        "nature": "Binding, solitude, hidden things, time, death",
+    },
+}
+
+# ═══════════════════════════════════════════════════════════════
+# SEVEN JINN KINGS — Mulūk al-Arḍīya (Terrestrial Dominance)
+# Source: Arabic Solomonic tradition (al-Toukhi / Asif ibn Barkhiya system)
+# These are the Arabic jinn king names for each day
+# Order: Sunday to Saturday
+# ═══════════════════════════════════════════════════════════════
+
+
+# ═══════════════════════════════════════════════════════════════
+
+
+
+# ═══════════════════════════════════════════════════════════════
+# Seven TAHATIL Names (الطهاطيل السبعة) — "The Seven Oft Repeated Signs"
+# Source: al-Toukhi (al-Futuh al-Rabbani, al-Sihr al-Azim, Sirr al-Asrar)
+# Each name connects a planet, archangel, day, and the planetary hours
+
+TAHATIL_SEVEN = {
+    "Saturday": {
+        "tahatil": "للطهطيل (Lillah-Tahtil)",
+        "planet": "Saturn",
+        "angel": "Kasfaya'eel (كسفيائيل)",
+        "metal": "Lead",
+        "element": "Earth",
+    },
+    "Thursday": {
+        "tahatil": "مهطهطيل (Mah-Tahtil)",
+        "planet": "Jupiter",
+        "angel": "Sorfaya'eel (صرفيائيل)",
+        "metal": "Tin",
+        "element": "Air",
+    },
+    "Tuesday": {
+        "tahatil": "قهطهطيل (Qah-Tahtil)",
+        "planet": "Mars",
+        "angel": "Samsamaa'eel (سمسمائيل)",
+        "metal": "Iron",
+        "element": "Fire",
+    },
+    "Sunday": {
+        "tahatil": "فهططيل (Fah-Tahtil)",
+        "planet": "Sun",
+        "angel": "Rooqaya'eel (روقيائيل)",
+        "metal": "Gold",
+        "element": "Fire",
+    },
+    "Friday": {
+        "tahatil": "نهطهطيل (Nah-Tahtil)",
+        "planet": "Venus",
+        "angel": "Anya'eel (عنيايئل)",
+        "metal": "Copper",
+        "element": "Water",
+    },
+    "Wednesday": {
+        "tahatil": "جهلططيل (Jahl-Tahtil)",
+        "planet": "Mercury",
+        "angel": "Meekaa'eel (ميكائيل)",
+        "metal": "Mercury",
+        "element": "Air",
+    },
+    "Monday": {
+        "tahatil": "لجهططيل (Lajah-Tahtil)",
+        "planet": "Moon",
+        "angel": "Jibra'eel (جبريل)",
+        "metal": "Silver",
+        "element": "Water",
+    },
+}
+
+# The Universal Oath (القسم الجامع) — the mantra binding the seven names
+UNIVERSAL_OATH = "للهطهطيل مهطهطيل فهطيطيل قهطيطيل نهططيل جهططيل قهططيل الدميغ ويدغ ياغ"
+
+@app.get("/tahatil-seven")
+async def get_tahatil():
+    """Return the Seven TAHATIL Names — the seven oft repeated signs/symbols.
+    Source: al-Toukhi (al-Futuh al-Rabbani, al-Sihr al-Azim)"""
+    return {
+        "source": "al-Toukhi (al-Futuh al-Rabbani, al-Sihr al-Azim)",
+        "description": "The Seven TAHATIL Names — the universal magical names anchoring all talismans across al-Toukhi's corpus",
+        "tahatil": TAHATIL_SEVEN,
+        "universal_oath": UNIVERSAL_OATH,
+    }
+
+@app.get("/planetary-hours-talismans")
+async def get_planetary_hours_talismans():
+    """Return planetary hours talismanic correspondences from al-Toukhi.
+    The signature pattern: Name in head, Lord of Hour in chest, Seven Names in belly."""
+    return {
+        "source": "al-Toukhi (al-Sihr al-Azim, Sirr al-Asrar)",
+        "description": "Planetary hours talisman system — the signature al-Toukhi pattern",
+        "pattern": "Name of target → Head | Lord of the Hour → Chest | Seven TAHATIL Names → Belly",
+        "hours_table": {
+            "Sunday": {"planet": "Sun",    "first_hour": "Sun",    "operations": "Healing, success, illumination"},
+            "Monday": {"planet": "Moon",   "first_hour": "Moon",   "operations": "Secrets, dreams, travel"},
+            "Tuesday": {"planet": "Mars",  "first_hour": "Mars",   "operations": "War, victory, binding"},
+            "Wednesday": {"planet": "Mercury", "first_hour": "Mercury", "operations": "Knowledge, eloquence"},
+            "Thursday": {"planet": "Jupiter", "first_hour": "Jupiter", "operations": "Wealth, honor, love"},
+            "Friday": {"planet": "Venus",  "first_hour": "Venus",   "operations": "Love, beauty, harmony"},
+            "Saturday": {"planet": "Saturn", "first_hour": "Saturn", "operations": "Binding, destruction, restriction"},
+        },
+        "talisman_rule": "The day's first hour after sunrise is ruled by the day's planet. Subsequent hours follow Chaldean sequence."
+    }
+
+# ═══════════════════════════════════════════════════════════════
+
+MAGIC_SQUARE_KINGS = {
+    "Saturn": {"king": "al-Mustawli (المستولي)", "meaning": "The Dominating King", "element": "Earth", "magic_square": "3×3 Kamea"},
+    "Jupiter": {"king": "al-Dalil (الدليل)", "meaning": "The Guiding King", "element": "Air", "magic_square": "4×4 Kamea"},
+    "Mars": {"king": "Sirr (السر)", "meaning": "The Secret King", "element": "Fire", "magic_square": "5×5 Kamea"},
+    "Sun": {"king": "al-Mu'adil (المعدل)", "meaning": "The Harmonizing King", "element": "Fire", "magic_square": "6×6 Kamea"},
+    "Venus": {"king": "al-Ra'is (الرئيس)", "meaning": "The Chief King", "element": "Water", "magic_square": "7×7 Kamea"},
+    "Mercury": {"king": "al-Hakim (الحكيم)", "meaning": "The Wise King", "element": "Air", "magic_square": "8×8 Kamea"},
+    "Moon": {"king": "al-Ghaffar (الغفار)", "meaning": "The Forgiving King", "element": "Water", "magic_square": "9×9 Kamea"},
+}
+
+MAYMUN_SUBTYPES = [
+    {"name": "Maymun al-Ghamami", "meaning": "The Cloudy Maymun", "domain": "Clouds/Rain"},
+    {"name": "Maymun al-Sahabi", "meaning": "The Companioned Maymun", "domain": "Clouds"},
+    {"name": "Maymun al-Sayyaf", "meaning": "The Swordsman Maymun", "domain": "War/Conflict"},
+    {"name": "Maymun al-Tayyar", "meaning": "The Flying Maymun", "domain": "Travel/Air"},
+    {"name": "Maymoon al-Aswad", "meaning": "The Black Maymun", "domain": "Night/Secrets"},
+    {"name": "Maymoon al-Abyad", "meaning": "The White Maymun", "domain": "Day/Purity"},
+    {"name": "Maymoon al-Azraq", "meaning": "The Blue Maymun", "domain": "Water/Emotions"},
+    {"name": "Maymoon al-Ahmar", "meaning": "The Red Maymun", "domain": "Fire/Passion"},
+]
+
+TERRESTRIAL_COMMANDERS = {
+    "Zawba'ah (الزوبعة)": "The Cyclone – lord of storms and destruction",
+    "Danhash (دنحاش)": "Co-king with Maymun – answers within 3 days",
+    "Aba Nookh (أبا نوح)": "Father Noah – elder of the jinn kings",
+    "Shamardal (شمرذل)": "The Flier – messenger of the kings",
+    "Sahsah (سحسح)": "Swift executor of commands",
+}
+
+@app.get("/magic-square-kings")
+async def get_magic_square_kings():
+    """Return the seven magic square kings from al-Toukhi's Kitab Sirr al-Asrar."""
+    return {"source": "al-Toukhi (Kitab Sirr al-Asrar fi Ilm al-Akhyar)", "kings": MAGIC_SQUARE_KINGS}
+
+@app.get("/jinn-commanders")
+async def get_jinn_commanders():
+    """Return the terrestrial jinn commanders from al-Toukhi's Red Magick."""
+    return {"source": "al-Toukhi (Red Magick / Forbidden Grimoire)", "commanders": TERRESTRIAL_COMMANDERS, "maymun_subtypes": MAYMUN_SUBTYPES}
+
+# ═══════════════════════════════════════════════════════════════
+
+JINN_KINGS = {
+    "Sunday": {
+        "planet": "Sun",
+        "king": "al-Mudhhib (المذحب)",
+        "king_meaning": "The Gilder / The Golden One",
+        "angels": ["Rooqaya'eel"],
+        "incense": "Frankincense / Red Sanders",
+        "colour": "Gold",
+        "servants": [
+            {"name": "Mudhhib", "role": "Chief of the Solar Host"},
+            {"name": "Maqfal", "role": "Guardian of Riches"},
+            {"name": "Aqlih", "role": "Bestower of Wisdom"},
+            {"name": "Miqat", "role": "Keeper of Time"},
+        ],
+    },
+    "Monday": {
+        "planet": "Moon",
+        "king": "Murra al-Abyad (مرا الأبيض)",
+        "king_meaning": "The Bitter White One",
+        "angels": ["Jibra'eel"],
+        "incense": "White camphor / Musk / Sandalwood",
+        "colour": "White/Silver",
+        "servants": [
+            {"name": "Abyad", "role": "Chief of the Lunar Host"},
+            {"name": "Ablam", "role": "Keeper of Secrets"},
+            {"name": "Talq", "role": "Messenger of Dreams"},
+            {"name": "Mashaf", "role": "Guardian of Sleep"},
+        ],
+    },
+    "Tuesday": {
+        "planet": "Mars",
+        "king": "al-Ahmar (الأحمر)",
+        "king_meaning": "The Red King",
+        "angels": ["Samsamaa'eel"],
+        "incense": "Pepper / Dragon's Blood / Red Sulfur",
+        "colour": "Red",
+        "servants": [
+            {"name": "Ahmar", "role": "Chief of the Martial Host"},
+            {"name": "Humaq", "role": "Bringer of Courage"},
+            {"name": "Tuqhar", "role": "Lord of Victory"},
+            {"name": "Mutawaq", "role": "Flame of War"},
+        ],
+    },
+    "Wednesday": {
+        "planet": "Mercury",
+        "king": "Burqan (برقان)",
+        "king_meaning": "The Flashing / The Two Thunderclaps",
+        "angels": ["Meekaa'eel"],
+        "incense": "Mastic / Storax / Lavender",
+        "colour": "Orange/Mixed",
+        "servants": [
+            {"name": "Burqan", "role": "Chief of the Mercurial Host"},
+            {"name": "Ma'sum", "role": "Keeper of Knowledge"},
+            {"name": "Sarsar", "role": "Lord of Eloquence"},
+            {"name": "Tawqis", "role": "Teacher of Sciences"},
+        ],
+    },
+    "Thursday": {
+        "planet": "Jupiter",
+        "king": "Shamhurish (شمشوريش)",
+        "king_meaning": "The Lofty One / The Exalted",
+        "angels": ["Sorfaya'eel"],
+        "incense": "Sandalwood / Cedar / Frankincense",
+        "colour": "Blue/Purple",
+        "servants": [
+            {"name": "Shamhurish", "role": "Chief of the Jovian Host"},
+            {"name": "Taruq", "role": "Bestower of Fortune"},
+            {"name": "Aws", "role": "Giver of Wisdom"},
+            {"name": "Muntaq", "role": "Distributor of Bounty"},
+        ],
+    },
+    "Friday": {
+        "planet": "Venus",
+        "king": "Abyad (أبيض)",
+        "king_meaning": "The White One",
+        "angels": ["Anya'eel"],
+        "incense": "Sandalwood / Ambergris / Rose / Musk",
+        "colour": "Green",
+        "servants": [
+            {"name": "Zuhra", "role": "Chief of the Venusian Host"},
+            {"name": "Mashriq", "role": "Bringer of Pleasure"},
+            {"name": "Awi", "role": "Harmonizer of Hearts"},
+            {"name": "Simak", "role": "Guardian of Love"},
+        ],
+    },
+    "Saturday": {
+        "planet": "Saturn",
+        "king": "Maymun (ميمون)",
+        "king_meaning": "The Fortunate / The Prosperous",
+        "angels": ["Kasfaya'eel"],
+        "incense": "Myrrh / Storax / Costus",
+        "colour": "Black/Indigo",
+        "servants": [
+            {"name": "Maymun", "role": "Chief of the Saturnine Host"},
+            {"name": "Aza'il", "role": "Keeper of Hidden Things"},
+            {"name": "Sarir", "role": "Binder of Secrets"},
+            {"name": "Mudabbir", "role": "Governor of Destinies"},
+        ],
+    },
+}
+
+
+# ═══════════════════════════════════════════════════════════════
+
+@app.get("/kitab-al-ajnas")
+async def kitab_al_ajnas():
+    """Return the complete Solomonic seal system from Kitab Al-Ajnas by Asaph Ibn Berechiah.
+    Contains the seven celestial seals, terrestrial kings, seal construction rules, and divine names."""
+    import json
+    data_path = "/home/mrmeow/Documents/ocr-output/kitab_al_ajnas_structured.json"
+    if os.path.exists(data_path):
+        with open(data_path) as f:
+            return json.load(f)
+    return {"error": "Kitab Al-Ajnas data not found"}
+
+@app.get("/seven-heavens")
+async def seven_heavens():
+    """Return the seven heavens with their ruling angels for each day.
+    Source: The Magus (Barrett), Picatrix, Solomonic tradition."""
+    return {"source": "al-Toukhi / Arabic Solomonic (Red Magick, Shifa al-Alil)", "heavens": SEVEN_HEAVENS}
+
+
+@app.get("/jinn-kings")
+async def jinn_kings():
+    """Return the seven Jinn Kings (Mulūk al-Arḍīya) for each day.
+    Source: al-Jawahir al-Lamma'a, Sihr Muluk al-Jann."""
+    return {"source": "al-Toukhi (Red Magick / Forbidden Grimoire of Harut & Marut)", "kings": JINN_KINGS}
+
+
 if __name__ == "__main__":
     print("🌙 Starting Coco's Divine Astromantic Throne v8.0...")
     print("   The Awakening")
@@ -839,6 +1247,7 @@ if __name__ == "__main__":
         "/planetary-hours", "/dignities", "/arabic-parts",
         "/lunar-mansion", "/fixed-stars", "/beings",
         "/electional", "/occult-chart",
+        "/seven-heavens", "/jinn-kings",
     ]:
         print(f"     http://localhost:8080{route}")
     print()

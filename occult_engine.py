@@ -26,11 +26,12 @@ TZ_OFFSET = 2.0 / 24.0  # SAST = UTC+2
 
 def compute_planetary_hours(jd, lat, lon):
     """
-    Compute 24 planetary hours starting at sunrise.
-    The planetary day starts at sunrise, not midnight.
-    Before sunrise = previous day's ruler.
-    Hour 1 (sunrise) = day ruler. Chaldean sequence continues through all 24 hours.
-    Each hour = (next_sunrise - sunrise) / 24.
+    Compute planetary hours using the traditional system:
+    - Daytime: 12 equal hours from sunrise to sunset
+    - Nighttime: 12 equal hours from sunset to next sunrise
+    - Hour 1 of each period = day ruler (at sunrise)
+    - Subsequent hours cycle through Chaldean order: Sat→Jup→Mars→Sun→Venus→Mercury→Moon
+    - Each hour includes ruling angel, intelligence, spirit from PLANETARY_BEINGS
     """
     now = datetime.datetime.utcnow()
     now_local = now + datetime.timedelta(hours=2)
@@ -43,12 +44,20 @@ def compute_planetary_hours(jd, lat, lon):
     rise_flags = swe.CALC_RISE | swe.BIT_DISC_CENTER
     set_flags = swe.CALC_SET | swe.BIT_DISC_CENTER
 
-    # Get today's sunrise
+    # Get today's sunrise and sunset
     res_rise, tret_rise = swe.rise_trans(jd_today_start, swe.SUN, rise_flags, geopos, 1013.25, 0.0)
     jd_rise_today = tret_rise[0]
 
-    # Determine the current planetary day ruler
-    # Before sunrise = previous day's ruler; after sunrise = today's ruler
+    res_set, tret_set = swe.rise_trans(jd_today_start, swe.SUN, set_flags, geopos, 1013.25, 0.0)
+    jd_set_today = tret_set[0]
+
+    # Get tomorrow's sunrise
+    jd_tomorrow = jd_today_start + 1.0
+    res_rise2, tret_rise2 = swe.rise_trans(jd_tomorrow, swe.SUN, rise_flags, geopos, 1013.25, 0.0)
+    jd_rise_next = tret_rise2[0]
+
+    # Determine the planetary day ruler
+    # If before sunrise, we're still in the previous planetary day
     if jd_now < jd_rise_today:
         prev_day = now_local - datetime.timedelta(days=1)
         weekday = prev_day.weekday()
@@ -56,32 +65,46 @@ def compute_planetary_hours(jd, lat, lon):
         jd_yesterday = jd_today_start - 1.0
         res_yrise, tret_yrise = swe.rise_trans(jd_yesterday, swe.SUN, rise_flags, geopos, 1013.25, 0.0)
         jd_rise = tret_yrise[0]
+        res_yset, tret_yset = swe.rise_trans(jd_yesterday, swe.SUN, set_flags, geopos, 1013.25, 0.0)
+        jd_set = tret_yset[0]
     else:
         weekday = now_local.weekday()
         jd_rise = jd_rise_today
+        jd_set = jd_set_today
 
     day_ruler = DAY_RULERS[weekday]
     day_ruler_idx = CHALDEAN.index(day_ruler)
 
-    # Get sunset and next sunrise for the cycle
-    res_set, tret_set = swe.rise_trans(jd_today_start, swe.SUN, set_flags, geopos, 1013.25, 0.0)
-    jd_set = tret_set[0]
+    # Calculate hour lengths
+    day_length = jd_set - jd_rise  # daytime in JD
+    night_length = jd_rise_next - jd_set  # nighttime in JD
+    day_hour_len = day_length / 12.0
+    night_hour_len = night_length / 12.0
 
-    jd_tomorrow = jd_today_start + 1.0
-    res_rise2, tret_rise2 = swe.rise_trans(jd_tomorrow, swe.SUN, rise_flags, geopos, 1013.25, 0.0)
-    jd_rise_next = tret_rise2[0]
-
-    # 24-hour period from sunrise to next sunrise
-    full_cycle_jd = jd_rise_next - jd_rise
-    hour_len = full_cycle_jd / 24
-
-    # Determine current hour (1-24)
-    elapsed = jd_now - jd_rise
-    if elapsed < 0:
-        elapsed += 24.0 / 24.0
-    hour_num = int(elapsed / hour_len) + 1
-    if hour_num > 24:
-        hour_num = 24
+    # Determine current hour
+    if jd_now < jd_rise:
+        # Before sunrise — nighttime of previous day
+        elapsed = jd_now - jd_set
+        if elapsed < 0:
+            elapsed += 24.0 / 24.0
+        hour_num = 12 + int(elapsed / night_hour_len) + 1
+        if hour_num > 24:
+            hour_num = 24
+        is_daytime = False
+    elif jd_now < jd_set:
+        # Daytime
+        elapsed = jd_now - jd_rise
+        hour_num = int(elapsed / day_hour_len) + 1
+        if hour_num > 12:
+            hour_num = 12
+        is_daytime = True
+    else:
+        # Nighttime
+        elapsed = jd_now - jd_set
+        hour_num = 12 + int(elapsed / night_hour_len) + 1
+        if hour_num > 24:
+            hour_num = 24
+        is_daytime = False
 
     # Build all 24 hours
     def jd_to_local_str(jd_val):
@@ -98,26 +121,59 @@ def compute_planetary_hours(jd, lat, lon):
         return f"{hr:02d}:{mi:02d}"
 
     all_hours = []
-    for h in range(1, 25):
+
+    # 12 daytime hours
+    for h in range(1, 13):
         ruler_idx = (day_ruler_idx + (h - 1)) % 7
         ruler = CHALDEAN[ruler_idx]
-        st = jd_rise + (h - 1) * hour_len
-        et = st + hour_len
+        st = jd_rise + (h - 1) * day_hour_len
+        et = st + day_hour_len
+        beings = PLANETARY_BEINGS.get(ruler, {})
         all_hours.append({
             "hour_number": h,
             "ruler": ruler,
             "symbol": PLANET_SYMBOL.get(ruler, ""),
             "benefic": PLANET_BENEFIC.get(ruler, "neutral"),
+            "period": "day",
             "start": jd_to_time_str(st),
             "end": jd_to_time_str(et),
             "start_full": jd_to_local_str(st),
             "end_full": jd_to_local_str(et),
-            "active": (h == hour_num),
+            "angel": beings.get("angel", ""),
+            "intelligence": beings.get("intelligence", ""),
+            "spirit": beings.get("spirit", ""),
+            "incense": beings.get("incense", ""),
+            "active": (h == hour_num and is_daytime),
+        })
+
+    # 12 nighttime hours
+    for h in range(13, 25):
+        ruler_idx = (day_ruler_idx + (h - 1)) % 7
+        ruler = CHALDEAN[ruler_idx]
+        st = jd_set + (h - 13) * night_hour_len
+        et = st + night_hour_len
+        beings = PLANETARY_BEINGS.get(ruler, {})
+        all_hours.append({
+            "hour_number": h,
+            "ruler": ruler,
+            "symbol": PLANET_SYMBOL.get(ruler, ""),
+            "benefic": PLANET_BENEFIC.get(ruler, "neutral"),
+            "period": "night",
+            "start": jd_to_time_str(st),
+            "end": jd_to_time_str(et),
+            "start_full": jd_to_local_str(st),
+            "end_full": jd_to_local_str(et),
+            "angel": beings.get("angel", ""),
+            "intelligence": beings.get("intelligence", ""),
+            "spirit": beings.get("spirit", ""),
+            "incense": beings.get("incense", ""),
+            "active": (h == hour_num and not is_daytime),
         })
 
     # Current hour details
     current_ruler_idx = (day_ruler_idx + (hour_num - 1)) % 7
     current_ruler = CHALDEAN[current_ruler_idx]
+    current_beings = PLANETARY_BEINGS.get(current_ruler, {})
 
     return {
         "timestamp": now_local.strftime("%Y-%m-%d %H:%M:%S") + " SAST",
@@ -137,11 +193,13 @@ def compute_planetary_hours(jd, lat, lon):
             "benefic": PLANET_BENEFIC.get(current_ruler, ""),
             "nature": PLANET_NATURE.get(current_ruler, {}),
             "keywords": PLANET_KEYWORDS.get(current_ruler, []),
-            "start": jd_to_time_str(jd_rise + (hour_num - 1) * hour_len),
-            "end": jd_to_time_str(jd_rise + hour_num * hour_len),
-            "angel": PLANETARY_BEINGS.get(current_ruler, {}).get("angel", ""),
-            "intelligence": PLANETARY_BEINGS.get(current_ruler, {}).get("intelligence", ""),
-            "spirit": PLANETARY_BEINGS.get(current_ruler, {}).get("spirit", ""),
+            "period": "day" if is_daytime else "night",
+            "start": jd_to_time_str(jd_rise + (hour_num - 1) * (day_hour_len if is_daytime else night_hour_len)),
+            "end": jd_to_time_str(jd_rise + hour_num * (day_hour_len if is_daytime else night_hour_len)),
+            "angel": current_beings.get("angel", ""),
+            "intelligence": current_beings.get("intelligence", ""),
+            "spirit": current_beings.get("spirit", ""),
+            "incense": current_beings.get("incense", ""),
         },
         "hours": all_hours,
     }
