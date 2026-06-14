@@ -1223,6 +1223,19 @@ async def kitab_al_ajnas():
             return json.load(f)
     return {"error": "Kitab Al-Ajnas data not found"}
 
+@app.get("/occult-encyclopedia")
+async def occult_encyclopedia():
+    """Return the complete angel/jinn value tables from the Occult Encyclopedia of Magick Squares.
+    Contains all 12 zodiac signs + 7 classical planets with their 10 angel positions each.
+    Each angel has: Number, Angel Value (Arabic), Angel Value (Hebrew), Jinn Value (Arabic), Jinn Value (Hebrew).
+    Also includes Lord of Tripticity and element magic square associations."""
+    import json
+    data_path = "/home/mrmeow/Documents/ocr-output/occult_encyclopedia_complete.json"
+    if os.path.exists(data_path):
+        with open(data_path) as f:
+            return json.load(f)
+    return {"error": "Occult Encyclopedia data not found"}
+
 @app.get("/seven-heavens")
 async def seven_heavens():
     """Return the seven heavens with their ruling angels for each day.

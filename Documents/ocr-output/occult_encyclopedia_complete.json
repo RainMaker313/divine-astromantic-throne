@@ -1,0 +1,1307 @@
+{
+  "source": "Occult Encyclopedia of Magick Squares (Nineveh Shadrach)",
+  "description": "Complete angel/jinn value tables for all 12 zodiac signs + 7 classical planets",
+  "zodiac_angels": {
+    "TAURUS": {
+      "lord_of_triplicity": {
+        "type": "NIGHT",
+        "name": "SAPATAVI",
+        "value": 236
+      },
+      "elements": [
+        "Fire-Jupiter",
+        "Air-Jupiter",
+        "Earth-Jupiter",
+        "Water-Jupiter"
+      ],
+      "angels": {
+        "Usurper": {
+          "number": 51,
+          "angel_arabic": 10,
+          "angel_hebrew": 20,
+          "jinn_arabic": 92,
+          "jinn_hebrew": 82
+        },
+        "Guide": {
+          "number": 68,
+          "angel_arabic": 27,
+          "angel_hebrew": 37,
+          "jinn_arabic": 109,
+          "jinn_hebrew": 99
+        },
+        "Mystery": {
+          "number": 119,
+          "angel_arabic": 78,
+          "angel_hebrew": 88,
+          "jinn_arabic": 160,
+          "jinn_hebrew": 150
+        },
+        "Adjuster": {
+          "number": 1888,
+          "angel_arabic": 1847,
+          "angel_hebrew": 1857,
+          "jinn_arabic": 1569,
+          "jinn_hebrew": 1559
+        },
+        "Leader": {
+          "number": 5664,
+          "angel_arabic": 5623,
+          "angel_hebrew": 5633,
+          "jinn_arabic": 5345,
+          "jinn_hebrew": 5335
+        },
+        "Regulator": {
+          "number": 7552,
+          "angel_arabic": 7511,
+          "angel_hebrew": 7521,
+          "jinn_arabic": 7233,
+          "jinn_hebrew": 7223
+        },
+        "General": {
+          "number": 15104,
+          "angel_arabic": 15063,
+          "angel_hebrew": 15073,
+          "jinn_arabic": 14785,
+          "jinn_hebrew": 14775
+        },
+        "High": {
+          "number": 1027072,
+          "angel_arabic": 1027031,
+          "angel_hebrew": 1027041,
+          "jinn_arabic": 1026753,
+          "jinn_hebrew": 1026743
+        },
+        "Overseer": {
+          "number": 1027072,
+          "angel_arabic": 1027031,
+          "angel_hebrew": 1027041,
+          "jinn_arabic": 1026753,
+          "jinn_hebrew": 1026743
+        }
+      }
+    },
+    "GEMINI": {
+      "lord_of_triplicity": {
+        "type": "DAY",
+        "name": "RAYDEL",
+        "value": 246
+      },
+      "elements": [
+        "Fire-Saturn",
+        "Air-Saturn",
+        "Earth-Saturn",
+        "Water-Saturn"
+      ],
+      "angels": {
+        "Usurper": {
+          "number": 11,
+          "angel_arabic": 330,
+          "angel_hebrew": 340,
+          "jinn_arabic": 52,
+          "jinn_hebrew": 42
+        },
+        "Guide": {
+          "number": 63,
+          "angel_arabic": 22,
+          "angel_hebrew": 32,
+          "jinn_arabic": 104,
+          "jinn_hebrew": 94
+        },
+        "Mystery": {
+          "number": 74,
+          "angel_arabic": 33,
+          "angel_hebrew": 43,
+          "jinn_arabic": 115,
+          "jinn_hebrew": 105
+        },
+        "Adjuster": {
+          "number": 249,
+          "angel_arabic": 208,
+          "angel_hebrew": 218,
+          "jinn_arabic": 290,
+          "jinn_hebrew": 280
+        },
+        "Leader": {
+          "number": 747,
+          "angel_arabic": 706,
+          "angel_hebrew": 716,
+          "jinn_arabic": 428,
+          "jinn_hebrew": 418
+        },
+        "Regulator": {
+          "number": 996,
+          "angel_arabic": 955,
+          "angel_hebrew": 965,
+          "jinn_arabic": 677,
+          "jinn_hebrew": 667
+        },
+        "General": {
+          "number": 1992,
+          "angel_arabic": 1951,
+          "angel_hebrew": 1961,
+          "jinn_arabic": 1673,
+          "jinn_hebrew": 1663
+        },
+        "High": {
+          "number": 125496,
+          "angel_arabic": 125455,
+          "angel_hebrew": 125465,
+          "jinn_arabic": 125177,
+          "jinn_hebrew": 125167
+        },
+        "Overseer": {
+          "number": 125496,
+          "angel_arabic": 125455,
+          "angel_hebrew": 125465,
+          "jinn_arabic": 125177,
+          "jinn_hebrew": 125167
+        }
+      }
+    },
+    "CANCER": {
+      "lord_of_triplicity": null,
+      "elements": [
+        "Fire-Moon",
+        "Air-Moon",
+        "Earth-Moon",
+        "Water-Moon"
+      ],
+      "angels": {
+        "Usurper": {
+          "number": 8,
+          "angel_arabic": 327,
+          "angel_hebrew": 337,
+          "jinn_arabic": 49,
+          "jinn_hebrew": 39
+        },
+        "Guide": {
+          "number": 95,
+          "angel_arabic": 54,
+          "angel_hebrew": 64,
+          "jinn_arabic": 136,
+          "jinn_hebrew": 126
+        },
+        "Mystery": {
+          "number": 103,
+          "angel_arabic": 62,
+          "angel_hebrew": 72,
+          "jinn_arabic": 144,
+          "jinn_hebrew": 134
+        },
+        "Adjuster": {
+          "number": 439,
+          "angel_arabic": 398,
+          "angel_hebrew": 408,
+          "jinn_arabic": 120,
+          "jinn_hebrew": 110
+        },
+        "Leader": {
+          "number": 1317,
+          "angel_arabic": 1276,
+          "angel_hebrew": 1286,
+          "jinn_arabic": 998,
+          "jinn_hebrew": 988
+        },
+        "Regulator": {
+          "number": 1756,
+          "angel_arabic": 1715,
+          "angel_hebrew": 1725,
+          "jinn_arabic": 1437,
+          "jinn_hebrew": 1427
+        },
+        "General": {
+          "number": 3512,
+          "angel_arabic": 3471,
+          "angel_hebrew": 3481,
+          "jinn_arabic": 3193,
+          "jinn_hebrew": 3183
+        },
+        "High": {
+          "number": 333640,
+          "angel_arabic": 333599,
+          "angel_hebrew": 333609,
+          "jinn_arabic": 333321,
+          "jinn_hebrew": 333311
+        },
+        "Overseer": {
+          "number": 333640,
+          "angel_arabic": 333599,
+          "angel_hebrew": 333609,
+          "jinn_arabic": 333321,
+          "jinn_hebrew": 333311
+        }
+      }
+    },
+    "LEO": {
+      "lord_of_triplicity": {
+        "type": "DAY",
+        "name": "RAADAR",
+        "value": 474
+      },
+      "elements": [
+        "Fire-Saturn",
+        "Air-Saturn",
+        "Earth-Saturn",
+        "Water-Saturn"
+      ],
+      "angels": {
+        "Usurper": {
+          "number": 6,
+          "angel_arabic": 325,
+          "angel_hebrew": 335,
+          "jinn_arabic": 47,
+          "jinn_hebrew": 37
+        },
+        "Guide": {
+          "number": 41,
+          "angel_arabic": 360,
+          "angel_hebrew": 10,
+          "jinn_arabic": 82,
+          "jinn_hebrew": 72
+        },
+        "Mystery": {
+          "number": 47,
+          "angel_arabic": 6,
+          "angel_hebrew": 16,
+          "jinn_arabic": 88,
+          "jinn_hebrew": 78
+        },
+        "Adjuster": {
+          "number": 141,
+          "angel_arabic": 100,
+          "angel_hebrew": 110,
+          "jinn_arabic": 182,
+          "jinn_hebrew": 172
+        },
+        "Leader": {
+          "number": 423,
+          "angel_arabic": 382,
+          "angel_hebrew": 392,
+          "jinn_arabic": 104,
+          "jinn_hebrew": 94
+        },
+        "Regulator": {
+          "number": 564,
+          "angel_arabic": 523,
+          "angel_hebrew": 533,
+          "jinn_arabic": 245,
+          "jinn_hebrew": 235
+        },
+        "General": {
+          "number": 1128,
+          "angel_arabic": 1087,
+          "angel_hebrew": 1097,
+          "jinn_arabic": 809,
+          "jinn_hebrew": 799
+        },
+        "High": {
+          "number": 46248,
+          "angel_arabic": 46207,
+          "angel_hebrew": 46217,
+          "jinn_arabic": 45929,
+          "jinn_hebrew": 45919
+        },
+        "Overseer": {
+          "number": 46248,
+          "angel_arabic": 46207,
+          "angel_hebrew": 46217,
+          "jinn_arabic": 45929,
+          "jinn_hebrew": 45919
+        }
+      }
+    },
+    "LIBRA": {
+      "lord_of_triplicity": null,
+      "elements": [
+        "Fire-Jupiter",
+        "Fire-Mars",
+        "Air-Jupiter",
+        "Air-Mars",
+        "Earth-Jupiter",
+        "Earth-Mars",
+        "Water-Jupiter",
+        "Water-Mars"
+      ],
+      "angels": {
+        "Usurper": {
+          "number": 185,
+          "angel_arabic": 144,
+          "angel_hebrew": 154,
+          "jinn_arabic": 226,
+          "jinn_hebrew": 216
+        },
+        "Guide": {
+          "number": 201,
+          "angel_arabic": 160,
+          "angel_hebrew": 170,
+          "jinn_arabic": 242,
+          "jinn_hebrew": 232
+        },
+        "Mystery": {
+          "number": 386,
+          "angel_arabic": 345,
+          "angel_hebrew": 355,
+          "jinn_arabic": 67,
+          "jinn_hebrew": 57
+        },
+        "Adjuster": {
+          "number": 6168,
+          "angel_arabic": 6127,
+          "angel_hebrew": 6137,
+          "jinn_arabic": 5849,
+          "jinn_hebrew": 5839
+        },
+        "Leader": {
+          "number": 18504,
+          "angel_arabic": 18463,
+          "angel_hebrew": 18473,
+          "jinn_arabic": 18185,
+          "jinn_hebrew": 18175
+        },
+        "Regulator": {
+          "number": 24672,
+          "angel_arabic": 24631,
+          "angel_hebrew": 24641,
+          "jinn_arabic": 24353,
+          "jinn_hebrew": 24343
+        },
+        "General": {
+          "number": 49344,
+          "angel_arabic": 49303,
+          "angel_hebrew": 49313,
+          "jinn_arabic": 49025,
+          "jinn_hebrew": 49015
+        },
+        "High": {
+          "number": 9918144,
+          "angel_arabic": 9918103,
+          "angel_hebrew": 9918113,
+          "jinn_arabic": 9917825,
+          "jinn_hebrew": 9917815
+        },
+        "Overseer": {
+          "number": 9918144,
+          "angel_arabic": 9918103,
+          "angel_hebrew": 9918113,
+          "jinn_arabic": 9917825,
+          "jinn_hebrew": 9917815
+        }
+      }
+    },
+    "SCORPIO": {
+      "lord_of_triplicity": null,
+      "elements": [
+        "Fire-Venus",
+        "Air-Sun",
+        "Earth-Venus",
+        "Water-Sun"
+      ],
+      "angels": {
+        "Usurper": {
+          "number": 70,
+          "angel_arabic": 29,
+          "angel_hebrew": 39,
+          "jinn_arabic": 111,
+          "jinn_hebrew": 101
+        },
+        "Guide": {
+          "number": 121,
+          "angel_arabic": 80,
+          "angel_hebrew": 90,
+          "jinn_arabic": 162,
+          "jinn_hebrew": 152
+        },
+        "Mystery": {
+          "number": 191,
+          "angel_arabic": 150,
+          "angel_hebrew": 160,
+          "jinn_arabic": 232,
+          "jinn_hebrew": 222
+        },
+        "Adjuster": {
+          "number": 661,
+          "angel_arabic": 620,
+          "angel_hebrew": 630,
+          "jinn_arabic": 342,
+          "jinn_hebrew": 332
+        },
+        "Leader": {
+          "number": 2644,
+          "angel_arabic": 2603,
+          "angel_hebrew": 2613,
+          "jinn_arabic": 2325,
+          "jinn_hebrew": 2315
+        },
+        "Regulator": {
+          "number": 5288,
+          "angel_arabic": 5247,
+          "angel_hebrew": 5257,
+          "jinn_arabic": 4969,
+          "jinn_hebrew": 4959
+        },
+        "General": {
+          "number": 639848,
+          "angel_arabic": 639807,
+          "angel_hebrew": 639817,
+          "jinn_arabic": 639529,
+          "jinn_hebrew": 639519
+        },
+        "High": {
+          "number": 639848,
+          "angel_arabic": 639807,
+          "angel_hebrew": 639817,
+          "jinn_arabic": 639529,
+          "jinn_hebrew": 639519
+        },
+        "Overseer": {
+          "number": 639848,
+          "angel_arabic": 639807,
+          "angel_hebrew": 639817,
+          "jinn_arabic": 639529,
+          "jinn_hebrew": 639519
+        }
+      }
+    },
+    "SAGITTARIUS": {
+      "lord_of_triplicity": {
+        "type": "DAY",
+        "name": "BETHCHON",
+        "value": 476
+      },
+      "elements": [
+        "Fire-Venus",
+        "Air-Sun",
+        "Air-Venus",
+        "Earth-Venus",
+        "Water-Sun",
+        "Water-Venus"
+      ],
+      "angels": {
+        "Usurper": {
+          "number": 111,
+          "angel_arabic": 70,
+          "angel_hebrew": 80,
+          "jinn_arabic": 152,
+          "jinn_hebrew": 142
+        },
+        "Guide": {
+          "number": 128,
+          "angel_arabic": 87,
+          "angel_hebrew": 97,
+          "jinn_arabic": 169,
+          "jinn_hebrew": 159
+        },
+        "Mystery": {
+          "number": 239,
+          "angel_arabic": 198,
+          "angel_hebrew": 208,
+          "jinn_arabic": 280,
+          "jinn_hebrew": 270
+        },
+        "Adjuster": {
+          "number": 3808,
+          "angel_arabic": 3767,
+          "angel_hebrew": 3777,
+          "jinn_arabic": 3489,
+          "jinn_hebrew": 3479
+        },
+        "Leader": {
+          "number": 11424,
+          "angel_arabic": 11383,
+          "angel_hebrew": 11393,
+          "jinn_arabic": 11105,
+          "jinn_hebrew": 11095
+        },
+        "Regulator": {
+          "number": 15232,
+          "angel_arabic": 15191,
+          "angel_hebrew": 15201,
+          "jinn_arabic": 14913,
+          "jinn_hebrew": 14903
+        },
+        "General": {
+          "number": 30464,
+          "angel_arabic": 30423,
+          "angel_hebrew": 30433,
+          "jinn_arabic": 30145,
+          "jinn_hebrew": 30135
+        },
+        "High": {
+          "number": 4,
+          "angel_arabic": 45,
+          "angel_hebrew": 55,
+          "jinn_arabic": 20,
+          "jinn_hebrew": 17
+        },
+        "Overseer": {
+          "number": 4,
+          "angel_arabic": 45,
+          "angel_hebrew": 55,
+          "jinn_arabic": 20,
+          "jinn_hebrew": 17
+        }
+      }
+    },
+    "CAPRICORN": {
+      "lord_of_triplicity": {
+        "type": "DAY",
+        "name": "AHOZ",
+        "value": 19
+      },
+      "elements": [
+        "Air-Mercury",
+        "Earth-Mercury",
+        "Water-Mercury"
+      ],
+      "angels": {
+        "Usurper": {
+          "number": 8,
+          "angel_arabic": 327,
+          "angel_hebrew": 337,
+          "jinn_arabic": 49,
+          "jinn_hebrew": 39
+        },
+        "Guide": {
+          "number": 75,
+          "angel_arabic": 34,
+          "angel_hebrew": 44,
+          "jinn_arabic": 116,
+          "jinn_hebrew": 106
+        },
+        "Mystery": {
+          "number": 83,
+          "angel_arabic": 42,
+          "angel_hebrew": 52,
+          "jinn_arabic": 124,
+          "jinn_hebrew": 114
+        },
+        "Adjuster": {
+          "number": 320,
+          "angel_arabic": 279,
+          "angel_hebrew": 289,
+          "jinn_arabic": 1,
+          "jinn_hebrew": 351
+        },
+        "Leader": {
+          "number": 7728,
+          "angel_arabic": 7687,
+          "angel_hebrew": 7697,
+          "jinn_arabic": 7409,
+          "jinn_hebrew": 7399
+        },
+        "Regulator": {
+          "number": 1280,
+          "angel_arabic": 1239,
+          "angel_hebrew": 1249,
+          "jinn_arabic": 961,
+          "jinn_hebrew": 951
+        },
+        "General": {
+          "number": 2560,
+          "angel_arabic": 2519,
+          "angel_hebrew": 2529,
+          "jinn_arabic": 2241,
+          "jinn_hebrew": 2231
+        },
+        "High": {
+          "number": 192000,
+          "angel_arabic": 191959,
+          "angel_hebrew": 191969,
+          "jinn_arabic": 191681,
+          "jinn_hebrew": 191671
+        },
+        "Overseer": {
+          "number": 192000,
+          "angel_arabic": 191959,
+          "angel_hebrew": 191969,
+          "jinn_arabic": 191681,
+          "jinn_hebrew": 191671
+        }
+      }
+    },
+    "AQUARIUS": {
+      "lord_of_triplicity": {
+        "type": "DAY",
+        "name": "SANDALl",
+        "value": 224
+      },
+      "elements": [
+        "Air-Venus",
+        "Water-Venus"
+      ],
+      "angels": {
+        "Usurper": {
+          "number": 10,
+          "angel_arabic": 329,
+          "angel_hebrew": 339,
+          "jinn_arabic": 51,
+          "jinn_hebrew": 41
+        },
+        "Guide": {
+          "number": 61,
+          "angel_arabic": 20,
+          "angel_hebrew": 30,
+          "jinn_arabic": 102,
+          "jinn_hebrew": 92
+        },
+        "Mystery": {
+          "number": 71,
+          "angel_arabic": 30,
+          "angel_hebrew": 40,
+          "jinn_arabic": 112,
+          "jinn_hebrew": 102
+        },
+        "Adjuster": {
+          "number": 241,
+          "angel_arabic": 200,
+          "angel_hebrew": 210,
+          "jinn_arabic": 282,
+          "jinn_hebrew": 272
+        },
+        "Leader": {
+          "number": 723,
+          "angel_arabic": 682,
+          "angel_hebrew": 692,
+          "jinn_arabic": 404,
+          "jinn_hebrew": 394
+        },
+        "Regulator": {
+          "number": 964,
+          "angel_arabic": 923,
+          "angel_hebrew": 933,
+          "jinn_arabic": 645,
+          "jinn_hebrew": 635
+        },
+        "General": {
+          "number": 1928,
+          "angel_arabic": 1887,
+          "angel_hebrew": 1897,
+          "jinn_arabic": 1609,
+          "jinn_hebrew": 1599
+        },
+        "High": {
+          "number": 107520,
+          "angel_arabic": 107479,
+          "angel_hebrew": 107489,
+          "jinn_arabic": 107201,
+          "jinn_hebrew": 107191
+        },
+        "Overseer": {
+          "number": 117608,
+          "angel_arabic": 117567,
+          "angel_hebrew": 117577,
+          "jinn_arabic": 117289,
+          "jinn_hebrew": 117279
+        }
+      }
+    },
+    "PISCES": {
+      "lord_of_triplicity": null,
+      "elements": [
+        "Fire-Sun",
+        "Air-Sun",
+        "Earth-Sun",
+        "Water-Sun"
+      ],
+      "angels": {
+        "Usurper": {
+          "number": 33,
+          "angel_arabic": 352,
+          "angel_hebrew": 2,
+          "jinn_arabic": 74,
+          "jinn_hebrew": 64
+        },
+        "Guide": {
+          "number": 69,
+          "angel_arabic": 28,
+          "angel_hebrew": 38,
+          "jinn_arabic": 110,
+          "jinn_hebrew": 100
+        },
+        "Mystery": {
+          "number": 89,
+          "angel_arabic": 48,
+          "angel_hebrew": 58,
+          "jinn_arabic": 130,
+          "jinn_hebrew": 120
+        },
+        "Adjuster": {
+          "number": 304,
+          "angel_arabic": 263,
+          "angel_hebrew": 273,
+          "jinn_arabic": 345,
+          "jinn_hebrew": 335
+        },
+        "Leader": {
+          "number": 912,
+          "angel_arabic": 871,
+          "angel_hebrew": 881,
+          "jinn_arabic": 593,
+          "jinn_hebrew": 583
+        },
+        "Regulator": {
+          "number": 1216,
+          "angel_arabic": 1175,
+          "angel_hebrew": 1185,
+          "jinn_arabic": 897,
+          "jinn_hebrew": 887
+        },
+        "General": {
+          "number": 2432,
+          "angel_arabic": 2391,
+          "angel_hebrew": 2401,
+          "jinn_arabic": 2113,
+          "jinn_hebrew": 2103
+        },
+        "High": {
+          "number": 167808,
+          "angel_arabic": 167767,
+          "angel_hebrew": 167777,
+          "jinn_arabic": 167489,
+          "jinn_hebrew": 167479
+        },
+        "Overseer": {
+          "number": 170240,
+          "angel_arabic": 170199,
+          "angel_hebrew": 170209,
+          "jinn_arabic": 169921,
+          "jinn_hebrew": 562
+        }
+      }
+    },
+    "ARIES": {
+      "lord_of_triplicity": null,
+      "elements": [],
+      "angels": {}
+    },
+    "VIRGO": {
+      "lord_of_triplicity": null,
+      "elements": [
+        "Fire-Mercury",
+        "Air-Mercury",
+        "Earth-Mercury",
+        "Water-Mercury"
+      ],
+      "angels": {}
+    }
+  },
+  "planetary_angels": {
+    "SATURN": {
+      "lord_of_triplicity": {
+        "type": "NIGHT",
+        "name": "NATHDORINEL",
+        "value": 751
+      },
+      "elements": [
+        "Air-Moon",
+        "Water-Moon"
+      ],
+      "angels": {
+        "Usurper": {
+          "number": 138,
+          "angel_arabic": 97,
+          "angel_hebrew": 107,
+          "jinn_arabic": 179,
+          "jinn_hebrew": 169
+        },
+        "Guide": {
+          "number": 163,
+          "angel_arabic": 122,
+          "angel_hebrew": 132,
+          "jinn_arabic": 204,
+          "jinn_hebrew": 194
+        },
+        "Mystery": {
+          "number": 301,
+          "angel_arabic": 260,
+          "angel_hebrew": 270,
+          "jinn_arabic": 342,
+          "jinn_hebrew": 332
+        },
+        "Adjuster": {
+          "number": 751,
+          "angel_arabic": 710,
+          "angel_hebrew": 720,
+          "jinn_arabic": 432,
+          "jinn_hebrew": 422
+        },
+        "Leader": {
+          "number": 1323,
+          "angel_arabic": 1282,
+          "angel_hebrew": 1292,
+          "jinn_arabic": 1004,
+          "jinn_hebrew": 994
+        },
+        "Regulator": {
+          "number": 3004,
+          "angel_arabic": 2963,
+          "angel_hebrew": 2973,
+          "jinn_arabic": 2685,
+          "jinn_hebrew": 2675
+        },
+        "General": {
+          "number": 6008,
+          "angel_arabic": 5967,
+          "angel_hebrew": 5977,
+          "jinn_arabic": 5689,
+          "jinn_hebrew": 5679
+        },
+        "High": {
+          "number": 979304,
+          "angel_arabic": 979263,
+          "angel_hebrew": 979273,
+          "jinn_arabic": 978985,
+          "jinn_hebrew": 978975
+        },
+        "Overseer": {
+          "number": 313992,
+          "angel_arabic": 313951,
+          "angel_hebrew": 313961,
+          "jinn_arabic": 313673,
+          "jinn_hebrew": 614
+        }
+      }
+    },
+    "JUPITER": {
+      "lord_of_triplicity": null,
+      "elements": [
+        "Fire-Jupiter",
+        "Air-Jupiter",
+        "Earth-Jupiter",
+        "Water-Jupiter"
+      ],
+      "angels": {
+        "Usurper": {
+          "number": 16,
+          "angel_arabic": 335,
+          "angel_hebrew": 345,
+          "jinn_arabic": 57,
+          "jinn_hebrew": 47
+        },
+        "Guide": {
+          "number": 24,
+          "angel_arabic": 343,
+          "angel_hebrew": 353,
+          "jinn_arabic": 65,
+          "jinn_hebrew": 55
+        },
+        "Mystery": {
+          "number": 40,
+          "angel_arabic": 359,
+          "angel_hebrew": 9,
+          "jinn_arabic": 81,
+          "jinn_hebrew": 71
+        },
+        "Adjuster": {
+          "number": 60,
+          "angel_arabic": 19,
+          "angel_hebrew": 29,
+          "jinn_arabic": 101,
+          "jinn_hebrew": 91
+        },
+        "Leader": {
+          "number": 180,
+          "angel_arabic": 139,
+          "angel_hebrew": 149,
+          "jinn_arabic": 221,
+          "jinn_hebrew": 211
+        },
+        "Regulator": {
+          "number": 240,
+          "angel_arabic": 199,
+          "angel_hebrew": 209,
+          "jinn_arabic": 281,
+          "jinn_hebrew": 271
+        },
+        "General": {
+          "number": 480,
+          "angel_arabic": 439,
+          "angel_hebrew": 449,
+          "jinn_arabic": 161,
+          "jinn_hebrew": 151
+        },
+        "High": {
+          "number": 11520,
+          "angel_arabic": 11479,
+          "angel_hebrew": 11489,
+          "jinn_arabic": 11201,
+          "jinn_hebrew": 11191
+        },
+        "Overseer": {
+          "number": 92160,
+          "angel_arabic": 92119,
+          "angel_hebrew": 92129,
+          "jinn_arabic": 91841,
+          "jinn_hebrew": 91831
+        }
+      }
+    },
+    "MARS": {
+      "lord_of_triplicity": null,
+      "elements": [
+        "Fire-Mars",
+        "Air-Mars",
+        "Earth-Mars",
+        "Water-Mars"
+      ],
+      "angels": {
+        "Usurper": {
+          "number": 170,
+          "angel_arabic": 129,
+          "angel_hebrew": 139,
+          "jinn_arabic": 211,
+          "jinn_hebrew": 201
+        },
+        "Guide": {
+          "number": 188,
+          "angel_arabic": 147,
+          "angel_hebrew": 157,
+          "jinn_arabic": 229,
+          "jinn_hebrew": 219
+        },
+        "Mystery": {
+          "number": 358,
+          "angel_arabic": 317,
+          "angel_hebrew": 327,
+          "jinn_arabic": 39,
+          "jinn_hebrew": 29
+        },
+        "Adjuster": {
+          "number": 5704,
+          "angel_arabic": 5663,
+          "angel_hebrew": 5673,
+          "jinn_arabic": 5385,
+          "jinn_hebrew": 5375
+        },
+        "Leader": {
+          "number": 17112,
+          "angel_arabic": 17071,
+          "angel_hebrew": 17081,
+          "jinn_arabic": 16793,
+          "jinn_hebrew": 16783
+        },
+        "Regulator": {
+          "number": 22816,
+          "angel_arabic": 22775,
+          "angel_hebrew": 22785,
+          "jinn_arabic": 22497,
+          "jinn_hebrew": 22487
+        },
+        "General": {
+          "number": 45632,
+          "angel_arabic": 45591,
+          "angel_hebrew": 45601,
+          "jinn_arabic": 45313,
+          "jinn_hebrew": 45303
+        },
+        "High": {
+          "number": 787152,
+          "angel_arabic": 787111,
+          "angel_hebrew": 787121,
+          "jinn_arabic": 786833,
+          "jinn_hebrew": 786823
+        },
+        "Overseer": {
+          "number": 8578816,
+          "angel_arabic": 8578775,
+          "angel_hebrew": 8578785,
+          "jinn_arabic": 8578497,
+          "jinn_hebrew": 8578487
+        }
+      }
+    },
+    "SUN": {
+      "lord_of_triplicity": null,
+      "elements": [
+        "Fire-Saturn",
+        "Air-Saturn",
+        "Earth-Saturn"
+      ],
+      "angels": {
+        "Usurper": {
+          "number": 21,
+          "angel_arabic": 340,
+          "angel_hebrew": 350,
+          "jinn_arabic": 62,
+          "jinn_hebrew": 52
+        },
+        "Guide": {
+          "number": 128,
+          "angel_arabic": 87,
+          "angel_hebrew": 97,
+          "jinn_arabic": 169,
+          "jinn_hebrew": 159
+        },
+        "Mystery": {
+          "number": 149,
+          "angel_arabic": 108,
+          "angel_hebrew": 118,
+          "jinn_arabic": 190,
+          "jinn_hebrew": 180
+        },
+        "Adjuster": {
+          "number": 713,
+          "angel_arabic": 672,
+          "angel_hebrew": 682,
+          "jinn_arabic": 394,
+          "jinn_hebrew": 384
+        },
+        "Leader": {
+          "number": 2852,
+          "angel_arabic": 2811,
+          "angel_hebrew": 2821,
+          "jinn_arabic": 2533,
+          "jinn_hebrew": 2523
+        },
+        "Regulator": {
+          "number": 5704,
+          "angel_arabic": 5663,
+          "angel_hebrew": 5673,
+          "jinn_arabic": 5385,
+          "jinn_hebrew": 5375
+        },
+        "General": {
+          "number": 5704,
+          "angel_arabic": 5663,
+          "angel_hebrew": 5673,
+          "jinn_arabic": 5385,
+          "jinn_hebrew": 5375
+        },
+        "High": {
+          "number": 5704,
+          "angel_arabic": 5663,
+          "angel_hebrew": 5673,
+          "jinn_arabic": 5385,
+          "jinn_hebrew": 5375
+        },
+        "Overseer": {
+          "number": 5704,
+          "angel_arabic": 5663,
+          "angel_hebrew": 5673,
+          "jinn_arabic": 5385,
+          "jinn_hebrew": 5375
+        }
+      }
+    },
+    "VENUS": {
+      "lord_of_triplicity": null,
+      "elements": [
+        "Fire-Mars",
+        "Air-Mars",
+        "Earth-Mars",
+        "Water-Mars"
+      ],
+      "angels": {
+        "Usurper": {
+          "number": 19,
+          "angel_arabic": 338,
+          "angel_hebrew": 348,
+          "jinn_arabic": 60,
+          "jinn_hebrew": 50
+        },
+        "Guide": {
+          "number": 37,
+          "angel_arabic": 356,
+          "angel_hebrew": 6,
+          "jinn_arabic": 78,
+          "jinn_hebrew": 68
+        },
+        "Mystery": {
+          "number": 56,
+          "angel_arabic": 15,
+          "angel_hebrew": 25,
+          "jinn_arabic": 97,
+          "jinn_hebrew": 87
+        },
+        "Adjuster": {
+          "number": 872,
+          "angel_arabic": 831,
+          "angel_hebrew": 841,
+          "jinn_arabic": 553,
+          "jinn_hebrew": 543
+        },
+        "Leader": {
+          "number": 2616,
+          "angel_arabic": 2575,
+          "angel_hebrew": 2585,
+          "jinn_arabic": 2297,
+          "jinn_hebrew": 2287
+        },
+        "Regulator": {
+          "number": 3488,
+          "angel_arabic": 3447,
+          "angel_hebrew": 3457,
+          "jinn_arabic": 3169,
+          "jinn_hebrew": 3159
+        },
+        "General": {
+          "number": 6976,
+          "angel_arabic": 6935,
+          "angel_hebrew": 6945,
+          "jinn_arabic": 6657,
+          "jinn_hebrew": 6647
+        },
+        "High": {
+          "number": 258112,
+          "angel_arabic": 258071,
+          "angel_hebrew": 258081,
+          "jinn_arabic": 257793,
+          "jinn_hebrew": 257783
+        },
+        "Overseer": {
+          "number": 32264,
+          "angel_arabic": 32223,
+          "angel_hebrew": 32233,
+          "jinn_arabic": 31945,
+          "jinn_hebrew": 31935
+        }
+      }
+    },
+    "MERCURY": {
+      "lord_of_triplicity": null,
+      "elements": [
+        "Air-Moon",
+        "Water-Moon"
+      ],
+      "angels": {
+        "Usurper": {
+          "number": 28,
+          "angel_arabic": 347,
+          "angel_hebrew": 357,
+          "jinn_arabic": 69,
+          "jinn_hebrew": 59
+        },
+        "Guide": {
+          "number": 114,
+          "angel_arabic": 73,
+          "angel_hebrew": 83,
+          "jinn_arabic": 155,
+          "jinn_hebrew": 145
+        },
+        "Mystery": {
+          "number": 142,
+          "angel_arabic": 101,
+          "angel_hebrew": 111,
+          "jinn_arabic": 183,
+          "jinn_hebrew": 173
+        },
+        "Adjuster": {
+          "number": 618,
+          "angel_arabic": 577,
+          "angel_hebrew": 587,
+          "jinn_arabic": 299,
+          "jinn_hebrew": 289
+        },
+        "Leader": {
+          "number": 1854,
+          "angel_arabic": 1813,
+          "angel_hebrew": 1823,
+          "jinn_arabic": 1535,
+          "jinn_hebrew": 1525
+        },
+        "Regulator": {
+          "number": 2472,
+          "angel_arabic": 2431,
+          "angel_hebrew": 2441,
+          "jinn_arabic": 2153,
+          "jinn_hebrew": 2143
+        },
+        "General": {
+          "number": 4944,
+          "angel_arabic": 4903,
+          "angel_hebrew": 4913,
+          "jinn_arabic": 4625,
+          "jinn_hebrew": 4615
+        },
+        "High": {
+          "number": 563616,
+          "angel_arabic": 563575,
+          "angel_hebrew": 563585,
+          "jinn_arabic": 563297,
+          "jinn_hebrew": 563287
+        },
+        "Overseer": {
+          "number": 563616,
+          "angel_arabic": 563575,
+          "angel_hebrew": 563585,
+          "jinn_arabic": 563297,
+          "jinn_hebrew": 563287
+        }
+      }
+    },
+    "MOON": {
+      "lord_of_triplicity": null,
+      "elements": [
+        "Fire-Jupiter",
+        "Air-Jupiter",
+        "Earth-Jupiter",
+        "Water-Jupiter"
+      ],
+      "angels": {
+        "Usurper": {
+          "number": 1,
+          "angel_arabic": 320,
+          "angel_hebrew": 330,
+          "jinn_arabic": 42,
+          "jinn_hebrew": 32
+        },
+        "Guide": {
+          "number": 36,
+          "angel_arabic": 355,
+          "angel_hebrew": 5,
+          "jinn_arabic": 77,
+          "jinn_hebrew": 67
+        },
+        "Mystery": {
+          "number": 37,
+          "angel_arabic": 356,
+          "angel_hebrew": 6,
+          "jinn_arabic": 78,
+          "jinn_hebrew": 68
+        },
+        "Adjuster": {
+          "number": 111,
+          "angel_arabic": 70,
+          "angel_hebrew": 80,
+          "jinn_arabic": 152,
+          "jinn_hebrew": 142
+        },
+        "Leader": {
+          "number": 444,
+          "angel_arabic": 403,
+          "angel_hebrew": 413,
+          "jinn_arabic": 125,
+          "jinn_hebrew": 115
+        },
+        "Regulator": {
+          "number": 888,
+          "angel_arabic": 847,
+          "angel_hebrew": 857,
+          "jinn_arabic": 569,
+          "jinn_hebrew": 559
+        },
+        "General": {
+          "number": 31968,
+          "angel_arabic": 31927,
+          "angel_hebrew": 31937,
+          "jinn_arabic": 31649,
+          "jinn_hebrew": 31639
+        },
+        "High": {
+          "number": 31968,
+          "angel_arabic": 31927,
+          "angel_hebrew": 31937,
+          "jinn_arabic": 31649,
+          "jinn_hebrew": 31639
+        },
+        "Overseer": {
+          "number": 10,
+          "angel_arabic": 23,
+          "angel_hebrew": 32,
+          "jinn_arabic": 19,
+          "jinn_hebrew": 27
+        }
+      }
+    }
+  }
+}
