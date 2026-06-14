@@ -1,0 +1,164 @@
+{
+  "source": "Asaph Ibn Berechiah - Kitab Al-Ajnas (كتاب الأجناس)",
+  "description": "The Book of Species — Solomonic grimoire by Asaph Ibn Berechiah, containing the seven planetary seals, terrestrial jinn kings, and divine names for evocation",
+  "seven_celestial_seals": [
+    {
+      "angel": "ميططرون (Metatron)",
+      "seal": "خاتم ميططرون",
+      "description": "First seal mentioned — greatest of the angels, governs the divine chariot",
+      "names": "Names taught to Moses, by which Elijah was raised to heaven",
+      "position": "Highest heaven, nearest to the divine presence"
+    },
+    {
+      "angel": "جبرائيل (Jibra'eel)",
+      "seal": "خاتم جبرائيل",
+      "description": "Stands at the left side of divine power, angel of revelation",
+      "role": "Right-hand angel of the throne, governs divine communication",
+      "position": "First heaven"
+    },
+    {
+      "angel": "ميكائيل (Meekaa'eel)",
+      "seal": "خاتم ميكائيل",
+      "description": "Archangel of sustenance and mercy",
+      "role": "Guardian of souls, provider of nourishment",
+      "position": "Second heaven"
+    },
+    {
+      "angel": "عزرائيل (Azrael/Israfil)",
+      "seal": "خاتم عزرائيل",
+      "description": "Angel of death, stands at divine power",
+      "role": "Takes souls at appointed time",
+      "position": "Third/Fourth heaven"
+    },
+    {
+      "angel": "سمسمائيل (Samsamaa'eel)",
+      "seal": "خاتم سمسمائيل",
+      "description": "Terrestrial king — the White One (الأبيض)",
+      "role": "Earthly ruler of jinn, governs terrestrial spirits",
+      "position": "Under the heaven of the world, rules jinn and demons"
+    },
+    {
+      "angel": "صرفيائيل (Sorfaya'eel)",
+      "seal": "خاتم صرفيائيل",
+      "description": "Great benefits and swift obedience",
+      "role": "Flying spirits in the air, governs revelation to mankind",
+      "position": "Heaven of the world"
+    },
+    {
+      "angel": "عنيائيل (Anyaa'eel)",
+      "seal": "خاتم عنيائيل",
+      "description": "Good answer and great obedience",
+      "role": "Extraction of secrets from books of mysteries",
+      "position": "Heaven of the world"
+    }
+  ],
+  "seven_terrestrial_kings": [
+    {
+      "king": "المذهب (al-Mudhhib)",
+      "meaning": "The Adorner / The Gilded",
+      "day": "Saturday",
+      "planet": "Saturn",
+      "seal_material": "Lead",
+      "rank": "Chief terrestrial king"
+    },
+    {
+      "king": "الأبيض (al-Abyad / Murra al-Abyad)",
+      "meaning": "The White One",
+      "day": "Sunday",
+      "planet": "Sun",
+      "seal_material": "Silver/Gold",
+      "note": "Also called مرة الأبيض — the white, bitter one"
+    },
+    {
+      "king": "الأحمر (al-Ahmar)",
+      "meaning": "The Red One",
+      "day": "Tuesday",
+      "planet": "Mars",
+      "seal_material": "Iron/Copper",
+      "note": "الأحمر القرشي — prepared for everything"
+    },
+    {
+      "king": "برقان (Burqan/Barqan)",
+      "meaning": "The Lightning",
+      "day": "Wednesday",
+      "planet": "Mercury",
+      "seal_material": "Mercury (quicksilver)",
+      "note": "Great king, swift answer, spirits under his command beyond counting"
+    },
+    {
+      "king": "شهمورش (Shamhoorash)",
+      "meaning": "The Lofty",
+      "day": "Thursday",
+      "planet": "Jupiter",
+      "seal_material": "Tin",
+      "note": "Swift answer, great obedience, flying spirits"
+    },
+    {
+      "king": "ميمون (Maymun)",
+      "meaning": "The Blessed",
+      "day": "Friday",
+      "planet": "Venus",
+      "seal_material": "Copper",
+      "note": "ميمون أبا نوح — Father Noah, good answer, swift obedience"
+    },
+    {
+      "king": "زوبعة (Zawba'ah)",
+      "meaning": "The Cyclone / Whirlwind",
+      "day": "Sunday",
+      "planet": "Sun",
+      "seal_material": "Gold/Red agate",
+      "note": "Great obedience, angel of storms"
+    }
+  ],
+  "additional_kings": [
+    {
+      "name": "خندش (Khandash)",
+      "note": "Earthly king with specific seal and judgment"
+    },
+    {
+      "name": "نيكل (Niql/Nikal)",
+      "note": "Co-king with Khandash, specific helpers"
+    },
+    {
+      "name": "أبا معبد زنبور (Abu Ma'bad Zanbur)",
+      "note": "King with specific seal and helpers"
+    },
+    {
+      "name": "شحنيت (Shahnit)",
+      "note": "Angel-helper, invoked with specific names"
+    },
+    {
+      "name": "مصصفص (Musafsis)",
+      "note": "Helper spirit"
+    },
+    {
+      "name": "مهاكي (Mihaki/Mahaquil)",
+      "Note": "King with helpers صخر بن عمرو بن سرجيل"
+    }
+  ],
+  "seal_construction_rules": {
+    "gold_seals": "For Sun, Jupiter — gold or red agate, Sunday or Thursday",
+    "silver_seals": "For Moon, Venus — pure white silver, Friday",
+    "iron_seals": "For Mars — steel iron, Saturday (for Mimun), Tuesday",
+    "copper_seals": "For Venus — copper, Friday",
+    "lead_seals": "For Saturn — lead, Saturday",
+    "timing": "First hour after sunrise on the planet's day, in its exaltation",
+    "washing": "Wash seal with running water and salt after engraving",
+    "consecration": "Raise (tanjim) the seal according to seal-raising ritual",
+    "silk_pouch": "Place consecrated seal in white silk pouch"
+  },
+  "divine_names": {
+    "supreme": "اسم الله الأعظم (The Greatest Name of God)",
+    "creation_names": "Names by which God created all the heavens",
+    "moses_names": "Names taught to Moses, by which he spoke to the Israelites",
+    "elijah_names": "Names by which Elijah was raised to heaven",
+    "solomon_names": "Names by which Solomon commanded jinn and wind",
+    "oath_formula": "بسم الله الرحمن الرحيم ألا تعلوا عليّ وأنتوني مسلمين"
+  },
+  "wind_of_solomon": {
+    "description": "Solomon's wind sail — by which he traveled between kingdoms",
+    "names": "Names of the wind sail that Solomon ibn Dawood used",
+    "function": "Travel between kingdoms, subjugation of all peoples",
+    "basmala": "بسم الله الرحمن الرحيم الحمد لله رب العالمين"
+  }
+}
