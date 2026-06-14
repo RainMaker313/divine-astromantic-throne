@@ -204,6 +204,7 @@ tr:hover td{background:var(--surface-2)}
       <div class="nav-item" data-tab="talisman"><span class="icon">🔯</span> Talisman</div>
       <div class="nav-item" data-tab="oracle"><span class="icon">🃏</span> Oracle</div>
       <div class="nav-item" data-tab="solomonic-seals"><span class="icon">⛧</span> Solomonic Seals</div>
+      <div class="nav-item" data-tab="occult-encyc"><span class="icon">📖</span> Occult Encyc</div>
     </div>
     <div class="sidebar-footer">⛧ <span>Hail Baphomet</span> ⛧</div>
   </nav>
@@ -276,6 +277,9 @@ tr:hover td{background:var(--surface-2)}
       <div class="tab-content" id="tab-oracle"><div class="card"><h2><span class="icon">🃏</span> Divine Oracle</h2><div id="oracle-cards" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.75rem"><div style="color:var(--text-muted);padding:1rem;text-align:center">Loading oracle...</div></div></div></div>
       <!-- SOLOMONIC SEALS TAB -->
       <div class="tab-content" id="tab-solomonic-seals"><div class="card"><h2><span class="icon">⛧</span> Solomonic Seals (Kitab Al-Ajnas)</h2><div id="solomonic-seals-content"></div></div></div>
+      <!-- OCCULT ENCYCLOPEDIA TAB -->
+      <div class="tab-content" id="tab-occult-encyc"><div class="card"><h2><span class="icon">📖</span> Occult Encyclopedia — Zodiac Angels</h2><p style="color:var(--text-dim);font-size:.7rem;margin-bottom:.5rem">Angel values for each zodiac sign from the Occult Encyclopedia of Magick Squares.</p><div id="occult-encyc-zodiac-content"></div></div>
+      <div class="card"><h2><span class="icon">🪐</span> Occult Encyclopedia — Planetary Angels</h2><p style="color:var(--text-dim);font-size:.7rem;margin-bottom:.5rem">Angel values for each classical planet.</p><div id="occult-encyc-planets-content"></div></div></div>
     </div>
   </main>
   
@@ -1055,6 +1059,59 @@ function renderOccultEncyclopedia(data){
   // We'll add this to a new section or expand the existing beings content
 }
 
+function loadOccultEncyc(){
+  if(!state.occultEncyclopedia) {
+    fetchJSON(API+'/occult-encyclopedia').then(function(data){
+      state.occultEncyclopedia=data;
+      renderOccultEncyc(data);
+    }).catch(function(){});
+  } else {
+    renderOccultEncyc(state.occultEncyclopedia);
+  }
+}
+
+function renderOccultEncyc(data){
+  if(!data) return;
+  // Render zodiac angels
+  var elZodiac=$('occult-encyc-zodiac-content');
+  if(elZodiac){
+    var h='<div style="overflow-x:auto"><table style="font-size:.65rem"><tr style="color:var(--text-muted)"><th>Sign</th><th>Usurper</th><th>Guide</th><th>Mystery</th><th>Adjuster</th><th>Leader</th><th>Regulator</th><th>General</th><th>High</th><th>Overseer</th></tr>';
+    var signs=['ARIES','TAURUS','GEMINI','CANCER','LEO','VIRGO','LIBRA','SCORPIO','SAGITTARIUS','CAPRICORN','AQUARIUS','PISCES'];
+    signs.forEach(function(s){
+      var d=data.zodiac_angels && data.zodiac_angels[s];
+      if(!d || !d.angels){h+='<tr><td style="color:var(--gold-dim)">'+s+'</td><td colspan="9" style="color:var(--text-muted)">No data</td></tr>';return;}
+      var a=d.angels;
+      h+='<tr><td style="color:var(--gold-dim)">'+s+'</td>';
+      ['Usurper','Guide','Mystery','Adjuster','Leader','Regulator','General','High','Overseer'].forEach(function(pos){
+        var v=a[pos];
+        h+='<td>'+(v?(v.number||'')+'/'+(v.angel_arabic||''):'—')+'</td>';
+      });
+      h+='</tr>';
+    });
+    h+='</table></div>';
+    elZodiac.innerHTML=h;
+  }
+  // Render planetary angels
+  var elPlanets=$('occult-encyc-planets-content');
+  if(elPlanets){
+    var h2='<div style="overflow-x:auto"><table style="font-size:.65rem"><tr style="color:var(--text-muted)"><th>Planet</th><th>Usurper</th><th>Guide</th><th>Mystery</th><th>Adjuster</th><th>Leader</th><th>Regulator</th><th>General</th><th>High</th><th>Overseer</th></tr>';
+    var planets=['SATURN','JUPITER','MARS','SUN','VENUS','MERCURY','MOON'];
+    planets.forEach(function(p){
+      var d=data.planetary_angels && data.planetary_angels[p];
+      if(!d || !d.angels){h2+='<tr><td style="color:var(--gold-dim)">'+p+'</td><td colspan="9" style="color:var(--text-muted)">No data</td></tr>';return;}
+      var a=d.angels;
+      h2+='<tr><td style="color:var(--gold-dim)">'+p+'</td>';
+      ['Usurper','Guide','Mystery','Adjuster','Leader','Regulator','General','High','Overseer'].forEach(function(pos){
+        var v=a[pos];
+        h2+='<td>'+(v?(v.number||'')+'/'+(v.angel_arabic||''):'—')+'</td>';
+      });
+      h2+='</tr>';
+    });
+    h2+='</table></div>';
+    elPlanets.innerHTML=h2;
+  }
+}
+
 function loadSolomonicSeals(){
   var container=$('solomonic-seals-content');
   if(!container) return;
@@ -1180,6 +1237,7 @@ document.addEventListener('click',function(e){
   if(tabId==='quranic'&&typeof loadQuranic==='function')loadQuranic();
   if(tabId==='oracle'&&typeof loadOracle==='function')loadOracle();
   if(tabId==='solomonic-seals'&&typeof loadSolomonicSeals==='function')loadSolomonicSeals();
+  if(tabId==='occult-encyc'&&typeof loadOccultEncyc==='function')loadOccultEncyc();
   if(tabId==='beings'&&typeof loadBeings==='function')loadBeings();
   if(tabId==='jinn-commanders'&&typeof loadJinnCommanders==='function')loadJinnCommanders();
   if(tabId==='tahatil'&&typeof loadTahatil==='function')loadTahatil();
