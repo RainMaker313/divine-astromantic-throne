@@ -1211,10 +1211,11 @@ function calcAndDrawWheel(){
   // Air: Gemini(2), Libra(7), Aquarius(11) — Yellow/Orange
   // Water: Cancer(3), Scorpio(8), Pisces(4) — Blue
   function getSignColor(i){
-    if(i===0||i===5||i===9) return ['#ff0040','#ff3366'];       // Fire: Aries, Leo, Sag
-    if(i===1||i===6||i===10) return ['#00ff66','#33ff88'];      // Earth: Taurus, Virgo, Cap
-    if(i===2||i===7||i===11) return ['#ffcc00','#ffdd44'];      // Air: Gemini, Libra, Aqua
-    return ['#0088ff','#33aaff'];                                // Water: Cancer, Scorpio, Pisces
+    // SIGNS: 0=Aries,1=Taurus,2=Gemini,3=Cancer,4=Leo,5=Virgo,6=Libra,7=Scorpio,8=Sagittarius,9=Capricorn,10=Aquarius,11=Pisces
+    if(i===0||i===4||i===8) return ['#ff0040','#ff3366'];       // Fire: Aries(0), Leo(4), Sagittarius(8)
+    if(i===1||i===5||i===9) return ['#00ff66','#33ff88'];       // Earth: Taurus(1), Virgo(5), Capricorn(9)
+    if(i===2||i===6||i===10) return ['#ffcc00','#ffdd44'];      // Air: Gemini(2), Libra(6), Aquarius(10)
+    return ['#0088ff','#33aaff'];                                // Water: Cancer(3), Scorpio(7), Pisces(11)
   }
   SIGNS.forEach(function(s,i){
     var lon1=i*30, lon2=(i+1)*30;
@@ -1375,8 +1376,10 @@ function calcAndDrawWheel(){
     var h='';
     chart.aspects.forEach(function(a){
       var col=aspColors[a.aspect]||'#888';
-      var app=a.applying?'<span style="color:#00ff88">▲</span>':'<span style="color:#ff0040">▼</span>';
-      h+='<div style="display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid rgba(255,255,255,.05)"><span style="color:'+col+'">'+a.aspect+'</span><span>'+a.planet1+' — '+a.planet2+'</span><span>'+app+'</span></div>';
+      var app='';
+      if(a.orb<1) app='<span style="color:#00ff88">●</span>';
+      var parts=a.between.split(' - ');
+      h+='<div style="display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid rgba(255,255,255,.05)"><span style="color:'+col+'">'+a.aspect+'</span><span>'+parts[0]+' — '+parts[1]+'</span><span>'+app+'</span></div>';
     });
     aspEl.innerHTML=h||'<div style="color:var(--text-muted)">No aspects</div>';
   }
