@@ -442,9 +442,10 @@ async function loadAll() {
       fetchJSON(API+'/moon-rise-set'), fetchJSON(API+'/lunar-events'),
       fetchJSON(API+'/lunar-aspects'), fetchJSON(API+'/heliocentric'),
       fetchJSON(API+'/kitab-al-ajnas-names').catch(function(){return null}),
-      fetchJSON(API+'/occult-encyclopedia').catch(function(){return null})
+      fetchJSON(API+'/occult-encyclopedia').catch(function(){return null}),
+      fetchJSON(API+'/static/talisman_data.json').catch(function(){return null})
     ]);
-    const [chart, hours, aspects, now, houses, dignities, lunarMansion, fixedStars, electional, beings, jinnCommanders, tahatil, arabicParts, occultChart, moonRiseSet, lunarEvents, lunarAspects, heliocentric, kitabAlAjnasNames, occultEncyclopedia, magicSquareKings, planetaryHoursTalismans, talismanData] = results.map(function(r){return r.value||null;});
+    const [chart, hours, aspects, now, houses, dignities, lunarMansion, fixedStars, electional, beings, jinnCommanders, tahatil, magicSquareKings, planetaryHoursTalismans, arabicParts, occultChart, moonRiseSet, lunarEvents, lunarAspects, heliocentric, kitabAlAjnasNames, occultEncyclopedia, talismanData] = results.map(function(r){return r.value||null;});
     state = { chart, hours, aspects: aspects && (aspects.aspects || aspects), now, houses, dignities, lunarMansion, fixedStars, electional, beings, arabicParts, occultChart, moonRiseSet, lunarEvents, lunarAspects, heliocentric, jinnCommanders, tahatil, magicSquareKings, planetaryHoursTalismans, kitabAlAjnasNames, occultEncyclopedia, talismanData };
     render();
   } catch(e) { showError(e.message); }
@@ -457,7 +458,7 @@ function render() {
   var header = $('header'); if(header) header.style.display = 'flex';
   var sidebar = $('sidebar'); if(sidebar) sidebar.style.display = 'flex';
   var content = $('content'); if(content) content.style.display = 'block';
-  const { chart, hours, aspects, now, houses, dignities, lunarMansion, fixedStars, electional, beings, arabicParts, occultChart, moonRiseSet, lunarEvents, lunarAspects, heliocentric, jinnCommanders, tahatil, magicSquareKings, planetaryHoursTalismans } = state;
+  const { chart, hours, aspects, now, houses, dignities, lunarMansion, fixedStars, electional, beings, arabicParts, occultChart, moonRiseSet, lunarEvents, lunarAspects, heliocentric, jinnCommanders, tahatil, magicSquareKings, planetaryHoursTalismans, kitabAlAjnasNames, occultEncyclopedia, talismanData } = state;
   const cusps = chart.houses ? Object.values(chart.houses.cusps).map(Number) : [];
 
   var sLocal = $('s-local'); if(sLocal && now) sLocal.textContent = now.local ? now.local.slice(11,19) : '--';
