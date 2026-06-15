@@ -287,7 +287,7 @@ tr:hover td{background:var(--surface-2)}
         <div class="card" style="margin-top:.5rem;background:linear-gradient(135deg,#080008 0%,#1a0010 50%,#0a0a0a 100%);border:1px solid rgba(255,0,255,.12)">
           <h2 style="color:#ff00ff;text-shadow:0 0 8px rgba(255,0,255,.4)"><span class="icon">🔯</span> Talisman Construction</h2>
           <div style="margin-bottom:.5rem"><label style="color:rgba(255,0,255,.6);font-size:.7rem;display:block;margin-bottom:.3rem">Intent:</label><select id="talisman-intent" onchange="loadTalisman()" style="width:100%;background:var(--surface-2);border:1px solid rgba(255,0,255,.2);color:var(--text);padding:.4rem .5rem;border-radius:var(--radius);font-size:.75rem"><option value="wealth">💰 Wealth & Prosperity</option><option value="strength">⚔️ Strength & Protection</option><option value="love">❤️ Love & Attraction</option><option value="wisdom">📖 Wisdom & Knowledge</option><option value="protection">🛡️ Protection & Binding</option><option value="glory">🌟 Glory & Honor</option><option value="foundation">🌙 Foundation & Dreams</option><option value="crown">👑 Crown & Divinity</option></select></div>
-          <div id="talisman-result"><div style="color:var(--text-muted);padding:1rem;text-align:center">Select an intent...</div></div>
+          <div id="talisman-result"><div style="color:rgba(255,0,255,.5);padding:1rem;text-align:center;font-size:.7rem">⚗ Select an intent to begin talisman construction</div></div>
         </div>
       </div>
       <!-- DIGNITIES TAB -->
@@ -319,7 +319,7 @@ tr:hover td{background:var(--surface-2)}
       <div class="tab-content" id="tab-chart-study"><div class="card"><h2><span class="icon">🔍</span> Chart Study</h2><div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:flex-end;margin-bottom:1rem"><div style="display:flex;flex-direction:column;gap:.15rem"><label style="font-size:.6rem;color:var(--text-muted);text-transform:uppercase">Date</label><input type="date" id="cs-date" style="background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:.3rem .4rem;border-radius:var(--radius);font-family:var(--font);font-size:.7rem"></div><div style="display:flex;flex-direction:column;gap:.15rem"><label style="font-size:.6rem;color:var(--text-muted);text-transform:uppercase">Time</label><input type="time" id="cs-time" style="background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:.3rem .4rem;border-radius:var(--radius);font-family:var(--font);font-size:.7rem"></div><div style="display:flex;flex-direction:column;gap:.15rem"><label style="font-size:.6rem;color:var(--text-muted);text-transform:uppercase">Lat</label><input type="number" id="cs-lat" value="-33.76" step=".01" style="background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:.3rem .4rem;border-radius:var(--radius);font-family:var(--font);font-size:.7rem;width:70px"></div><div style="display:flex;flex-direction:column;gap:.15rem"><label style="font-size:.6rem;color:var(--text-muted);text-transform:uppercase">Lon</label><input type="number" id="cs-lon" value="25.40" step=".01" style="background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:.3rem .4rem;border-radius:var(--radius);font-family:var(--font);font-size:.7rem;width:70px"></div><button class="btn-refresh" id="btn-calculate-chart">☆ Calc</button></div><div id="chart-study-result"></div></div></div>
 
       <!-- TALISMAN TAB -->
-      <div class="tab-content" id="tab-talisman"><div class="card"><h2><span class="icon">🔯</span> Talisman Construction</h2><div id="talisman-builder"><div style="margin-bottom:1rem"><label style="color:var(--text-dim);font-size:.8rem;display:block;margin-bottom:.3rem">Intent:</label><select id="talisman-intent" onchange="loadTalisman()" style="width:100%;background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:.4rem .5rem;border-radius:var(--radius);font-family:var(--font);font-size:.75rem"><option value="wealth">💰 Wealth &amp; Prosperity</option><option value="strength">⚔️ Strength &amp; Protection</option><option value="love">❤️ Love &amp; Attraction</option><option value="wisdom">📖 Wisdom &amp; Knowledge</option><option value="protection">🛡️ Protection &amp; Binding</option><option value="glory">🌟 Glory &amp; Honor</option><option value="foundation">🌙 Foundation &amp; Dreams</option><option value="crown">👑 Crown &amp; Divinity</option></select></div><div id="talisman-result"><div style="color:var(--text-muted);padding:1rem;text-align:center">Select an intent...</div></div></div></div></div>
+      <div class="tab-content" id="tab-talisman"><div class="card"><h2><span class="icon">🔯</span> Talisman Construction</h2><div id="talisman-builder"><div style="margin-bottom:1rem"><label style="color:var(--text-dim);font-size:.8rem;display:block;margin-bottom:.3rem">Intent:</label><select id="talisman-intent" onchange="loadTalisman()" style="width:100%;background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:.4rem .5rem;border-radius:var(--radius);font-family:var(--font);font-size:.75rem"><option value="wealth">💰 Wealth &amp; Prosperity</option><option value="strength">⚔️ Strength &amp; Protection</option><option value="love">❤️ Love &amp; Attraction</option><option value="wisdom">📖 Wisdom &amp; Knowledge</option><option value="protection">🛡️ Protection &amp; Binding</option><option value="glory">🌟 Glory &amp; Honor</option><option value="foundation">🌙 Foundation &amp; Dreams</option><option value="crown">👑 Crown &amp; Divinity</option></select></div><div id="talisman-result"><div style="color:rgba(255,0,255,.5);padding:1rem;text-align:center;font-size:.7rem">⚗ Select an intent to begin talisman construction</div></div></div></div></div>
       <!-- TALISMAN TAB -->
       <div class="tab-content" id="tab-mansion-wheel">
       <!-- SOLOMONIC SEALS TAB -->
@@ -444,8 +444,8 @@ async function loadAll() {
       fetchJSON(API+'/kitab-al-ajnas-names').catch(function(){return null}),
       fetchJSON(API+'/occult-encyclopedia').catch(function(){return null})
     ]);
-    const [chart, hours, aspects, now, houses, dignities, lunarMansion, fixedStars, electional, beings, jinnCommanders, tahatil, arabicParts, occultChart, moonRiseSet, lunarEvents, lunarAspects, heliocentric, kitabAlAjnasNames, occultEncyclopedia, magicSquareKings, planetaryHoursTalismans] = results.map(function(r){return r.value||null;});
-    state = { chart, hours, aspects: aspects && (aspects.aspects || aspects), now, houses, dignities, lunarMansion, fixedStars, electional, beings, arabicParts, occultChart, moonRiseSet, lunarEvents, lunarAspects, heliocentric, jinnCommanders, tahatil, magicSquareKings, planetaryHoursTalismans, kitabAlAjnasNames, occultEncyclopedia };
+    const [chart, hours, aspects, now, houses, dignities, lunarMansion, fixedStars, electional, beings, jinnCommanders, tahatil, arabicParts, occultChart, moonRiseSet, lunarEvents, lunarAspects, heliocentric, kitabAlAjnasNames, occultEncyclopedia, magicSquareKings, planetaryHoursTalismans, talismanData] = results.map(function(r){return r.value||null;});
+    state = { chart, hours, aspects: aspects && (aspects.aspects || aspects), now, houses, dignities, lunarMansion, fixedStars, electional, beings, arabicParts, occultChart, moonRiseSet, lunarEvents, lunarAspects, heliocentric, jinnCommanders, tahatil, magicSquareKings, planetaryHoursTalismans, kitabAlAjnasNames, occultEncyclopedia, talismanData };
     render();
   } catch(e) { showError(e.message); }
 }
@@ -886,20 +886,26 @@ function renderHours(hours){
   var kingsBody=$('magic-square-kings-body');
   if(kingsBody&&state.magicSquareKings&&state.magicSquareKings.kings){
     var kh='';
-    var kings=state.magicSquareKings;
-    var planets=['Sun','Moon','Mercury','Venus','Mars','Jupiter','Saturn'];
+    var kings=state.magicSquareKings.kings;
+    var planets=['Saturn','Jupiter','Mars','Sun','Venus','Mercury','Moon'];
     planets.forEach(function(p){
       var k=kings[p];
-      if(k) kh+='<tr><td style="color:#ffd700">'+p+'</td><td style="color:#fff">'+k.king+'</td><td style="color:rgba(255,255,255,.6)">'+k.meaning+'</td><td style="color:#00ff44">'+k.element+'</td><td style="color:#ff00ff">'+k.magic_square+'</td></tr>';
+      if(k) kh+='<tr><td style="color:#ffd700">'+p+'</td><td style="color:#fff;font-size:.65rem">'+k.king+'</td><td style="color:rgba(255,255,255,.6);font-size:.6rem">'+k.meaning+'</td><td style="color:#00ff44">'+k.element+'</td><td style="color:#ff00ff">'+k.magic_square+'</td></tr>';
     });
     kingsBody.innerHTML=kh;
   }
 }
 
 function renderHourRows(period,bodyId){
-  var body=$(bodyId); if(!body||!state.hours||!state.hours.hours) return;
-  var hours=state.hours.hours[period]||[];
-  body.innerHTML=hours.map(function(h){return'<tr'+(h.active?' style="background:var(--gold-glow)"':'')+'><td>'+h.hour_number+'</td><td>'+h.ruler+' '+h.symbol+'</td><td>'+h.start+'</td><td>'+h.end+'</td><td>'+(h.active?'★ Active':'')+'</td></tr>';}).join('');
+  var body=$(bodyId); if(!body||!state.hours) return;
+  var allHours=state.hours.hours||[];
+  var dayHours=[], nightHours=[];
+  allHours.forEach(function(h){
+    if(h.period==='day') dayHours.push(h);
+    else nightHours.push(h);
+  });
+  var hours=period==='day'?dayHours:nightHours;
+  body.innerHTML=hours.map(function(h){return'<tr'+(h.active?' style="background:rgba(255,215,0,.08)"':'')+'><td>'+h.hour_number+'</td><td>'+h.ruler+' '+h.symbol+'</td><td>'+h.start+'</td><td>'+h.end+'</td><td>'+(h.active?'★ Active':'')+'</td></tr>';}).join('');
 }
 
 function renderDignities(data){
@@ -2824,20 +2830,21 @@ async function loadMansions() {
 // TALISMAN TAB
 // ═══════════════════════════════════════════════════════════════
 var talismanData = null;
-fetch('/static/talisman_data.json').then(function(r){return r.json();})
+fetchJSON(API+'/static/talisman_data.json').catch(function(){return null})
   .then(function(d){talismanData=d;}).catch(function(){talismanData=null;});
 
 function loadTalisman() {
   var container = $('talisman-result');
   if(!container) return;
   var sel = document.getElementById('talisman-intent');
-  if(!sel||!talismanData) { return; }
+  var td=state.talismanData||talismanData;
+  if(!sel||!td) { container.innerHTML='<div style="color:rgba(255,0,255,.5);padding:1rem;text-align:center">Loading talisman data...</div>'; return; }
   var intent = sel.value;
-  var intents = talismanData.intents;
+  var intents = td.intents;
   var intentData = intents[intent];
   if(!intentData){container.innerHTML='<div style="color:var(--text-muted);padding:1rem">No data</div>';return;}
-  var sephirah = talismanData.sephiroth.find(function(s){return s.name===intentData.sephirah;});
-  var planet = talismanData.planetary_squares[intentData.planet];
+  var sephirah = td.sephiroth.find(function(s){return s.name===intentData.sephirah;});
+  var planet = td.planetary_squares[intentData.planet];
   var html = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">';
   html += '<div style="border:1px solid var(--border);border-radius:var(--radius);padding:1rem;background:var(--surface-2)">';
   html += '<h3 style="color:var(--gold);margin-bottom:1rem">' + sel.options[sel.selectedIndex].text + '</h3>';
