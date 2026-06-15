@@ -193,9 +193,7 @@ tr:hover td{background:var(--surface-2)}
       <div class="nav-item" data-tab="electional"><span class="icon">⌛</span> Electional</div>
 <div class="nav-item" data-tab="jinn-commanders"><span class="icon">⚔️</span> Commanders</div>
       <div class="nav-item" data-tab="tahatil"><span class="icon">🜁</span> Tahatil</div>
-      <div class="nav-item" data-tab="magic-square-kings"><span class="icon">🜶</span> Sq Kings</div>
-      <div class="nav-item" data-tab="planetary-hours-talismans"><span class="icon">🕐</span> Hour Talismans</div>
-            <div class="nav-item" data-tab="beings"><span class="icon">👾</span> Beings</div>
+      <div class="nav-item" data-tab="beings"><span class="icon">👾</span> Beings</div>
       <div class="nav-item" data-tab="occult-chart"><span class="icon">🔮</span> Occult</div>
       <div class="nav-item" data-tab="chart-study"><span class="icon">🔍</span> Study</div>
       <div class="nav-item" data-tab="talisman"><span class="icon">🔯</span> Talisman</div>
@@ -259,7 +257,39 @@ tr:hover td{background:var(--surface-2)}
         </div>
       </div>
       <!-- HOURS TAB -->
-      <div class="tab-content" id="tab-hours"><div class="card"><h2><span class="icon">⏳</span> Planetary Hours</h2><div id="hours-current"></div><h3>Day Hours</h3><div class="table-wrap"><table><thead><tr><th>#</th><th>Ruler</th><th>Start</th><th>End</th><th></th></tr></thead><tbody id="hours-day-body"></tbody></table></div><h3>Night Hours</h3><div class="table-wrap"><table><thead><tr><th>#</th><th>Ruler</th><th>Start</th><th>End</th><th></th></tr></thead><tbody id="hours-night-body"></tbody></table></div></div></div>
+      <div class="tab-content" id="tab-hours">
+        <div class="card" style="background:linear-gradient(135deg,#0a0008 0%,#1a0000 50%,#0a0a0a 100%);border:1px solid rgba(255,0,40,.2);box-shadow:0 0 40px rgba(255,0,40,.08),inset 0 0 80px rgba(0,0,0,.6)">
+          <h2 style="color:#ff0022;text-shadow:0 0 10px rgba(255,0,34,.6)"><span class="icon">⏳</span> Planetary Hours <span style="color:#ffd700;font-size:.6rem;margin-left:.3rem">⛧ Talismans & Magic Squares</span></h2>
+          <div id="hours-current"></div>
+          <!-- Current hour ruler -->
+          <div style="margin:.5rem 0;padding:.5rem;background:rgba(255,0,40,.05);border:1px solid rgba(255,0,40,.15);border-radius:8px">
+            <div style="color:#ff0022;font-size:.7rem;font-weight:600;margin-bottom:.3rem">⏰ Current Hour Ruler</div>
+            <div id="hours-ruler-display" style="color:#ffd700;font-size:.8rem"></div>
+          </div>
+          <!-- Talisman pattern -->
+          <div style="margin:.5rem 0;padding:.5rem;background:rgba(255,215,0,.03);border:1px solid rgba(255,215,0,.12);border-radius:8px">
+            <div style="color:#ffd700;font-size:.7rem;font-weight:600;margin-bottom:.3rem">🕐 Talisman Pattern</div>
+            <div style="color:rgba(255,255,255,.6);font-size:.65rem;line-height:1.4" id="hours-talisman-pattern"></div>
+          </div>
+          <!-- Day/Night hours tables -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:.5rem">
+            <div><h3 style="color:#00ccff;font-size:.7rem">☀ Day Hours</h3><div class="table-wrap"><table><thead><tr><th>#</th><th>Ruler</th><th>Start</th><th>End</th></tr></thead><tbody id="hours-day-body"></tbody></table></div></div>
+            <div><h3 style="color:#aa00ff;font-size:.7rem">☽ Night Hours</h3><div class="table-wrap"><table><thead><tr><th>#</th><th>Ruler</th><th>Start</th><th>End</th></tr></thead><tbody id="hours-night-body"></tbody></table></div></div>
+          </div>
+        </div>
+        <!-- Magic Square Kings -->
+        <div class="card" style="margin-top:.5rem;background:linear-gradient(135deg,#0a0800 0%,#1a0a00 50%,#0a0a0a 100%);border:1px solid rgba(255,215,0,.15)">
+          <h2 style="color:#ffd700;text-shadow:0 0 8px rgba(255,215,0,.4)"><span class="icon">🜶</span> Magic Square Kings</h2>
+          <div style="color:rgba(255,215,0,.5);font-size:.6rem;margin-bottom:.5rem">⛧ Planetary kings governing the kamea magic squares — source: Kitab Sirr al-Asrar</div>
+          <div class="table-wrap"><table><thead><tr><th>Planet</th><th>King (Arabic)</th><th>Meaning</th><th>Element</th><th>Magic Square</th></tr></thead><tbody id="magic-square-kings-body"></tbody></table></div>
+        </div>
+        <!-- Talisman construction -->
+        <div class="card" style="margin-top:.5rem;background:linear-gradient(135deg,#080008 0%,#1a0010 50%,#0a0a0a 100%);border:1px solid rgba(255,0,255,.12)">
+          <h2 style="color:#ff00ff;text-shadow:0 0 8px rgba(255,0,255,.4)"><span class="icon">🔯</span> Talisman Construction</h2>
+          <div style="margin-bottom:.5rem"><label style="color:rgba(255,0,255,.6);font-size:.7rem;display:block;margin-bottom:.3rem">Intent:</label><select id="talisman-intent" onchange="loadTalisman()" style="width:100%;background:var(--surface-2);border:1px solid rgba(255,0,255,.2);color:var(--text);padding:.4rem .5rem;border-radius:var(--radius);font-size:.75rem"><option value="wealth">💰 Wealth & Prosperity</option><option value="strength">⚔️ Strength & Protection</option><option value="love">❤️ Love & Attraction</option><option value="wisdom">📖 Wisdom & Knowledge</option><option value="protection">🛡️ Protection & Binding</option><option value="glory">🌟 Glory & Honor</option><option value="foundation">🌙 Foundation & Dreams</option><option value="crown">👑 Crown & Divinity</option></select></div>
+          <div id="talisman-result"><div style="color:var(--text-muted);padding:1rem;text-align:center">Select an intent...</div></div>
+        </div>
+      </div>
       <!-- DIGNITIES TAB -->
       <div class="tab-content" id="tab-dignities"><div class="card"><h2><span class="icon">★</span> Essential Dignities</h2><div class="table-wrap"><table><thead><tr><th>Planet</th><th>Sign</th><th>Deg</th><th>Dom</th><th>Exa</th><th>Fall</th><th>Det</th><th>Tri</th><th>Term</th><th>Face</th><th>Score</th><th>Condition</th></tr></thead><tbody id="dignities-body"></tbody></table></div></div></div>
       <!-- FIXED STARS TAB -->
@@ -272,9 +302,6 @@ tr:hover td{background:var(--surface-2)}
       <!-- TAHATIL SEVEN TAB -->
       <div class="tab-content" id="tab-tahatil"><div class="card"><h2><span class="icon">🜁</span> Seven TAHATIL Names (الطهاطيل السبعة)</h2><div id="tahatil-content"></div></div></div>
       <!-- MAGIC SQUARE KINGS TAB -->
-      <div class="tab-content" id="tab-magic-square-kings"><div class="card"><h2><span class="icon">🜶</span> Magic Square Kings</h2><div id="magic-square-kings-content"></div></div></div>
-      <!-- PLANETARY HOURS TALISMANS TAB -->
-      <div class="tab-content" id="tab-planetary-hours-talismans"><div class="card"><h2><span class="icon">🕐</span> Planetary Hours Talismans</h2><div id="planetary-hours-talismans-content"></div></div></div>
       <div class="tab-content" id="tab-beings">
         <div class="card"><h2><span class="icon">👾</span> Planetary Beings &amp; Current Hour Ruler</h2><div id="beings-content"></div></div>
         <div class="card"><h2><span class="icon">👼</span> Seven Celestial Angels (ملائكة السبعة السماوية)</h2><p style="color:var(--text-dim);font-size:.7rem;margin-bottom:.5rem">The seven primary angels governing the seven heavens, each with a seal (خاتم). Source: Kitab Al-Ajnas.</p><div id="celestial-angels-content"></div></div>
@@ -417,7 +444,7 @@ async function loadAll() {
       fetchJSON(API+'/kitab-al-ajnas-names').catch(function(){return null}),
       fetchJSON(API+'/occult-encyclopedia').catch(function(){return null})
     ]);
-    const [chart, hours, aspects, now, houses, dignities, lunarMansion, fixedStars, electional, beings, jinnCommanders, tahatil, magicSquareKings, planetaryHoursTalismans, arabicParts, occultChart, moonRiseSet, lunarEvents, lunarAspects, heliocentric, kitabAlAjnasNames, occultEncyclopedia] = results.map(function(r){return r.value||null;});
+    const [chart, hours, aspects, now, houses, dignities, lunarMansion, fixedStars, electional, beings, jinnCommanders, tahatil, arabicParts, occultChart, moonRiseSet, lunarEvents, lunarAspects, heliocentric, kitabAlAjnasNames, occultEncyclopedia, magicSquareKings, planetaryHoursTalismans] = results.map(function(r){return r.value||null;});
     state = { chart, hours, aspects: aspects && (aspects.aspects || aspects), now, houses, dignities, lunarMansion, fixedStars, electional, beings, arabicParts, occultChart, moonRiseSet, lunarEvents, lunarAspects, heliocentric, jinnCommanders, tahatil, magicSquareKings, planetaryHoursTalismans, kitabAlAjnasNames, occultEncyclopedia };
     render();
   } catch(e) { showError(e.message); }
@@ -845,6 +872,28 @@ function renderHours(hours){
   var h=hours.current;
   cur.innerHTML='<div class="stat-grid"><div class="stat"><div class="stat-label">Current Hour</div><div class="stat-value gold">'+h.hour_number+' ('+h.period+')</div></div><div class="stat"><div class="stat-label">Ruler</div><div class="stat-value">'+h.ruler+' '+h.symbol+'</div></div><div class="stat"><div class="stat-label">Nature</div><div class="stat-value '+(h.benefic==='benefic'?'':(h.benefic==='malefic'?'malefic':''))+'">'+h.benefic+'</div></div><div class="stat"><div class="stat-label">Time</div><div class="stat-value">'+h.start+' - '+h.end+'</div></div></div>';
   renderHourRows('day','hours-day-body'); renderHourRows('night','hours-night-body');
+  // Current hour ruler display
+  var rulerEl=$('hours-ruler-display');
+  if(rulerEl) rulerEl.innerHTML='<span style="font-size:1.2rem">'+h.symbol+'</span> <span style="color:#ff0022">'+h.ruler+'</span> <span style="color:rgba(255,255,255,.5);font-size:.7rem">('+h.period+' hour '+h.hour_number+')</span>';
+  // Talisman pattern
+  var patEl=$('hours-talisman-pattern');
+  if(patEl&&state.planetaryHoursTalismans&&state.planetaryHoursTalismans.pattern){
+    var tp=state.planetaryHoursTalismans.pattern;
+    var tr=state.planetaryHoursTalismans.talisman_rule||'';
+    patEl.innerHTML='<strong style="color:#ffd700">Pattern:</strong> '+tp+'<br><strong style="color:#ffd700">Rule:</strong> '+tr;
+  }
+  // Magic square kings
+  var kingsBody=$('magic-square-kings-body');
+  if(kingsBody&&state.magicSquareKings&&state.magicSquareKings.kings){
+    var kh='';
+    var kings=state.magicSquareKings;
+    var planets=['Sun','Moon','Mercury','Venus','Mars','Jupiter','Saturn'];
+    planets.forEach(function(p){
+      var k=kings[p];
+      if(k) kh+='<tr><td style="color:#ffd700">'+p+'</td><td style="color:#fff">'+k.king+'</td><td style="color:rgba(255,255,255,.6)">'+k.meaning+'</td><td style="color:#00ff44">'+k.element+'</td><td style="color:#ff00ff">'+k.magic_square+'</td></tr>';
+    });
+    kingsBody.innerHTML=kh;
+  }
 }
 
 function renderHourRows(period,bodyId){
