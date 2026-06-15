@@ -1138,7 +1138,7 @@ function loadZodiacWheel(){
     cv.onmousemove=function(e){ handleWheelHover(e); };
     cv.onmouseleave=function(){ zwHoverPlanet=null; $('zw-hover-info').textContent=''; };
   }
-  if(zwAnimFrame) cancelAnimationFrame(zwAnimFrame);
+  if(zwAnimFrame) clearInterval(zwAnimFrame);
 }
 
 function handleWheelHover(e){
@@ -1391,8 +1391,9 @@ function calcAndDrawWheel(){
   var ll=$('zw-latlon');
   if(ll&&chart){ ll.textContent='Loc: '+(chart.lat||'--')+','+(chart.lon||'--')+' | ASC: '+fmtDeg(asc%30)+' '+SIGN_SYMBOLS[Math.floor(asc/30)]; }
 
-  // Animate
-  zwAnimFrame=requestAnimationFrame(function(){ calcAndDrawWheel(); });
+  // Animate — use setInterval instead of recursive rAF
+  if(zwAnimFrame) clearInterval(zwAnimFrame);
+  zwAnimFrame=setInterval(function(){ calcAndDrawWheel(); }, 100);
 
   // ── Render Aspects panel ──
   var aspEl=$('zw-aspects-list');
