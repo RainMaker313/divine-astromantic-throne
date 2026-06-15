@@ -186,7 +186,7 @@ tr:hover td{background:var(--surface-2)}
       <div class="nav-item active" data-tab="moon"><span class="icon">☽</span> Moon</div>
       <div class="nav-item" data-tab="solar-system"><span class="icon">☉</span> Solar System</div>
       <div class="nav-item" data-tab="zodiac-wheel"><span class="icon">☉</span> Zodiac Wheel</div>
-      <div class="nav-item" data-tab="mansion-wheel"><span class="icon">☽</span> Mansion Wheel</div>
+      <div class="nav-item" data-tab="mansion-wheel"><span class="icon">☽</span> Mansions</div>
       <div class="nav-item" data-tab="hours"><span class="icon">⏳</span> Hours</div>
       <div class="nav-item" data-tab="dignities"><span class="icon">★</span> Dignities</div>
       <div class="nav-item" data-tab="fixed-stars"><span class="icon">✧</span> Stars</div>
@@ -198,7 +198,6 @@ tr:hover td{background:var(--surface-2)}
             <div class="nav-item" data-tab="beings"><span class="icon">👾</span> Beings</div>
       <div class="nav-item" data-tab="occult-chart"><span class="icon">🔮</span> Occult</div>
       <div class="nav-item" data-tab="chart-study"><span class="icon">🔍</span> Study</div>
-      <div class="nav-item" data-tab="mansions"><span class="icon">🏠</span> Mansions</div>
       <div class="nav-item" data-tab="talisman"><span class="icon">🔯</span> Talisman</div>
       <div class="nav-item" data-tab="oracle"><span class="icon">🃏</span> Oracle</div>
       <div class="nav-item" data-tab="solomonic-seals"><span class="icon">⛧</span> Solomonic Seals</div>
@@ -293,10 +292,8 @@ tr:hover td{background:var(--surface-2)}
 
       <!-- TALISMAN TAB -->
       <div class="tab-content" id="tab-talisman"><div class="card"><h2><span class="icon">🔯</span> Talisman Construction</h2><div id="talisman-builder"><div style="margin-bottom:1rem"><label style="color:var(--text-dim);font-size:.8rem;display:block;margin-bottom:.3rem">Intent:</label><select id="talisman-intent" onchange="loadTalisman()" style="width:100%;background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:.4rem .5rem;border-radius:var(--radius);font-family:var(--font);font-size:.75rem"><option value="wealth">💰 Wealth &amp; Prosperity</option><option value="strength">⚔️ Strength &amp; Protection</option><option value="love">❤️ Love &amp; Attraction</option><option value="wisdom">📖 Wisdom &amp; Knowledge</option><option value="protection">🛡️ Protection &amp; Binding</option><option value="glory">🌟 Glory &amp; Honor</option><option value="foundation">🌙 Foundation &amp; Dreams</option><option value="crown">👑 Crown &amp; Divinity</option></select></div><div id="talisman-result"><div style="color:var(--text-muted);padding:1rem;text-align:center">Select an intent...</div></div></div></div></div>
-      <!-- MANSIONS TAB -->
-      <div class="tab-content" id="tab-mansions"><div class="card"><h2><span class="icon">🏠</span> Lunar Mansions</h2><div id="mansions-content"><div style="color:var(--text-muted);padding:1rem;text-align:center">Loading 28 lunar mansions...</div></div></div></div>
-      <!-- ORACLE TAB -->
-      <div class="tab-content" id="tab-oracle"><div class="card"><h2><span class="icon">🃏</span> Divine Oracle</h2><div id="oracle-cards" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.75rem"><div style="color:var(--text-muted);padding:1rem;text-align:center">Loading oracle...</div></div></div></div>
+      <!-- TALISMAN TAB -->
+      <div class="tab-content" id="tab-mansion-wheel">
       <!-- SOLOMONIC SEALS TAB -->
       <div class="tab-content" id="tab-solomonic-seals"><div class="card"><h2><span class="icon">⛧</span> Solomonic Seals (Kitab Al-Ajnas)</h2><div id="solomonic-seals-content"></div></div></div>
       <!-- OCCULT ENCYCLOPEDIA TAB -->
@@ -1459,12 +1456,18 @@ function getHouseForLon(lon, houses){
 // ═════════════════════════════════════════════════════════════
 var mwInterval=null;
 
+// ═════════════════════════════════════════════════════════════
+// LUNAR MANSION WHEEL — 28 mansions + house cusps
+// Moon=gold, Rahu=red, Ketu=green, Parts=magenta
+// Mansions=white, Star-mansions=gold, House cusps=gold
+// ═════════════════════════════════════════════════════════════
+var mwInterval=null;
+
 function loadMansionWheel(){
-  // Fetch mansion and star data
   Promise.all([
     fetchJSON(API+'/mansions/list'),
     fetchJSON(API+'/stars/list')
- ]).then(function(results){
+  ]).then(function(results){
     state.mansions=results[0].mansions||[];
     state.fixedStars=results[1].stars||[];
     calcAndDrawMansionWheel();
@@ -1481,32 +1484,56 @@ function loadMansionWheel(){
 function handleMansionHover(e){
   var cv=$('mansion-wheel-canvas'); if(!cv) return;
   var rect=cv.getBoundingClientRect();
-  var scaleX=cv.width/rect.width, scaleY=cv.height/rect.height;
-  var mx=(e.clientX-rect.left)*scaleX, my=(e.clientY-rect.top)*scaleY;
+  var sx=cv.width/rect.width, sy=cv.height/rect.height;
+  var mx=(e.clientX-rect.left)*sx, my=(e.clientY-rect.top)*sy;
   var chart=state.chart; if(!chart) return;
   var asc=chart.asc||0, CX=310, CY=310, R=250;
   function toXY(lon,r){ var rel=(lon-asc+360)%360; var ang=(180-rel)*(Math.PI/180); return {x:CX+r*Math.cos(ang),y:CY+r*Math.sin(ang)}; }
-  var best=null, bestDist=15;
-  var specialObjects=[
+  var best=null, bestDist=18;
+  var objs=[
     {name:'Moon',lon:chart.planets.find(function(p){return p.name==='Moon';})?.longitude},
     {name:'Rahu',lon:chart.planets.find(function(p){return p.name==='Rahu';})?.longitude},
     {name:'Ketu',lon:chart.planets.find(function(p){return p.name==='Ketu';})?.longitude}
   ];
   if(chart.arabic_parts){
-    var p1=chart.arabic_parts.Part_of_Fortune||chart.arabic_parts['Part of Fortune'];
-    var p2=chart.arabic_parts.Part_of_Spirit||chart.arabic_parts['Part of Spirit'];
-    if(p1&&p1.longitude) specialObjects.push({name:'Fortune',lon:p1.longitude});
-    if(p2&&p2.longitude) specialObjects.push({name:'Spirit',lon:p2.longitude});
+    var p1=chart.arabic_parts.Part_of_Fortune; if(p1&&p1.longitude!=null) objs.push({name:'Fortune',lon:p1.longitude});
+    var p2=chart.arabic_parts.Part_of_Spirit; if(p2&&p2.longitude!=null) objs.push({name:'Spirit',lon:p2.longitude});
   }
-  specialObjects.forEach(function(obj){
+  // Check mansion hover
+  var mansions=state.mansions||[];
+  var mSpan=360/28;
+  for(var i=0;i<mansions.length;i++){
+    var mLon=mansions[i].start_deg+mSpan/2;
+    var pos=toXY(mLon,(250+170)/2);
+    var d=Math.sqrt((mx-pos.x)*(mx-pos.x)+(my-pos.y)*(my-pos.y));
+    if(d<bestDist){bestDist=d;best={name:mansions[i].name,lon:mLon,isMansion:true};}
+  }
+  // Check objects
+  objs.forEach(function(obj){
     if(obj.lon==null) return;
-    var pos=toXY(obj.lon,R-40);
+    var pos=toXY(obj.lon,250-40);
     var d=Math.sqrt((mx-pos.x)*(mx-pos.x)+(my-pos.y)*(my-pos.y));
     if(d<bestDist){bestDist=d;best={name:obj.name,lon:obj.lon};}
   });
   if(best){
     var sign=getSign(best.lon), deg=getDegInSign(best.lon);
-    $('mw-hover-info').textContent=best.name+' '+SIGN_SYMBOLS[Math.floor(best.lon/30)]+' '+sign+' '+fmtDeg(deg);
+    var info=best.name+' '+SIGN_SYMBOLS[Math.floor(best.lon/30)]+' '+sign+' '+fmtDeg(deg);
+    if(best.isMansion){
+      // Find which house this mansion is in
+      var houses=chart.houses;
+      if(houses&&houses.cusps){
+        var cuspKeys=Object.keys(houses.cusps).sort(function(a,b){return parseInt(a)-parseInt(b);});
+        for(var ci=0;ci<cuspKeys.length;ci++){
+          var c1=houses.cusps[cuspKeys[ci]];
+          var c2=houses.cusps[cuspKeys[(ci+1)%cuspKeys.length]];
+          if(c1!=null&&c2!=null){
+            if(c2>c1){if(best.lon>=c1&&best.lon<c2){info+=' | House '+(ci+1);break;}}
+            else{if(best.lon>=c1||best.lon<c2){info+=' | House '+(ci+1);break;}}
+          }
+        }
+      }
+    }
+    $('mw-hover-info').textContent=info;
   } else {
     $('mw-hover-info').textContent='';
   }
@@ -1516,7 +1543,7 @@ function calcAndDrawMansionWheel(){
   var chart=state.chart; if(!chart||!chart.planets) return;
   var cv=$('mansion-wheel-canvas'); if(!cv) return;
   var ctx=cv.getContext('2d');
-  var W=cv.width, H=cv.height, CX=W/2, CY=H/2, R=250, R_INNER=170;
+  var W=cv.width, H=cv.height, CX=W/2, CY=H/2, R=250, R_INNER=160;
   var asc=chart.asc||0, now=Date.now();
   function toXY(lon,r){ var rel=(lon-asc+360)%360; var ang=(180-rel)*(Math.PI/180); return {x:CX+r*Math.cos(ang),y:CY+r*Math.sin(ang)}; }
 
@@ -1539,7 +1566,31 @@ function calcAndDrawMansionWheel(){
     }
   });
 
-  // Draw 28 mansion segments
+  // ── Draw house cusp lines (gold) ──
+  var houses=chart.houses;
+  if(houses&&houses.cusps){
+    var cuspKeys=['1st','4th','7th','10th'];
+    var cuspLabels={'1st':'ASC','4th':'IC','7th':'DC','10th':'MC'};
+    var allCuspKeys=Object.keys(houses.cusps).sort(function(a,b){return parseInt(a)-parseInt(b);});
+    allCuspKeys.forEach(function(k){
+      var lon=houses.cusps[k]; if(lon==null) return;
+      var isAxis=cuspKeys.indexOf(k)>=0;
+      var p2=toXY(lon,R+12);
+      ctx.save();
+      if(isAxis){ ctx.shadowColor='#ffd700'; ctx.shadowBlur=10; ctx.strokeStyle='#ffd700'; ctx.lineWidth=2.5; }
+      else{ ctx.strokeStyle='rgba(255,215,0,0.3)'; ctx.lineWidth=0.8; }
+      ctx.beginPath(); ctx.moveTo(CX,CY); ctx.lineTo(p2.x,p2.y); ctx.stroke();
+      if(isAxis){
+        var lp=toXY(lon,R+22);
+        ctx.save(); ctx.shadowColor='#ffd700'; ctx.shadowBlur=6;
+        ctx.font='bold 10px "Courier New",monospace'; ctx.fillStyle='#ffd700'; ctx.textAlign='center'; ctx.textBaseline='middle';
+        ctx.fillText(cuspLabels[k],lp.x,lp.y); ctx.restore();
+      }
+      ctx.restore();
+    });
+  }
+
+  // ── Draw 28 mansion segments ──
   var mSpan=360/28;
   for(var i=0;i<28;i++){
     var lon1=i*mSpan, lon2=(i+1)*mSpan;
@@ -1551,90 +1602,103 @@ function calcAndDrawMansionWheel(){
     ctx.lineTo(p2o.x,p2o.y);
     ctx.arc(CX,CY,R,(180-lon2)*(Math.PI/180),(180-lon1)*(Math.PI/180),false);
     ctx.closePath();
-    ctx.fillStyle=hasStar?'rgba(255,215,0,0.08)':'rgba(255,255,255,0.04)';
+    ctx.fillStyle=hasStar?'rgba(255,215,0,0.1)':'rgba(255,255,255,0.04)';
     ctx.fill();
     ctx.save();
-    if(hasStar){ ctx.shadowColor='#ffd700'; ctx.shadowBlur=6; ctx.strokeStyle='rgba(255,215,0,0.5)'; ctx.lineWidth=1.5; }
+    if(hasStar){ ctx.shadowColor='#ffd700'; ctx.shadowBlur=8; ctx.strokeStyle='rgba(255,215,0,0.6)'; ctx.lineWidth=2; }
     else{ ctx.strokeStyle='rgba(255,255,255,0.2)'; ctx.lineWidth=0.7; }
     ctx.beginPath(); ctx.moveTo(p1i.x,p1i.y);
     ctx.arc(CX,CY,R_INNER,(180-lon1)*(Math.PI/180),(180-lon2)*(Math.PI/180),true);
     ctx.lineTo(p2o.x,p2o.y);
     ctx.arc(CX,CY,R,(180-lon2)*(Math.PI/180),(180-lon1)*(Math.PI/180),false);
     ctx.closePath(); ctx.stroke(); ctx.restore();
+
+    // Mansion name — BIGGER FONT
     var mid=toXY(lon1+mSpan/2,(R+R_INNER)/2);
     ctx.save();
-    if(hasStar){ ctx.shadowColor='#ffd700'; ctx.shadowBlur=8; ctx.fillStyle='#ffd700'; }
-    else{ ctx.fillStyle='rgba(255,255,255,0.65)'; }
-    ctx.font='bold 7px "Courier New",monospace'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    if(hasStar){ ctx.shadowColor='#ffd700'; ctx.shadowBlur=10; ctx.fillStyle='#ffd700'; }
+    else{ ctx.fillStyle='rgba(255,255,255,0.8)'; }
+    ctx.font='bold 11px "Courier New",monospace'; ctx.textAlign='center'; ctx.textBaseline='middle';
     ctx.fillText(mName,mid.x,mid.y); ctx.restore();
   }
 
-  // Moon — neon gold
+  // ── Moon — neon gold ──
   var moonLon=null;
   chart.planets.forEach(function(p){ if(p.name==='Moon') moonLon=p.longitude; });
   if(moonLon!=null){
     var mp=toXY(moonLon,R-35), pulse=Math.sin(now/300)*0.3+0.7;
     ctx.save(); ctx.shadowColor='#ffd700'; ctx.shadowBlur=25*pulse+10;
     ctx.beginPath(); ctx.arc(mp.x,mp.y,12+4*pulse,0,Math.PI*2);
-    ctx.fillStyle='rgba(255,215,0,0.25)'; ctx.fill();
-    ctx.beginPath(); ctx.arc(mp.x,mp.y,6,0,Math.PI*2);
+    ctx.fillStyle='rgba(255,215,0,0.3)'; ctx.fill();
+    ctx.beginPath(); ctx.arc(mp.x,mp.y,7,0,Math.PI*2);
     ctx.fillStyle='#ffd700'; ctx.fill(); ctx.restore();
     ctx.save(); ctx.shadowColor='#ffd700'; ctx.shadowBlur=8;
-    ctx.font='bold 9px "Courier New",monospace'; ctx.fillStyle='#ffd700'; ctx.textAlign='center';
-    ctx.fillText('Moon',mp.x,mp.y-16); ctx.restore();
+    ctx.font='bold 11px "Courier New",monospace'; ctx.fillStyle='#ffd700'; ctx.textAlign='center';
+    ctx.fillText('Moon',mp.x,mp.y-18); ctx.restore();
   }
 
-  // Rahu — red
+  // ── Rahu — red ──
   var rahuLon=null;
   chart.planets.forEach(function(p){ if(p.name==='Rahu') rahuLon=p.longitude; });
   if(rahuLon!=null){
     var rp=toXY(rahuLon,R-50);
     ctx.save(); ctx.shadowColor='#ff0040'; ctx.shadowBlur=10;
-    ctx.beginPath(); ctx.arc(rp.x,rp.y,5,0,Math.PI*2); ctx.fillStyle='#ff0040'; ctx.fill(); ctx.restore();
-    ctx.font='7px monospace'; ctx.fillStyle='#ff0040'; ctx.textAlign='center';
-    ctx.fillText('Rahu',rp.x,rp.y-11);
+    ctx.beginPath(); ctx.arc(rp.x,rp.y,6,0,Math.PI*2); ctx.fillStyle='#ff0040'; ctx.fill(); ctx.restore();
+    ctx.font='bold 8px monospace'; ctx.fillStyle='#ff0040'; ctx.textAlign='center';
+    ctx.fillText('Rahu',rp.x,rp.y-13);
   }
 
-  // Ketu — green
+  // ── Ketu — green ──
   var ketuLon=null;
   chart.planets.forEach(function(p){ if(p.name==='Ketu') ketuLon=p.longitude; });
   if(ketuLon!=null){
     var kp=toXY(ketuLon,R-50);
     ctx.save(); ctx.shadowColor='#00ff44'; ctx.shadowBlur=10;
-    ctx.beginPath(); ctx.arc(kp.x,kp.y,5,0,Math.PI*2); ctx.fillStyle='#00ff44'; ctx.fill(); ctx.restore();
-    ctx.font='7px monospace'; ctx.fillStyle='#00ff44'; ctx.textAlign='center';
-    ctx.fillText('Ketu',kp.x,kp.y-11);
+    ctx.beginPath(); ctx.arc(kp.x,kp.y,6,0,Math.PI*2); ctx.fillStyle='#00ff44'; ctx.fill(); ctx.restore();
+    ctx.font='bold 8px monospace'; ctx.fillStyle='#00ff44'; ctx.textAlign='center';
+    ctx.fillText('Ketu',kp.x,kp.y-13);
   }
 
-  // Arabic Parts — magenta
+  // ── Arabic Parts ──
   if(chart.arabic_parts){
-    var partDefs=[{k:'Part_of_Fortune',n:'Fortune'},{k:'Part_of_Spirit',n:'Spirit'}];
-    partDefs.forEach(function(pt){
+    [{k:'Part_of_Fortune',n:'Fortune'},{k:'Part_of_Spirit',n:'Spirit'}].forEach(function(pt){
       var pd=chart.arabic_parts[pt.k]; if(!pd||pd.longitude==null) return;
       var pp=toXY(pd.longitude,R-65);
       ctx.save(); ctx.shadowColor='#ff00ff'; ctx.shadowBlur=8;
-      ctx.beginPath(); ctx.arc(pp.x,pp.y,4,0,Math.PI*2); ctx.fillStyle='#ff00ff'; ctx.fill(); ctx.restore();
-      ctx.font='6px monospace'; ctx.fillStyle='#ff00ff'; ctx.textAlign='center';
-      ctx.fillText(pt.n,pp.x,pp.y-9);
+      ctx.beginPath(); ctx.arc(pp.x,pp.y,5,0,Math.PI*2); ctx.fillStyle='#ff00ff'; ctx.fill(); ctx.restore();
+      ctx.font='bold 8px monospace'; ctx.fillStyle='#ff00ff'; ctx.textAlign='center';
+      ctx.fillText(pt.n,pp.x,pp.y-11);
     });
   }
 
   // Center crosshair
-  ctx.strokeStyle='rgba(255,215,0,0.15)'; ctx.lineWidth=0.5; ctx.setLineDash([2,3]);
-  ctx.beginPath(); ctx.moveTo(CX-5,CY); ctx.lineTo(CX+5,CY); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(CX,CY-5); ctx.lineTo(CX,CY+5); ctx.stroke(); ctx.setLineDash([]);
+  ctx.strokeStyle='rgba(255,215,0,0.2)'; ctx.lineWidth=0.5; ctx.setLineDash([2,3]);
+  ctx.beginPath(); ctx.moveTo(CX-6,CY); ctx.lineTo(CX+6,CY); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(CX,CY-6); ctx.lineTo(CX,CY+6); ctx.stroke(); ctx.setLineDash([]);
 
   // Clock
   var n=new Date(); var c=$('mw-clock'); if(c) c.textContent=n.toLocaleTimeString();
 
-  // Mansion list
+  // Mansion list with house info
   var listEl=$('mw-mansion-list');
   if(listEl&&mansions.length){
-    var h='<div class="table-wrap"><table><thead><tr><th>#</th><th>Mansion</th><th>Sign</th><th>Start</th><th>Ruler</th><th>Nature</th></tr></thead><tbody>';
+    var h='<div class="table-wrap"><table><thead><tr><th>#</th><th>Mansion</th><th>Sign</th><th>Start</th><th>Ruler</th><th>Nature</th><th>House</th></tr></thead><tbody>';
     for(var i=0;i<mansions.length;i++){
       var m=mansions[i]; var hasStar=!!starMansionSet[i];
       var rc=hasStar?' style="color:#ffd700"':'';
-      h+='<tr'+rc+'><td>'+(i+1)+'</td><td>'+m.name+'</td><td>'+SIGN_SYMBOLS[Math.floor(m.start_deg/30)]+' '+getSign(m.start_deg)+'</td><td>'+fmtDeg(m.start_deg%30)+'</td><td>'+m.ruled_by+'</td><td>'+m.nature+'</td></tr>';
+      var mHouse='';
+      if(houses&&houses.cusps){
+        var allCKeys=Object.keys(houses.cusps).sort(function(a,b){return parseInt(a)-parseInt(b);});
+        for(var ci=0;ci<allCKeys.length;ci++){
+          var c1=houses.cusps[allCKeys[ci]];
+          var c2=houses.cusps[allCKeys[(ci+1)%allCKeys.length]];
+          if(c1!=null&&c2!=null){
+            if(c2>c1){if(m.start_deg>=c1&&m.start_deg<c2){mHouse=(ci+1)+'th';break;}}
+            else{if(m.start_deg>=c1||m.start_deg<c2){mHouse=(ci+1)+'th';break;}}
+          }
+        }
+      }
+      h+='<tr'+rc+'><td>'+(i+1)+'</td><td>'+m.name+'</td><td>'+SIGN_SYMBOLS[Math.floor(m.start_deg/30)]+'</td><td>'+fmtDeg(m.start_deg%30)+'</td><td>'+m.ruled_by+'</td><td>'+m.nature+'</td><td>'+mHouse+'</td></tr>';
     }
     h+='</tbody></table></div>'; listEl.innerHTML=h;
   }
