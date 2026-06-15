@@ -1233,41 +1233,46 @@ function calcAndDrawWheel(){
     ctx.lineTo(p2o.x,p2o.y);
     ctx.arc(CX,CY,R,(180-lon2)*(Math.PI/180),(180-lon1)*(Math.PI/180),false);
     ctx.closePath(); ctx.fillStyle=grad; ctx.fill();
-    // Neon border
-    ctx.save(); ctx.shadowColor=neonSignColors[i][0]; ctx.shadowBlur=6;
+    // Solid neon border lines for each sign boundary
+    ctx.save(); ctx.shadowColor=neonSignColors[i][0]; ctx.shadowBlur=10;
     ctx.beginPath(); ctx.moveTo(p1.x,p1.y);
     ctx.arc(CX,CY,R_INNER,(180-lon1)*(Math.PI/180),(180-lon2)*(Math.PI/180),true);
     ctx.lineTo(p2o.x,p2o.y);
     ctx.arc(CX,CY,R,(180-lon2)*(Math.PI/180),(180-lon1)*(Math.PI/180),false);
-    ctx.closePath(); ctx.strokeStyle=neonSignColors[i][0]+'60'; ctx.lineWidth=0.8; ctx.stroke(); ctx.restore();
-    // Sign glyph
+    ctx.closePath(); ctx.strokeStyle=neonSignColors[i][0]; ctx.lineWidth=1.5; ctx.stroke(); ctx.restore();
+    // Full sign name in neon
     var mid=toXY(lon1+15,(R+R_INNER)/2);
-    ctx.save(); ctx.shadowColor=neonSignColors[i][0]; ctx.shadowBlur=8;
-    ctx.font='bold 16px monospace'; ctx.textAlign='center'; ctx.textBaseline='middle';
-    ctx.fillStyle=neonSignColors[i][0]; ctx.fillText(SIGN_SYMBOLS[i],mid.x,mid.y); ctx.restore();
+    ctx.save(); ctx.shadowColor=neonSignColors[i][0]; ctx.shadowBlur=12;
+    ctx.font='bold 11px "Courier New",monospace'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillStyle=neonSignColors[i][0]; ctx.fillText(s.toUpperCase(),mid.x,mid.y); ctx.restore();
   });
 
-  // ── House cusp lines ──
+  // ── House cusp lines — solid and clear ──
   if(houses&&houses.cusps){
     var cuspKeys=Object.keys(houses.cusps).sort(function(a,b){return parseInt(a)-parseInt(b);});
     cuspKeys.forEach(function(k){
       var lon=houses.cusps[k]; if(lon==null) return;
-      var p=toXY(lon,R+10);
       var isAxis=(k==='1st'||k==='4th'||k==='7th'||k==='10th');
+      // Draw solid line from center outward
+      var pOut=toXY(lon,R+10);
       ctx.save();
-      if(isAxis){ ctx.shadowColor='#00ffff'; ctx.shadowBlur=10; }
-      ctx.beginPath(); ctx.moveTo(CX,CY); ctx.lineTo(p.x,p.y);
-      ctx.strokeStyle=isAxis?'rgba(0,255,255,0.7)':'rgba(100,100,150,0.2)';
-      ctx.lineWidth=isAxis?2:0.5;
-      if(!isAxis) ctx.setLineDash([4,4]);
-      ctx.stroke(); ctx.setLineDash([]); ctx.restore();
-      if(isAxis){
-        var lp=toXY(lon,R+26);
-        var lbl=k==='1st'?'ASC':k==='10th'?'MC':k==='7th'?'DC':'IC';
-        ctx.save(); ctx.shadowColor='#00ffff'; ctx.shadowBlur=6;
-        ctx.font='bold 10px monospace'; ctx.textAlign='center'; ctx.textBaseline='middle';
-        ctx.fillStyle='#00ffff'; ctx.fillText(lbl,lp.x,lp.y); ctx.restore();
-      }
+      if(isAxis){ ctx.shadowColor='#00ffff'; ctx.shadowBlur=12; }
+      ctx.beginPath(); ctx.moveTo(CX,CY); ctx.lineTo(pOut.x,pOut.y);
+      ctx.strokeStyle=isAxis?'#00ffff':'rgba(150,150,200,0.5)';
+      ctx.lineWidth=isAxis?2.5:1;
+      ctx.stroke(); ctx.restore();
+      // House number label
+      var lp=toXY(lon,R+24);
+      var lbl;
+      if(k==='1st') lbl='ASC';
+      else if(k==='10th') lbl='MC';
+      else if(k==='7th') lbl='DC';
+      else if(k==='4th') lbl='IC';
+      else lbl=k.replace('th','').replace('st','').replace('nd','').replace('rd','');
+      ctx.save(); ctx.shadowColor=isAxis?'#00ffff':'rgba(150,150,200,0.6)'; ctx.shadowBlur=isAxis?8:4;
+      ctx.font='bold 9px "Courier New",monospace'; ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillStyle=isAxis?'#00ffff':'rgba(180,180,220,0.8)';
+      ctx.fillText(lbl,lp.x,lp.y); ctx.restore();
     });
   }
 
