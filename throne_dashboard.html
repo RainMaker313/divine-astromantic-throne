@@ -504,39 +504,108 @@ function renderMoon() {
   var illum = Math.round((1-Math.cos(elong*Math.PI/180))/2*100);
   var waxing = elong < 180;
   var lon = moonPos ? moonPos.longitude : 0;
+  var riseSet = state.moonRiseSet;
+  var mansion = state.lunarMansion;
+  var aspects = state.lunarAspects;
+  var nakSubs = state.nakSubLords;
+
   var h = '<div class="card" style="background:linear-gradient(135deg,#0a0008 0%,#1a0000 50%,#0a0a0a 100%);border:1px solid rgba(255,215,0,.15);box-shadow:0 0 40px rgba(255,215,0,.06)">';
   h += '<h2 style="color:#ffd700;text-shadow:0 0 10px rgba(255,215,0,.5)"><span class="icon">☽</span> Lunar Dashboard</h2>';
-  // Moon disk with crescent
+
+  // Crescent moon disk — canvas-based
   h += '<div style="text-align:center;padding:.5rem 0">';
-  h += '<div style="width:100px;height:100px;border-radius:50%;margin:0 auto;background:#111;border:2px solid rgba(255,215,0,.3);box-shadow:0 0 20px rgba(255,215,0,.15);position:relative;overflow:hidden">';
-  if(waxing){
-    h += '<div style="position:absolute;top:0;right:0;width:'+illum+'%;height:100%;background:#ffd700;border-radius:0 50% 50% 0"></div>';
-  } else {
-    h += '<div style="position:absolute;top:0;left:0;width:'+(100-illum)+'%;height:100%;background:#ffd700;border-radius:50% 0 0 50%"></div>';
-  }
-  h += '</div>';
+  h += '<canvas id="moon-disk-canvas" width="120" height="120" style="display:block;margin:0 auto"></canvas>';
   h += '<div style="font-size:1rem;color:#ffd700;text-shadow:0 0 6px rgba(255,215,0,.4);margin-top:.4rem">'+phase+'</div>';
   h += '<div style="font-size:.65rem;color:rgba(255,255,255,.4)">'+illum+'% illuminated</div>';
   h += '</div>';
-  // Stats
+
+  // Moon position stats
   h += '<div class="stat-grid" style="margin-top:.5rem">';
   h += '<div class="stat" style="background:rgba(255,215,0,.03);border:1px solid rgba(255,215,0,.1)"><div class="stat-label">Sign</div><div class="stat-value" style="color:#ffd700">'+SIGN_SYMBOLS[Math.floor(lon/30)]+' '+getSign(lon)+'</div></div>';
   h += '<div class="stat" style="background:rgba(255,215,0,.03);border:1px solid rgba(255,215,0,.1)"><div class="stat-label">Degree</div><div class="stat-value">'+fmtDeg(lon%30)+'</div></div>';
-  if(state.moonRiseSet){
-    h += '<div class="stat"><div class="stat-label">Rise</div><div class="stat-value" style="color:#00ff88">'+state.moonRiseSet.moon_rise+'</div></div>';
-    h += '<div class="stat"><div class="stat-label">Set</div><div class="stat-value" style="color:#ff4444">'+state.moonRiseSet.moon_set+'</div></div>';
+  if(riseSet){
+    h += '<div class="stat"><div class="stat-label">Rise</div><div class="stat-value" style="color:#00ff88">'+riseSet.moon_rise+'</div></div>';
+    h += '<div class="stat"><div class="stat-label">Set</div><div class="stat-value" style="color:#ff4444">'+riseSet.moon_set+'</div></div>';
   }
   h += '</div>';
-  // Mansion section (abbreviated for now)
-  if(state.lunarMansion&&state.lunarMansion.mansion&&state.lunarMansion.mansion.current){
-    var m=state.lunarMansion.mansion.current;
-    h+='<div style="margin-top:.5rem;padding:.5rem;background:rgba(255,215,0,.03);border:1px solid rgba(255,215,0,.1);border-radius:8px">';
-    h+='<div style="color:#ffd700;font-size:.8rem;font-weight:600">'+m.number+'. '+m.name+' <span style="color:rgba(255,255,255,.4);font-size:.65rem">ruled by '+(m.ruled_by||'?')+'</span></div>';
-    if(m.progress_percent!=null) h+='<div class="progress-bar" style="margin-top:.2rem"><div class="progress-fill" style="width:'+m.progress_percent+'%"></div></div>';
+
+  // Nakshatra + sub-lord section
+  if(mansion && mansion.mansion && mansion.mansion.current){
+    var m=mansion.mansion.current;
+    h+='<h3 style="color:#ffd700;font-size:.75rem;margin:.5rem 0 .3rem">✦ Nakshatra</h3>';
+    h+='<div style="background:rgba(255,215,0,.03);border:1px solid rgba(255,215,0,.1);border-radius:8px;padding:.75rem">';
+    h+='<div style="font-size:.9rem;color:#ffd700;font-weight:600">'+m.number+'. '+m.name+' <span style="color:rgba(255,255,255,.4);font-size:.65rem">ruled by '+(m.ruled_by||'?')+'</span></div>';
+    // Sub-lord
+    if(nakSubs && nakSubs.entries){
+      var found=null;
+      for(var ei=0;ei<nakSubs.entries.length;ei++){
+        var e=nakSubs.entries[ei];
+        if(e.from_deg!=null && e.to_deg!=null){
+          if(e.to_deg>e.from_deg){if(lon>=e.from_deg&&lon<e.to_deg){found=e;break;}}
+          else{if(lon>=e.from_deg||lon<e.to_deg){found=e;break;}}
+        }
+      }
+      if(found){
+        var slColor=found.sub_lord==='Jupiter'||found.sub_lord==='Venus'?'#00ff88':found.sub_lord==='Saturn'||found.sub_lord==='Mars'?'#ff4444':'#ffd700';
+        h+='<div style="display:flex;gap:.5rem;margin:.4rem 0;flex-wrap:wrap;align-items:center">';
+        h+='<span style="background:rgba(255,215,0,.08);padding:2px 8px;border-radius:4px;font-size:.7rem;color:#ffd700">'+found.nakshatra+'</span>';
+        h+='<span style="background:rgba(255,170,0,.08);padding:2px 8px;border-radius:4px;font-size:.65rem;color:#ffaa00">★ Star Lord: <b>'+found.star_lord+'</b></span>';
+        h+='<span style="background:rgba(255,0,255,.08);padding:2px 8px;border-radius:4px;font-size:.65rem;color:'+slColor+'">◆ Sub Lord: <b>'+found.sub_lord+'</b></span>';
+        h+='</div>';
+        h+='<div style="color:rgba(255,255,255,.35);font-size:.6rem">Range: '+found.from+' — '+found.to+' • Sub-division '+(found.sub_index+1)+'/9</div>';
+      }
+    }
+    if(m.keywords) h+='<div style="color:rgba(255,255,255,.5);font-size:.7rem;margin-top:.3rem">'+m.keywords.join(', ')+'</div>';
+    if(m.magical) h+='<div style="font-size:.7rem;color:#ff00ff;font-style:italic;margin-top:.2rem">'+m.magical+'</div>';
+    if(m.progress_percent!=null){ h+='<div class="progress-bar" style="margin-top:.3rem"><div class="progress-fill" style="width:'+m.progress_percent+'%"></div></div><div style="font-size:.6rem;color:rgba(255,255,255,.35);margin-top:.15rem">'+m.progress_percent.toFixed(1)+'% through mansion</div>'; }
     h+='</div>';
   }
-  h += '</div>';
+
+  // Moon aspects
+  if(aspects && aspects.aspects && aspects.aspects.length){
+    h+='<h3 style="color:#ff0022;font-size:.75rem;margin:.5rem 0 .3rem">☍ Moon Aspects</h3>';
+    aspects.aspects.forEach(function(a){
+      var c=a.nature==='benefic'?'#00ff88':'#ff4444';
+      h+='<div style="background:rgba(255,0,40,.03);border:1px solid rgba(255,0,40,.08);border-radius:6px;padding:.5rem .6rem;margin-bottom:.3rem">';
+      h+='<div><span style="color:'+c+';font-weight:600;font-size:.7rem">'+a.aspect+'</span> <span style="font-size:.7rem">'+a.planet+'</span> <span style="color:rgba(255,255,255,.3);font-size:.6rem">('+(a.applying?'applying':'separating')+')</span></div>';
+      h+='<div style="font-size:.6rem;color:rgba(255,255,255,.4);margin-top:.15rem">Moon: '+SIGN_SYMBOLS[Math.floor(lon/30)]+' '+getSign(lon)+' '+fmtDeg(lon%30)+' | '+a.planet+': '+a.planet_sign+' '+fmtDeg(a.planet_degree)+' | Nakshatra: '+a.nakshatra+'</div>';
+      h+='<div style="font-size:.65rem;color:'+c+';margin-top:.2rem;line-height:1.3">'+a.talisman_guidance+'</div>';
+      h+='</div>';
+    });
+  }
+
+  // Upcoming events
+  if(state.lunarEvents && state.lunarEvents.events && state.lunarEvents.events.length){
+    h+='<h3 style="color:#aa00ff;font-size:.75rem;margin:.5rem 0 .3rem">🌑 Upcoming Events</h3>';
+    state.lunarEvents.events.forEach(function(e){
+      h+='<div style="display:flex;justify-content:space-between;padding:.3rem .5rem;background:rgba(170,0,255,.03);border-radius:4px;margin-bottom:.2rem;font-size:.7rem"><span style="color:#aa00ff">'+getMoonEmoji(e.event)+' '+e.event+'</span><span style="color:rgba(255,255,255,.45)">'+e.date+' '+e.time+'</span></div>';
+    });
+  }
+
+  h+='</div>';
   container.innerHTML=h;
+
+  // Draw crescent moon on canvas
+  setTimeout(function(){
+    var cv=document.getElementById('moon-disk-canvas');
+    if(!cv) return;
+    var ctx=cv.getContext('2d');
+    var cx=60, cy=60, r=50;
+    ctx.clearRect(0,0,120,120);
+    // Dark moon background
+    ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.fillStyle='#111'; ctx.fill();
+    // Glow
+    var grad=ctx.createRadialGradient(cx,cy,r-5,cx,cy,r+10);
+    grad.addColorStop(0,'rgba(255,215,0,0.3)'); grad.addColorStop(1,'rgba(255,215,0,0)');
+    ctx.fillStyle=grad; ctx.fillRect(0,0,120,120);
+    // Crescent — draw gold circle then overlay dark circle offset
+    ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.fillStyle='#ffd700'; ctx.fill();
+    // Overlay dark part
+    var offset=r*(1-illum/100)*0.85;
+    ctx.beginPath(); ctx.arc(cx+offset*(waxing?-1:1),cy*0.95,r*0.88,0,Math.PI*2); ctx.fillStyle='#111'; ctx.fill();
+    // Border
+    ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.strokeStyle='rgba(255,215,0,0.5)'; ctx.lineWidth=2; ctx.stroke();
+  }, 50);
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -570,6 +639,11 @@ function renderSolarSystem(helioData) {
 }
 
 function initSolarSystem(helioData,width,height) {
+  if(!width || !height || width<10 || height<10) {
+    // Container not visible yet, retry after delay
+    setTimeout(function(){ var c=$('solar-system-container'); if(c) renderSolarSystem(helioData); }, 500);
+    return;
+  }
   var container=$('solar-system-container');
   if(!container) return;
   if(solarAnimId) cancelAnimationFrame(solarAnimId);
@@ -896,7 +970,7 @@ function renderHours(hours){
     var planets=['Saturn','Jupiter','Mars','Sun','Venus','Mercury','Moon'];
     planets.forEach(function(p){
       var k=kings[p];
-      if(k) kh+='<tr><td style="color:#ffd700">'+p+'</td><td style="color:#fff;font-size:.65rem">'+k.king+'</td><td style="color:rgba(255,255,255,.6);font-size:.6rem">'+k.meaning+'</td><td style="color:#00ff44">'+k.element+'</td><td style="color:#ff00ff">'+k.magic_square+'</td></tr>';
+      if(k) kh+='<tr><td style="color:#ffd700">'+p+'</td><td style="color:#fff;font-size:.7rem">'+k.king+'</td><td style="color:rgba(255,255,255,.6);font-size:.65rem">'+k.meaning+'</td><td style="color:#00ff44">'+k.element+'</td><td style="color:#ff00ff">'+k.magic_square+'</td></tr>';
     });
     kingsBody.innerHTML=kh;
   }
@@ -905,13 +979,8 @@ function renderHours(hours){
 function renderHourRows(period,bodyId){
   var body=$(bodyId); if(!body||!state.hours) return;
   var allHours=state.hours.hours||[];
-  var dayHours=[], nightHours=[];
-  allHours.forEach(function(h){
-    if(h.period==='day') dayHours.push(h);
-    else nightHours.push(h);
-  });
-  var hours=period==='day'?dayHours:nightHours;
-  body.innerHTML=hours.map(function(h){return'<tr'+(h.active?' style="background:rgba(255,215,0,.08)"':'')+'><td>'+h.hour_number+'</td><td>'+h.ruler+' '+h.symbol+'</td><td>'+h.start+'</td><td>'+h.end+'</td><td>'+(h.active?'★ Active':'')+'</td></tr>';}).join('');
+  var filtered=allHours.filter(function(h){return h.period===period;});
+  body.innerHTML=filtered.map(function(h){return'<tr'+(h.active?' style="background:rgba(255,215,0,.08)"':'')+'><td>'+h.hour_number+'</td><td>'+h.ruler+' '+h.symbol+'</td><td>'+h.start+'</td><td>'+h.end+'</td><td>'+(h.active?'★ Active':'')+'</td></tr>';}).join('');
 }
 
 function renderDignities(data){
@@ -2843,8 +2912,8 @@ function loadTalisman() {
   var container = $('talisman-result');
   if(!container) return;
   var sel = document.getElementById('talisman-intent');
-  var td=state.talismanData||talismanData;
-  if(!sel||!td) { container.innerHTML='<div style="color:rgba(255,0,255,.5);padding:1rem;text-align:center">Loading talisman data...</div>'; return; }
+  var td=state.talismanData||talismanData||window.talismanData;
+  if(!sel||!td) { container.innerHTML='<div style="color:rgba(255,0,255,.5);padding:1rem;text-align:center;font-size:.7rem">⚗ Loading talisman data...</div>'; return; }
   var intent = sel.value;
   var intents = td.intents;
   var intentData = intents[intent];
