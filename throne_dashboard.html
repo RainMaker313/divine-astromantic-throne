@@ -1220,21 +1220,24 @@ function calcAndDrawWheel(){
   ctx.strokeStyle='rgba(0,255,255,0.15)'; ctx.lineWidth=1; ctx.stroke();
   ctx.restore();
 
-  // ── Zodiac sign segments — elemental neon colors ──
-  // Fire: Aries(0), Leo(5), Sagittarius(9) — Red
-  // Earth: Taurus(1), Virgo(6), Capricorn(10) — Green
-  // Air: Gemini(2), Libra(7), Aquarius(11) — Yellow/Orange
-  // Water: Cancer(3), Scorpio(8), Pisces(4) — Blue
-  function getSignColor(i){
-    // SIGNS: 0=Aries,1=Taurus,2=Gemini,3=Cancer,4=Leo,5=Virgo,6=Libra,7=Scorpio,8=Sagittarius,9=Capricorn,10=Aquarius,11=Pisces
-    if(i===0||i===4||i===8) return ['#ff0040','#ff3366'];       // Fire: Aries(0), Leo(4), Sagittarius(8)
-    if(i===1||i===5||i===9) return ['#00ff66','#33ff88'];       // Earth: Taurus(1), Virgo(5), Capricorn(9)
-    if(i===2||i===6||i===10) return ['#ffcc00','#ffdd44'];      // Air: Gemini(2), Libra(6), Aquarius(10)
-    return ['#0088ff','#33aaff'];                                // Water: Cancer(3), Scorpio(7), Pisces(11)
-  }
+  // ── Zodiac sign segments — elemental neon colors by name ──
+  var signColorMap={
+    'Aries':['#ff2200','#ff4422'],
+    'Taurus':['#00ff44','#22ff66'],
+    'Gemini':['#ffcc00','#ffdd33'],
+    'Cancer':['#0066ff','#3388ff'],
+    'Leo':['#ff4400','#ff6633'],
+    'Virgo':['#00dd44','#22ee66'],
+    'Libra':['#ffaa00','#ffcc33'],
+    'Scorpio':['#0044ff','#3366ff'],
+    'Sagittarius':['#ff0022','#ff3344'],
+    'Capricorn':['#00ff66','#33ff88'],
+    'Aquarius':['#ffdd00','#ffee44'],
+    'Pisces':['#0055ff','#3377ff']
+  };
   SIGNS.forEach(function(s,i){
     var lon1=i*30, lon2=(i+1)*30;
-    var ec=getSignColor(i);
+    var ec=signColorMap[s]||['#ffffff','#ffffff'];
     // Segment fill
     var grad=ctx.createRadialGradient(CX,CY,R_INNER,CX,CY,R);
     grad.addColorStop(0,'rgba(0,0,0,0)');
