@@ -205,6 +205,7 @@ tr:hover td{background:var(--surface-2)}
       <div class="nav-item" data-tab="oracle"><span class="icon">🃏</span> Oracle</div>
       <div class="nav-item" data-tab="solomonic-seals"><span class="icon">⛧</span> Solomonic Seals</div>
       <div class="nav-item" data-tab="occult-encyc"><span class="icon">📖</span> Occult Encyc</div>
+      <div class="nav-item" data-tab="zodiac-wheel"><span class="icon">☉</span> Zodiac Wheel</div>
     </div>
     <div class="sidebar-footer">⛧ <span>Hail Baphomet</span> ⛧</div>
   </nav>
@@ -280,6 +281,21 @@ tr:hover td{background:var(--surface-2)}
       <!-- OCCULT ENCYCLOPEDIA TAB -->
       <div class="tab-content" id="tab-occult-encyc"><div class="card"><h2><span class="icon">📖</span> Occult Encyclopedia — Zodiac Angels</h2><p style="color:var(--text-dim);font-size:.7rem;margin-bottom:.5rem">Angel values for each zodiac sign from the Occult Encyclopedia of Magick Squares.</p><div id="occult-encyc-zodiac-content"></div></div>
       <div class="card"><h2><span class="icon">🪐</span> Occult Encyclopedia — Planetary Angels</h2><p style="color:var(--text-dim);font-size:.7rem;margin-bottom:.5rem">Angel values for each classical planet.</p><div id="occult-encyc-planets-content"></div></div></div>
+      <!-- ZODIAC WHEEL TAB -->
+      <div class="tab-content" id="tab-zodiac-wheel">
+        <div class="card"><h2><span class="icon">☉</span> Live Zodiac Wheel — <span id="zw-clock">--:--:--</span> <span style="color:var(--text-dim);font-size:.7rem">(<span id="zw-date">--</span>)</span></h2>
+          <div style="color:var(--text-muted);font-size:.65rem;margin-bottom:.5rem">Live minute-by-minute ephemeris. Planets, houses, nodes, and Arabic parts from your location. Updates every 60 seconds.</div>
+          <div id="zodiac-wheel-container" style="display:flex;justify-content:center;margin:.5rem 0;overflow:auto">
+            <svg id="zodiac-wheel-svg" width="600" height="600" viewBox="0 0 600 600" style="max-width:100%;height:auto"></svg>
+          </div>
+          <div id="zw-planet-list" style="margin-top:.5rem"></div>
+          <div style="margin-top:.5rem;display:flex;gap:.5rem;flex-wrap:wrap">
+            <button class="btn-refresh" id="zw-refresh" style="font-size:.65rem;padding:.2rem .5rem">↻ Refresh Now</button>
+            <button class="btn-refresh" id="zw-toggle-retr" style="font-size:.65rem;padding:.2rem .5px">Show Retrograde</button>
+            <select id="zw-house-system" onchange="calcAndDrawWheel()" style="background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:.2rem .3rem;border-radius:var(--radius);font-size:.65rem"><option value="P" selected>Placidus</option><option value="K">Koch</option><option value="E">Equal</option><option value="W">Whole Sign</option></select>
+          </div>
+        </div>
+      </div>
     </div>
   </main>
   
@@ -1112,6 +1128,137 @@ function renderOccultEncyc(data){
   }
 }
 
+// ═════════════════════════════════════════════════════════════
+// ZODIAC WHEEL — Live SVG wheel with planets, houses, nodes, parts
+// ═════════════════════════════════════════════════════════════
+var zwInterval=null, zwShowRetro=true;
+
+function loadZodiacWheel(){
+  calcAndDrawWheel();
+  if(zwInterval) clearInterval(zwInterval);
+  zwInterval = setInterval(calcAndDrawWheel, 60000); // every minute
+  // Bind refresh button
+  var btn=$('zw-refresh');
+  if(btn) btn.onclick=calcAndDrawWheel;
+  var btn2=$('zw-toggle-retr');
+  if(btn2) btn2.onclick=function(){zwShowRetro=!zwShowRetro;calcAndDrawWheel();};
+}
+
+function calcAndDrawWheel(){
+  var chart=state.chart, houses=state.chart && state.chart.houses, parts=state.chart && state.chart.arabic_parts;
+  if(!chart || !chart.planets){return;}
+  var svgEL=$('zodiac-wheel-svg');
+  if(!svgEL) return;
+  var W=600, H=600, CX=300, CY=300, R=240, R_INNER=160, R_HOUSE=200;
+  var asc = chart.asc || (houses && houses.asc) || 0;
+  var dpr = window.devicePixelRatio||1;
+  // All longitudes relative to ASC (ASC = 0° at top, wheel goes counter-clockwise)
+  function rel(lon){ var r=(lon-asc+360)%360; return r; }
+  function toXY(lon, r){ var ang=(rel(lon)-90)*(Math.PI/180); return {x:CX+r*Math.cos(ang), y:CY+r*Math.sin(ang)}; }
+  var svg='';
+  // Outer ring — zodiac signs
+  var signColors=['#ff6b6b','#ffa07a','#ffd700','#90ee90','#87ceeb','#9370db','#ff6b6b','#ffa07a','#ffd700','#90ee90','#87ceeb','#9370db'];
+  SIGNS.forEach(function(s,i){
+    var a1=i*30, a2=(i+1)*30;
+    var sAng=(a1-90)*(Math.PI/180), eAng=(a2-90)*(Math.PI/180);
+    var x1o=CX+R*Math.cos(sAng), y1o=CY+R*Math.sin(sAng);
+    var x2o=CX+R*Math.cos(eAng), y2o=CY+R*Math.sin(eAng);
+    var x1i=CX+R_INNER*Math.cos(sAng), y1i=CY+R_INNER*Math.sin(sAng);
+    var x2i=CX+R_INNER*Math.cos(eAng), y2i=CY+R_INNER*Math.sin(eAng);
+    svg+='<path d="M'+x1o+','+y1o+' A'+R+','+R+' 0 0,1 '+x2o+','+y2o+' L'+x2i+','+y2i+' A'+R_INNER+','+R_INNER+' 0 0,0 '+x1i+','+y1i+' Z" fill="'+signColors[i]+'" opacity="0.08" stroke="'+signColors[i]+'" stroke-width="0.5"/>';
+    // Sign glyph at midpoint
+    var mAng=(a1+15-90)*(Math.PI/180);
+    var mgX=CX+(R+R_INNER)/2*Math.cos(mAng), mgY=CY+(R+R_INNER)/2*Math.sin(mAng);
+    svg+='<text x="'+mgX+'" y="'+mgY+'" text-anchor="middle" dominant-baseline="middle" fill="'+signColors[i]+'" font-size="14" font-weight="600" opacity="0.7">'+SIGN_SYMBOLS[i]+'</text>';
+  });
+  // House cusp lines + labels
+  if(houses && houses.cusps){
+    var cuspKeys=Object.keys(houses.cusps).sort(function(a,b){return parseInt(a)-parseInt(b);});
+    cuspKeys.forEach(function(k){
+      var lon=houses.cusps[k];
+      if(lon==null) return;
+      var p1=toXY(lon, R_HOUSE), p2=toXY(lon, R+10);
+      var isAxis=(k==='1st'||k==='4th'||k==='7th'||k==='10th');
+      svg+='<line x1="'+CX+'" y1="'+CY+'" x2="'+p2.x+'" y2="'+p2.y+'" stroke="'+(isAxis?'#d4a84c':'#3a3a5a')+'" stroke-width="'+(isAxis?1.5:0.5)+'" '+(isAxis?'':'stroke-dasharray="3,3"')+'/>';
+      if(isAxis){
+        var lp=toXY(lon, R+22);
+        var lbl=k==='1st'?'ASC':k==='10th'?'MC':k==='7th'?'DC':'IC';
+        svg+='<text x="'+lp.x+'" y="'+lp.y+'" text-anchor="middle" dominant-baseline="middle" fill="#d4a84c" font-size="9" font-weight="700">'+lbl+'</text>';
+      }
+    });
+  }
+  // ASC/DC/MC/IC axis lines
+  [asc, (asc+180)%360, (asc+90)%360, (asc+270)%360].forEach(function(lon,i){
+    var p2=toXY(lon, R+10);
+    var col=i===0?'#d4a84c':i===1?'#888':i===2?'#666':'#444';
+    svg+='<line x1="'+CX+'" y1="'+CY+'" x2="'+p2.x+'" y2="'+p2.y+'" stroke="'+col+'" stroke-width="'+(i===0?1.5:0.5)+'"/>';
+  });
+  // Planets
+  var planetGlyphs={Sun:'☉',Moon:'☽',Mercury:'☿',Venus:'♀',Mars:'♂',Jupiter:'♃',Saturn:'♄',Uranus:'♅',Neptune:'♆',Pluto:'♇',Rahu:'☊',Ketu:'☋'};
+  var planetColors={Sun:'#f4d03f',Moon:'#c0c0c0',Mercury:'#b0a0d0',Venus:'#f0a0c0',Mars:'#e05050',Jupiter:'#d4a017',Saturn:'#c8a860',Uranus:'#4dd0e1',Neptune:'#1565c0',Pluto:'#8d6e63',Rahu:'#ff6b35',Ketu:'#8b4513'};
+  var planetData=[];
+  chart.planets.forEach(function(p){
+    var lon=p.longitude, retro=p.retro||false;
+    if(!zwShowRetro && retro) return;
+    var r=R-30-((planetData.length%3)*12);
+    var pos=toXY(lon, r);
+    var col=planetColors[p.name]||'#fff';
+    var houseNum=getHouseForLon(lon, houses);
+    planetData.push({name:p.name, lon:lon, retro:retro, house:houseNum, x:pos.x, y:pos.y, col:col});
+    svg+='<circle cx="'+pos.x+'" cy="'+pos.y+'" r="'+(p.name==='Sun'||p.name==='Moon'?8:6)+'" fill="'+col+'" opacity="0.9"/>';
+    svg+='<text x="'+pos.x+'" y="'+(pos.y+3)+'" text-anchor="middle" dominant-baseline="middle" fill="#000" font-size="8" font-weight="700">'+planetGlyphs[p.name]+'</text>';
+    // Name label offset
+    var lblOff=12;
+    var lx=pos.x+lblOff*(Math.cos((rel(lon))*(Math.PI/180)));
+    var ly=pos.y+lblOff*(Math.sin((rel(lon))*(Math.PI/180)));
+    svg+='<text x="'+lx+'" y="'+ly+'" text-anchor="middle" dominant-baseline="middle" fill="'+col+'" font-size="7" opacity="0.8">'+p.name+(retro?' R':'')+'</text>';
+  });
+  // Arabic parts
+  if(parts && parts.parts){
+    var partSyms={'Part_of_Fortune':'⊕', 'Part_of_Spirit':'☉', 'Part_of_Marriage':'♡', 'Part_of_Father':'♄', 'Part_of_Mother':'♀'};
+    var partNames=Object.keys(parts.parts);
+    partNames.forEach(function(pn,i){
+      var lon=parts.parts[pn];
+      if(lon==null) return;
+      var r=R-60-(i%2)*14;
+      var pos=toXY(lon, r);
+      svg+='<circle cx="'+pos.x+'" cy="'+pos.y+'" r="4" fill="#9370db" opacity="0.6"/>';
+      svg+='<text x="'+pos.x+'" y="'+(pos.y+12)+'" text-anchor="middle" fill="#9370db" font-size="5.5" opacity="0.7">'+pn.replace('Part_of_','')+'</text>';
+    });
+  }
+  svgEL.innerHTML=svg;
+  // Update planet list
+  var pl=$('zw-planet-list');
+  if(pl){
+    var h='<div class="table-wrap"><table><thead><tr><th></th><th>Planet</th><th>Sign</th><th>Degree</th><th>House</th><th>Status</th></tr></thead><tbody>';
+    planetData.sort(function(a,b){return a.lon-b.lon;});
+    planetData.forEach(function(p){
+      var sign=getSign(p.lon), deg=getDegInSign(p.lon);
+      h+='<tr><td style="color:'+p.col+'">'+planetGlyphs[p.name]+'</td><td style="color:'+p.col+'">'+p.name+'</td><td>'+SIGN_SYMBOLS[getSignIndex(p.lon)]+' '+sign+'</td><td>'+fmtDeg(deg)+'</td><td style="color:var(--gold-dim)">'+p.house+'</td><td>'+(p.retro?'<span class="retro-badge">R</span>':'Direct')+'</td></tr>';
+    });
+    h+='</tbody></table></div>';
+    pl.innerHTML=h;
+  }
+  // Update clock
+  var now=new Date();
+  var c=$('zw-clock'); if(c) c.textContent=now.toLocaleTimeString();
+  var d=$('zw-date'); if(d) d.textContent=now.toLocaleDateString();
+}
+
+function getHouseForLon(lon, houses){
+  if(!houses || !houses.cusps) return '?';
+  var cuspKeys=Object.keys(houses.cusps).sort(function(a,b){return parseInt(a)-parseInt(b);});
+  for(var i=0;i<cuspKeys.length;i++){
+    var c1=houses.cusps[cuspKeys[i]];
+    var c2=houses.cusps[cuspKeys[(i+1)%cuspKeys.length]];
+    if(c1!=null && c2!=null){
+      if(c2>c1){if(lon>=c1&&lon<c2) return i+1;}
+      else{if(lon>=c1||lon<c2) return i+1;}
+    }
+  }
+  return '?';
+}
+
 function loadSolomonicSeals(){
   var container=$('solomonic-seals-content');
   if(!container) return;
@@ -1238,6 +1385,7 @@ document.addEventListener('click',function(e){
   if(tabId==='oracle'&&typeof loadOracle==='function')loadOracle();
   if(tabId==='solomonic-seals'&&typeof loadSolomonicSeals==='function')loadSolomonicSeals();
   if(tabId==='occult-encyc'&&typeof loadOccultEncyc==='function')loadOccultEncyc();
+  if(tabId==='zodiac-wheel'&&typeof loadZodiacWheel==='function')loadZodiacWheel();
   if(tabId==='beings'&&typeof loadBeings==='function')loadBeings();
   if(tabId==='jinn-commanders'&&typeof loadJinnCommanders==='function')loadJinnCommanders();
   if(tabId==='tahatil'&&typeof loadTahatil==='function')loadTahatil();
