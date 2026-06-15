@@ -1289,19 +1289,28 @@ function calcAndDrawWheel(){
     });
   }
 
-  // ── Arabic parts ──
+  // ── Arabic parts — flashing radiance ──
   if(parts&&parts.parts){
     var partNames=Object.keys(parts.parts);
+    var partColors=['#ff00ff','#00ffff','#ffaa00','#ff4444','#44ff44','#ffff00','#ff6600','#00ff88','#8800ff'];
     partNames.forEach(function(pn,i){
       var pd=parts.parts[pn]; if(!pd) return;
       var lon=pd.longitude||pd; if(lon==null) return;
       var r=R-65-(i%2)*12;
       var pos=toXY(lon,r);
-      ctx.save(); ctx.shadowColor='#ff00ff'; ctx.shadowBlur=5;
-      ctx.beginPath(); ctx.arc(pos.x,pos.y,4,0,Math.PI*2);
-      ctx.fillStyle='#ff00ff80'; ctx.fill(); ctx.restore();
-      ctx.font='7px monospace'; ctx.fillStyle='#ff00ff90'; ctx.textAlign='center';
-      ctx.fillText(pn.replace('Part_of_',''),pos.x,pos.y+10);
+      var col=partColors[i%partColors.length];
+      var pulse=Math.sin(now/200+i)*0.4+0.6;
+      // Outer glow ring
+      ctx.save(); ctx.shadowColor=col; ctx.shadowBlur=15*pulse+10;
+      ctx.beginPath(); ctx.arc(pos.x,pos.y,8+4*pulse,0,Math.PI*2);
+      ctx.strokeStyle=col+'80'; ctx.lineWidth=1.5; ctx.stroke();
+      // Core dot
+      ctx.beginPath(); ctx.arc(pos.x,pos.y,4+2*pulse,0,Math.PI*2);
+      ctx.fillStyle=col; ctx.fill(); ctx.restore();
+      // Label
+      ctx.save(); ctx.shadowColor=col; ctx.shadowBlur=6;
+      ctx.font='bold 7px "Courier New",monospace'; ctx.fillStyle=col; ctx.textAlign='center';
+      ctx.fillText(pn.replace('Part_of_',''),pos.x,pos.y+12); ctx.restore();
     });
   }
 
