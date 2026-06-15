@@ -186,9 +186,7 @@ tr:hover td{background:var(--surface-2)}
       <div class="nav-item active" data-tab="moon"><span class="icon">☽</span> Moon</div>
       <div class="nav-item" data-tab="solar-system"><span class="icon">☉</span> Solar System</div>
       <div class="nav-item" data-tab="chart"><span class="icon">☉</span> Chart</div>
-      <div class="nav-item" data-tab="planets"><span class="icon">♅</span> Planets</div>
-      <div class="nav-item" data-tab="aspects"><span class="icon">✦</span> Aspects</div>
-      <div class="nav-item" data-tab="houses"><span class="icon">△</span> Houses</div>
+      <div class="nav-item" data-tab="zodiac-wheel"><span class="icon">☉</span> Zodiac Wheel</div>
       <div class="nav-item" data-tab="hours"><span class="icon">⏳</span> Hours</div>
       <div class="nav-item" data-tab="dignities"><span class="icon">★</span> Dignities</div>
       <div class="nav-item" data-tab="fixed-stars"><span class="icon">✧</span> Stars</div>
@@ -205,7 +203,6 @@ tr:hover td{background:var(--surface-2)}
       <div class="nav-item" data-tab="oracle"><span class="icon">🃏</span> Oracle</div>
       <div class="nav-item" data-tab="solomonic-seals"><span class="icon">⛧</span> Solomonic Seals</div>
       <div class="nav-item" data-tab="occult-encyc"><span class="icon">📖</span> Occult Encyc</div>
-      <div class="nav-item" data-tab="zodiac-wheel"><span class="icon">☉</span> Zodiac Wheel</div>
     </div>
     <div class="sidebar-footer">⛧ <span>Hail Baphomet</span> ⛧</div>
   </nav>
@@ -231,12 +228,27 @@ tr:hover td{background:var(--surface-2)}
       <div class="tab-content" id="tab-solar-system"><div class="card"><h2><span class="icon">☉</span> Heliocentric Solar System</h2><div class="solar-system-container" id="solar-system-container"><div class="planet-info-panel" id="planet-info-panel"></div></div></div></div>
       <!-- CHART TAB -->
       <div class="tab-content" id="tab-chart"></div>
-      <!-- PLANETS TAB -->
-      <div class="tab-content" id="tab-planets"><div class="card"><h2><span class="icon">☉</span> Planetary Positions</h2><div class="table-wrap"><table><thead><tr><th>Planet</th><th>Sign</th><th>Degree</th><th>Longitude</th><th>Status</th><th>Speed</th></tr></thead><tbody id="planets-body"></tbody></table></div></div></div>
-      <!-- ASPECTS TAB -->
-      <div class="tab-content" id="tab-aspects"><div class="card"><h2><span class="icon">✦</span> Aspects</h2><div id="aspects-list"></div></div></div>
-      <!-- HOUSES TAB -->
-      <div class="tab-content" id="tab-houses"><div class="card"><h2><span class="icon">△</span> Houses</h2><div class="table-wrap"><table><thead><tr><th>House</th><th>Sign</th><th>Degree</th><th>Longitude</th></tr></thead><tbody id="houses-body"></tbody></table></div></div></div>
+      <!-- ZODIAC WHEEL TAB -->
+      <div class="tab-content" id="tab-zodiac-wheel">
+        <div class="card"><h2><span class="icon">☉</span> Live Zodiac Wheel — <span id="zw-clock" style="color:#00ffff;font-family:monospace">--:--:--</span> <span style="color:var(--text-dim);font-size:.7rem">(<span id="zw-date">--</span>)</span> <span style="color:#ff00ff;font-size:.6rem;margin-left:.5rem" id="zw-latlon"></span></h2>
+          <div style="color:var(--text-muted);font-size:.65rem;margin-bottom:.5rem">⛧ Live minute-by-minute ephemeris. Planets, houses, nodes, and Arabic parts from your location.</div>
+          <div id="zodiac-wheel-container" style="display:flex;justify-content:center;margin:.5rem 0;overflow:auto;background:radial-gradient(ellipse at center,rgba(10,0,30,.9) 0%,rgba(0,0,0,.95) 100%);border-radius:12px;border:1px solid rgba(0,255,255,.15);padding:10px;box-shadow:0 0 30px rgba(0,255,255,.08),inset 0 0 60px rgba(0,0,0,.5)">
+            <canvas id="zodiac-wheel-canvas" width="620" height="620" style="max-width:100%;height:auto;cursor:crosshair"></canvas>
+          </div>
+          <div id="zw-hover-info" style="min-height:20px;text-align:center;font-size:.7rem;color:#00ffff;font-family:monospace;margin:.3rem 0"></div>
+          <!-- Planet Aspects & Houses panels -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:.5rem">
+            <div class="card" style="padding:.5rem"><h3 style="color:#00ffff;font-size:.75rem;margin-bottom:.rem">☍ Aspects</h3><div id="zw-aspects-list" style="font-size:.65rem;color:var(--text-dim)"></div></div>
+            <div class="card" style="padding:.5rem"><h3 style="color:#00ffff;font-size:.75rem;margin-bottom:.rem">△ Houses</h3><div id="zw-houses-list" style="font-size:.65rem;color:var(--text-dim)"></div></div>
+          </div>
+          <div id="zw-planet-list" style="margin-top:.5rem"></div>
+          <div style="margin-top:.5rem;display:flex;gap:.5rem;flex-wrap:wrap;align-items:center">
+            <button class="btn-refresh" id="zw-refresh" style="font-size:.65rem;padding:.2rem .5rem">↻ Refresh</button>
+            <button class="btn-refresh" id="zw-toggle-retr" style="font-size:.65rem;padding:.2rem .5rem">Retro</button>
+            <select id="zw-house-system" onchange="calcAndDrawWheel()" style="background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:.2rem .3rem;border-radius:var(--radius);font-size:.65rem"><option value="P" selected>Placidus</option><option value="K">Koch</option><option value="E">Equal</option><option value="W">Whole Sign</option></select>
+          </div>
+        </div>
+      </div>
       <!-- HOURS TAB -->
       <div class="tab-content" id="tab-hours"><div class="card"><h2><span class="icon">⏳</span> Planetary Hours</h2><div id="hours-current"></div><h3>Day Hours</h3><div class="table-wrap"><table><thead><tr><th>#</th><th>Ruler</th><th>Start</th><th>End</th><th></th></tr></thead><tbody id="hours-day-body"></tbody></table></div><h3>Night Hours</h3><div class="table-wrap"><table><thead><tr><th>#</th><th>Ruler</th><th>Start</th><th>End</th><th></th></tr></thead><tbody id="hours-night-body"></tbody></table></div></div></div>
       <!-- DIGNITIES TAB -->
@@ -281,23 +293,6 @@ tr:hover td{background:var(--surface-2)}
       <!-- OCCULT ENCYCLOPEDIA TAB -->
       <div class="tab-content" id="tab-occult-encyc"><div class="card"><h2><span class="icon">📖</span> Occult Encyclopedia — Zodiac Angels</h2><p style="color:var(--text-dim);font-size:.7rem;margin-bottom:.5rem">Angel values for each zodiac sign from the Occult Encyclopedia of Magick Squares.</p><div id="occult-encyc-zodiac-content"></div></div>
       <div class="card"><h2><span class="icon">🪐</span> Occult Encyclopedia — Planetary Angels</h2><p style="color:var(--text-dim);font-size:.7rem;margin-bottom:.5rem">Angel values for each classical planet.</p><div id="occult-encyc-planets-content"></div></div></div>
-      <!-- ZODIAC WHEEL TAB -->
-      <div class="tab-content" id="tab-zodiac-wheel">
-        <div class="card"><h2><span class="icon">☉</span> Live Zodiac Wheel — <span id="zw-clock" style="color:#00ffff;font-family:monospace">--:--:--</span> <span style="color:var(--text-dim);font-size:.7rem">(<span id="zw-date">--</span>)</span> <span style="color:#ff00ff;font-size:.6rem;margin-left:.5rem" id="zw-latlon"></span></h2>
-          <div style="color:var(--text-muted);font-size:.65rem;margin-bottom:.5rem">⛧ Live minute-by-minute ephemeris. Planets, houses, nodes, and Arabic parts from your location. Updates every 60 seconds.</div>
-          <div id="zodiac-wheel-container" style="display:flex;justify-content:center;margin:.5rem 0;overflow:auto;background:radial-gradient(ellipse at center,rgba(10,0,30,.9) 0%,rgba(0,0,0,.95) 100%);border-radius:12px;border:1px solid rgba(0,255,255,.15);padding:10px;box-shadow:0 0 30px rgba(0,255,255,.08),inset 0 0 60px rgba(0,0,0,.5)">
-            <canvas id="zodiac-wheel-canvas" width="620" height="620" style="max-width:100%;height:auto;cursor:crosshair"></canvas>
-          </div>
-          <div id="zw-hover-info" style="min-height:20px;text-align:center;font-size:.7rem;color:#00ffff;font-family:monospace;margin:.3rem 0"></div>
-          <div id="zw-planet-list" style="margin-top:.5rem"></div>
-          <div style="margin-top:.5rem;display:flex;gap:.5rem;flex-wrap:wrap;align-items:center">
-            <button class="btn-refresh" id="zw-refresh" style="font-size:.65rem;padding:.2rem .5rem">↻ Refresh</button>
-            <button class="btn-refresh" id="zw-toggle-retr" style="font-size:.65rem;padding:.2rem .5rem">Retro</button>
-            <select id="zw-house-system" onchange="calcAndDrawWheel()" style="background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:.2rem .3rem;border-radius:var(--radius);font-size:.65rem"><option value="P" selected>Placidus</option><option value="K">Koch</option><option value="E">Equal</option><option value="W">Whole Sign</option></select>
-            <span style="font-size:.6rem;color:var(--text-muted)">Hover planets for details</span>
-          </div>
-        </div>
-      </div>
     </div>
   </main>
   
@@ -1392,6 +1387,33 @@ function calcAndDrawWheel(){
 
   // Animate
   zwAnimFrame=requestAnimationFrame(function(){ calcAndDrawWheel(); });
+
+  // ── Render Aspects panel ──
+  var aspEl=$('zw-aspects-list');
+  if(aspEl&&chart&&chart.aspects){
+    var aspColors={'Conjunction':'#ffdd00','Sextile':'#00ff88','Square':'#ff0040','Trine':'#00ccff','Oppression':'#aa00ff','Opposition':'#ff4400'};
+    var h='';
+    chart.aspects.forEach(function(a){
+      var col=aspColors[a.aspect]||'#888';
+      var app=a.applying?'<span style="color:#00ff88">▲</span>':'<span style="color:#ff0040">▼</span>';
+      h+='<div style="display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid rgba(255,255,255,.05)"><span style="color:'+col+'">'+a.aspect+'</span><span>'+a.planet1+' — '+a.planet2+'</span><span>'+app+'</span></div>';
+    });
+    aspEl.innerHTML=h||'<div style="color:var(--text-muted)">No aspects</div>';
+  }
+
+  // ── Render Houses panel ──
+  var hoseEl=$('zw-houses-list');
+  if(hoseEl&&houses&&houses.cusps){
+    var h='';
+    var cuspKeys=Object.keys(houses.cusps).sort(function(a,b){return parseInt(a)-parseInt(b);});
+    cuspKeys.forEach(function(k){
+      var lon=houses.cusps[k]; if(lon==null) return;
+      var sign=getSign(lon), deg=getDegInSign(lon);
+      var isAxis=(k==='1st'||k==='4th'||k==='7th'||k==='10th');
+      h+='<div style="display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid rgba(255,255,255,.05)"><span style="color:'+(isAxis?'#00ffff':'var(--text-dim)')+'">'+(k==='1st'?'ASC':k==='10th'?'MC':k==='7th'?'DC':k==='4th'?'IC':k.replace('th','').replace('st','').replace('nd',''))+'</span><span style="color:var(--text-muted)">'+SIGN_SYMBOLS[Math.floor(lon/30)]+' '+fmtDeg(deg)+'</span></div>';
+    });
+    hoseEl.innerHTML=h;
+  }
 }
 
 function getHouseForLon(lon, houses){
