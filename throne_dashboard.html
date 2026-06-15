@@ -271,6 +271,11 @@ tr:hover td{background:var(--surface-2)}
             <div style="color:#ffd700;font-size:.7rem;font-weight:600;margin-bottom:.3rem">🕐 Talisman Pattern</div>
             <div style="color:rgba(255,255,255,.6);font-size:.65rem;line-height:1.4" id="hours-talisman-pattern"></div>
           </div>
+          <!-- Day-by-day talisman operations -->
+          <div style="margin:.5rem 0;padding:.5rem;background:rgba(255,0,40,.03);border:1px solid rgba(255,0,40,.1);border-radius:8px">
+            <div style="color:#ff0022;font-size:.7rem;font-weight:600;margin-bottom:.3rem">⚡ Talisman Operations by Day</div>
+            <div class="table-wrap"><table><thead><tr><th>Day</th><th>Planet</th><th>First Hour</th><th>Best For</th></tr></thead><tbody id="hours-talismans-body"></tbody></table></div>
+          </div>
           <!-- Day/Night hours tables -->
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:.5rem">
             <div><h3 style="color:#00ccff;font-size:.7rem">☀ Day Hours</h3><div class="table-wrap"><table><thead><tr><th>#</th><th>Ruler</th><th>Start</th><th>End</th></tr></thead><tbody id="hours-day-body"></tbody></table></div></div>
@@ -491,59 +496,47 @@ function render() {
 // ═══════════════════════════════════════════════════════════════
 function renderMoon() {
   var container = $('tab-moon'); if(!container) return;
-  var chart = state.chart, riseSet = state.moonRiseSet, events = state.lunarEvents, mansion = state.lunarMansion, lunarAsp = state.lunarAspects;
-  var phase = chart ? chart.moon_phase : '--';
-  var elong = chart ? (chart.moon_elongation||0) : 0;
+  var chart = state.chart;
+  if(!chart) { container.innerHTML='<div style="color:var(--text-muted);padding:2rem;text-align:center">Loading lunar data...</div>'; return; }
+  var moonPos = chart.planets ? chart.planets.find(function(p){return p.name==='Moon';}) : null;
+  var phase = chart.moon_phase || '--';
+  var elong = chart.moon_elongation||0;
   var illum = Math.round((1-Math.cos(elong*Math.PI/180))/2*100);
   var waxing = elong < 180;
-  var age = elong/360*29.53;
-  var moonPos = null; if(chart && chart.planets) { moonPos = chart.planets.find(function(p){return p.name==='Moon';}); }
-  var html = '<div class="card"><h2><span class="icon">☽</span> Lunar Dashboard</h2>';
-  html += '<div class="moon-phase-container"><div class="moon-disk">';
-  if(waxing){ html += '<div class="moon-illuminated" style="width:'+illum+'%"></div>'; }
-  else { html += '<div class="moon-shadow" style="width:'+(100-illum)+'%"></div>'; }
-  html += '</div><div class="phase-name '+(waxing?'waxing':'waning')+'">'+getMoonEmoji(phase)+' '+phase+'</div>';
-  html += '<div class="phase-detail">'+illum+'% illuminated • Age: '+age.toFixed(1)+' days</div></div>';
-  if(moonPos){ var lon=moonPos.longitude; html+='<div class="stat-grid" style="margin-top:1rem"><div class="stat"><div class="stat-label">Sign</div><div class="stat-value">'+SIGN_SYMBOLS[getSignIndex(lon)]+' '+getSign(lon)+'</div></div><div class="stat"><div class="stat-label">Degree</div><div class="stat-value">'+fmtDeg(getDegInSign(lon))+'</div></div><div class="stat"><div class="stat-label">Longitude</div><div class="stat-value">'+lon.toFixed(2)+'°</div></div><div class="stat"><div class="stat-label">Elongation</div><div class="stat-value">'+(elong||0).toFixed(1)+'°</div></div></div>'; }
-  html += '<h3>Rise & Set</h3><div class="stat-grid"><div class="stat"><div class="stat-label">Moon Rise</div><div class="stat-value">'+(riseSet&&riseSet.moon_rise?riseSet.moon_rise:'--')+'</div></div><div class="stat"><div class="stat-label">Moon Set</div><div class="stat-value">'+(riseSet&&riseSet.moon_set?riseSet.moon_set:'--')+'</div></div></div>';
-  if(mansion && mansion.mansion && mansion.mansion.current){
-    var m=mansion.mansion.current;
-    html+='<h3>Nakshatra</h3><div style="background:var(--surface-2);border-radius:var(--radius);padding:1rem;border:1px solid var(--border)">';
-    html+='<div style="font-size:1.05rem;color:var(--gold);margin-bottom:0.4rem">'+m.number+'. '+m.name+' <span style="color:var(--text-dim);font-size:0.8rem">ruled by '+(m.ruled_by||'--')+'</span></div>';
-    if(moonPos&&state.nakSubLords&&state.nakSubLords.entries){
-      var lon=moonPos.longitude,found=null;
-      for(var e of state.nakSubLords.entries){
-        if(e.from_deg!=null&&e.to_deg!=null){
-          if(e.to_deg>e.from_deg){
-            if(lon>=e.from_deg&&lon<e.to_deg){found=e;break;}
-          } else {
-            if(lon>=e.from_deg||lon<e.to_deg){found=e;break;}
-          }
-        }
-      }
-      if(found){
-        var slColor=found.sub_lord==='Jupiter'||found.sub_lord==='Venus'?'var(--success)':found.sub_lord==='Saturn'||found.sub_lord==='Mars'?'var(--danger)':'var(--gold)';
-        html+='<div style="display:flex;gap:0.5rem;margin-top:0.3rem;flex-wrap:wrap;align-items:center">';
-        html+='<span style="background:rgba(156,39,176,.15);padding:2px 8px;border-radius:4px;font-size:0.75rem;color:'+slColor+'"><b>\u25c6 Vedic Nakshatra: '+found.nakshatra+'</b></span>';
-        html+='<span style="background:rgba(233,30,158,.15);padding:2px 8px;border-radius:4px;font-size:0.7rem;color:var(--pink-dim)">\u2605 Star Lord: <b>'+found.star_lord+'</b></span>';
-        html+='<span style="background:rgba(156,39,176,.15);padding:2px 8px;border-radius:4px;font-size:0.7rem;color:'+slColor+'">\u25c6 Sub Lord: <b>'+found.sub_lord+'</b></span></div>';
-        html+='<div style="color:var(--text-dim);font-size:0.65rem;margin-top:0.3rem">Range: '+found.from+' \u2014 '+found.to+' \u2022 Sub-division '+(found.sub_index+1)+'/9</div>';
-        if(state.nakSubLords.nakshatras){
-          var nakInfo=state.nakSubLords.nakshatras.find(function(n){return n.name===found.nakshatra;});
-          if(nakInfo){
-            html+='<div style="color:var(--text-muted);font-size:0.65rem">Nakshatra #'+nakInfo.number+' \u2022 Lord: '+nakInfo.lord+'</div>';
-          }
-        }
-      }
-    }
-    if(m.keywords) html+='<div style="color:var(--text-dim);font-size:0.8rem;margin-bottom:0.4rem">'+m.keywords.join(', ')+'</div>';
-    if(m.magical) html+='<div style="font-size:0.8rem;color:var(--pink-dim);margin-bottom:0.25rem"><em>'+m.magical+'</em></div>';
-    if(m.progress_percent!=null){ html+='<div class="progress-bar"><div class="progress-fill" style="width:'+m.progress_percent+'%"></div></div><div style="font-size:0.7rem;color:var(--text-muted);margin-top:0.2rem">'+m.progress_percent.toFixed(1)+'% through mansion</div>'; }
-    html+='</div>';
+  var lon = moonPos ? moonPos.longitude : 0;
+  var h = '<div class="card" style="background:linear-gradient(135deg,#0a0008 0%,#1a0000 50%,#0a0a0a 100%);border:1px solid rgba(255,215,0,.15);box-shadow:0 0 40px rgba(255,215,0,.06)">';
+  h += '<h2 style="color:#ffd700;text-shadow:0 0 10px rgba(255,215,0,.5)"><span class="icon">☽</span> Lunar Dashboard</h2>';
+  // Moon disk with crescent
+  h += '<div style="text-align:center;padding:.5rem 0">';
+  h += '<div style="width:100px;height:100px;border-radius:50%;margin:0 auto;background:#111;border:2px solid rgba(255,215,0,.3);box-shadow:0 0 20px rgba(255,215,0,.15);position:relative;overflow:hidden">';
+  if(waxing){
+    h += '<div style="position:absolute;top:0;right:0;width:'+illum+'%;height:100%;background:#ffd700;border-radius:0 50% 50% 0"></div>';
+  } else {
+    h += '<div style="position:absolute;top:0;left:0;width:'+(100-illum)+'%;height:100%;background:#ffd700;border-radius:50% 0 0 50%"></div>';
   }
-  if(lunarAsp && lunarAsp.aspects && lunarAsp.aspects.length){ html+='<h3>Moon Aspects to Planets</h3>'; lunarAsp.aspects.forEach(function(a){ var c=a.nature==='benefic'?'var(--success)':'var(--danger)'; html+='<div class="aspect-item"><div><span class="aspect-type" style="color:'+c+'">'+a.aspect+'</span> <span>'+a.planet+'</span> <span style="var(--'+(a.applying?'success':'text-muted')+')">('+(a.applying?'applying':'separating')+')</span></div><div class="aspect-detail">Moon: '+SIGN_SYMBOLS[getSignIndex(state.chart.planets.find(function(p){return p.name==='Moon';}).longitude)]+' '+a.moon_sign+' '+fmtDeg(a.moon_degree)+' | '+a.planet+': '+a.planet_sign+' '+fmtDeg(a.planet_degree)+' | Nakshatra: '+a.nakshatra+'</div><div class="talisman" style="color:'+c+'">'+a.talisman_guidance+'</div></div>'; }); }
-  if(events && events.events && events.events.length){ html+='<h3>Upcoming Lunar Events</h3>'; events.events.forEach(function(e){ html+='<div class="lunar-event-item"><span class="event-name">'+getMoonEmoji(e.event)+' '+e.event+'</span><span class="event-date">'+e.date+' '+e.time+'</span></div>'; }); }
-  html+='</div>'; container.innerHTML=html;
+  h += '</div>';
+  h += '<div style="font-size:1rem;color:#ffd700;text-shadow:0 0 6px rgba(255,215,0,.4);margin-top:.4rem">'+phase+'</div>';
+  h += '<div style="font-size:.65rem;color:rgba(255,255,255,.4)">'+illum+'% illuminated</div>';
+  h += '</div>';
+  // Stats
+  h += '<div class="stat-grid" style="margin-top:.5rem">';
+  h += '<div class="stat" style="background:rgba(255,215,0,.03);border:1px solid rgba(255,215,0,.1)"><div class="stat-label">Sign</div><div class="stat-value" style="color:#ffd700">'+SIGN_SYMBOLS[Math.floor(lon/30)]+' '+getSign(lon)+'</div></div>';
+  h += '<div class="stat" style="background:rgba(255,215,0,.03);border:1px solid rgba(255,215,0,.1)"><div class="stat-label">Degree</div><div class="stat-value">'+fmtDeg(lon%30)+'</div></div>';
+  if(state.moonRiseSet){
+    h += '<div class="stat"><div class="stat-label">Rise</div><div class="stat-value" style="color:#00ff88">'+state.moonRiseSet.moon_rise+'</div></div>';
+    h += '<div class="stat"><div class="stat-label">Set</div><div class="stat-value" style="color:#ff4444">'+state.moonRiseSet.moon_set+'</div></div>';
+  }
+  h += '</div>';
+  // Mansion section (abbreviated for now)
+  if(state.lunarMansion&&state.lunarMansion.mansion&&state.lunarMansion.mansion.current){
+    var m=state.lunarMansion.mansion.current;
+    h+='<div style="margin-top:.5rem;padding:.5rem;background:rgba(255,215,0,.03);border:1px solid rgba(255,215,0,.1);border-radius:8px">';
+    h+='<div style="color:#ffd700;font-size:.8rem;font-weight:600">'+m.number+'. '+m.name+' <span style="color:rgba(255,255,255,.4);font-size:.65rem">ruled by '+(m.ruled_by||'?')+'</span></div>';
+    if(m.progress_percent!=null) h+='<div class="progress-bar" style="margin-top:.2rem"><div class="progress-fill" style="width:'+m.progress_percent+'%"></div></div>';
+    h+='</div>';
+  }
+  h += '</div>';
+  container.innerHTML=h;
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -882,6 +875,18 @@ function renderHours(hours){
     var tp=state.planetaryHoursTalismans.pattern;
     var tr=state.planetaryHoursTalismans.talisman_rule||'';
     patEl.innerHTML='<strong style="color:#ffd700">Pattern:</strong> '+tp+'<br><strong style="color:#ffd700">Rule:</strong> '+tr;
+  }
+  // Day-by-day talisman operations
+  var talBody=$('hours-talismans-body');
+  if(talBody&&state.planetaryHoursTalismans&&state.planetaryHoursTalismans.hours_table){
+    var th=state.planetaryHoursTalismans.hours_table;
+    var days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    var rh='';
+    days.forEach(function(d){
+      var info=th[d];
+      if(info) rh+='<tr><td style="color:#ff0022">'+d+'</td><td>'+info.planet+'</td><td>'+info.first_hour+'</td><td style="color:rgba(255,255,255,.5);font-size:.6rem">'+info.operations+'</td></tr>';
+    });
+    talBody.innerHTML=rh;
   }
   // Magic square kings
   var kingsBody=$('magic-square-kings-body');
