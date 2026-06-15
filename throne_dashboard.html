@@ -185,7 +185,6 @@ tr:hover td{background:var(--surface-2)}
     <div class="sidebar-nav">
       <div class="nav-item active" data-tab="moon"><span class="icon">☽</span> Moon</div>
       <div class="nav-item" data-tab="solar-system"><span class="icon">☉</span> Solar System</div>
-      <div class="nav-item" data-tab="chart"><span class="icon">☉</span> Chart</div>
       <div class="nav-item" data-tab="zodiac-wheel"><span class="icon">☉</span> Zodiac Wheel</div>
       <div class="nav-item" data-tab="hours"><span class="icon">⏳</span> Hours</div>
       <div class="nav-item" data-tab="dignities"><span class="icon">★</span> Dignities</div>
@@ -226,8 +225,6 @@ tr:hover td{background:var(--surface-2)}
       <div class="tab-content active" id="tab-moon"></div>
       <!-- SOLAR SYSTEM TAB -->
       <div class="tab-content" id="tab-solar-system"><div class="card"><h2><span class="icon">☉</span> Heliocentric Solar System</h2><div class="solar-system-container" id="solar-system-container"><div class="planet-info-panel" id="planet-info-panel"></div></div></div></div>
-      <!-- CHART TAB -->
-      <div class="tab-content" id="tab-chart"></div>
       <!-- ZODIAC WHEEL TAB -->
       <div class="tab-content" id="tab-zodiac-wheel">
         <div class="card"><h2><span class="icon">☉</span> Live Zodiac Wheel — <span id="zw-clock" style="color:#00ffff;font-family:monospace">--:--:--</span> <span style="color:var(--text-dim);font-size:.7rem">(<span id="zw-date">--</span>)</span> <span style="color:#ff00ff;font-size:.6rem;margin-left:.5rem" id="zw-latlon"></span></h2>
@@ -1213,55 +1210,38 @@ function calcAndDrawWheel(){
   // Earth: Taurus(1), Virgo(6), Capricorn(10) — Green
   // Air: Gemini(2), Libra(7), Aquarius(11) — Yellow/Orange
   // Water: Cancer(3), Scorpio(8), Pisces(4) — Blue
-  var elementColors={
-    0:['#ff0040','#ff3366'],  // Aries — Fire Red
-    1:['#00ff66','#33ff88'],  // Taurus — Earth Green
-    2:['#ffcc00','#ffdd44'],  // Gemini — Air Yellow
-    3:['#0088ff','#33aaff'],  // Cancer — Water Blue
-    4:['#0066cc','#3388ee'],  // Pisces — Water Blue
-    5:['#ff2200','#ff5533'],  // Leo — Fire Red
-    6:['#00cc44','#33dd66'],  // Virgo — Earth Green
-    7:['#ffaa00','#ffcc33'],  // Libra — Air Orange
-    8:['#0044ff','#3366ee'],  // Scorpio — Water Deep Blue
-    9:['#ff0022','#ff3344'],  // Sagittarius — Fire Red
-    10:['#00ff88','#33ffaa'], // Capricorn — Earth Bright Green
-    11:['#ff8800','#ffaa33']  // Aquarius — Air Orange-Yellow
-  };
+  function getSignColor(i){
+    if(i===0||i===5||i===9) return ['#ff0040','#ff3366'];       // Fire: Aries, Leo, Sag
+    if(i===1||i===6||i===10) return ['#00ff66','#33ff88'];      // Earth: Taurus, Virgo, Cap
+    if(i===2||i===7||i===11) return ['#ffcc00','#ffdd44'];      // Air: Gemini, Libra, Aqua
+    return ['#0088ff','#33aaff'];                                // Water: Cancer, Scorpio, Pisces
+  }
   SIGNS.forEach(function(s,i){
     var lon1=i*30, lon2=(i+1)*30;
+    var ec=getSignColor(i);
     // Segment fill
     var grad=ctx.createRadialGradient(CX,CY,R_INNER,CX,CY,R);
     grad.addColorStop(0,'rgba(0,0,0,0)');
-    grad.addColorStop(0.5,elementColors[i][0]+'18');
-    grad.addColorStop(1,elementColors[i][1]+'10');
+    grad.addColorStop(0.5,ec[0]+'18');
+    grad.addColorStop(1,ec[1]+'10');
     var p1=toXY(lon1,R_INNER), p2=toXY(lon2,R_INNER), p1o=toXY(lon1,R), p2o=toXY(lon2,R);
     ctx.beginPath(); ctx.moveTo(p1.x,p1.y);
     ctx.arc(CX,CY,R_INNER,(180-lon1)*(Math.PI/180),(180-lon2)*(Math.PI/180),true);
     ctx.lineTo(p2o.x,p2o.y);
     ctx.arc(CX,CY,R,(180-lon2)*(Math.PI/180),(180-lon1)*(Math.PI/180),false);
     ctx.closePath(); ctx.fillStyle=grad; ctx.fill();
-    // Solid neon border lines for each sign boundary
-    ctx.save(); ctx.shadowColor=elementColors[i][0]; ctx.shadowBlur=10;
+    // Solid neon border
+    ctx.save(); ctx.shadowColor=ec[0]; ctx.shadowBlur=10;
     ctx.beginPath(); ctx.moveTo(p1.x,p1.y);
     ctx.arc(CX,CY,R_INNER,(180-lon1)*(Math.PI/180),(180-lon2)*(Math.PI/180),true);
     ctx.lineTo(p2o.x,p2o.y);
     ctx.arc(CX,CY,R,(180-lon2)*(Math.PI/180),(180-lon1)*(Math.PI/180),false);
-    ctx.closePath(); ctx.strokeStyle=elementColors[i][0]; ctx.lineWidth=1.5; ctx.stroke(); ctx.restore();
-    // Full sign name in neon with element indicator
-    var mid=toXY(lon1+15,(R+R_INNER)/2);
-    var el;
-    if(i===0||i===5||i===9) el='🔥';       // Fire: Aries, Leo, Sagittarius
-    else if(i===1||i===6||i===10) el='🌍';  // Earth: Taurus, Virgo, Capricorn
-    else if(i===2||i===7||i===11) el='💨';  // Air: Gemini, Libra, Aquarius
-    else el='🌊';                           // Water: Cancer, Scorpio, Pisces
-    // Element glyph on the outer ring
-    var outerPos=toXY(lon1+15,R-10);
-    ctx.font='10px serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
-    ctx.fillText(el,outerPos.x,outerPos.y);
+    ctx.closePath(); ctx.strokeStyle=ec[0]; ctx.lineWidth=1.5; ctx.stroke(); ctx.restore();
     // Sign name in neon
-    ctx.save(); ctx.shadowColor=elementColors[i][0]; ctx.shadowBlur=12;
+    var mid=toXY(lon1+15,(R+R_INNER)/2);
+    ctx.save(); ctx.shadowColor=ec[0]; ctx.shadowBlur=12;
     ctx.font='bold 10px "Courier New",monospace'; ctx.textAlign='center'; ctx.textBaseline='middle';
-    ctx.fillStyle=elementColors[i][0]; ctx.fillText(s.toUpperCase(),mid.x,mid.y); ctx.restore();
+    ctx.fillStyle=ec[0]; ctx.fillText(s.toUpperCase(),mid.x,mid.y); ctx.restore();
   });
 
   // ── House cusp lines — solid and clear ──
