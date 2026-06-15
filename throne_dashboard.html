@@ -1163,10 +1163,10 @@ function handleWheelHover(e){
     if(d<bestDist){bestDist=d;best={name:p.name,lon:lon,retro:retro,house:getHouseForLon(lon,houses),x:pos.x,y:pos.y};}
   });
   // Check Arabic parts
-  if(chart.arabic_parts&&chart.arabic_parts.parts){
-    var pNames=Object.keys(chart.arabic_parts.parts);
+  if(chart.arabic_parts){
+    var pNames=Object.keys(chart.arabic_parts);
     pNames.forEach(function(pn,i){
-      var pd=chart.arabic_parts.parts[pn]; if(!pd) return;
+      var pd=chart.arabic_parts[pn]; if(!pd) return;
       var lon=pd.longitude||pd; if(lon==null) return;
       var r=R-65-(i%2)*12;
       var pos=toXY(lon,r);
@@ -1293,11 +1293,11 @@ function calcAndDrawWheel(){
   }
 
   // ── Arabic parts — flashing radiance ──
-  if(parts&&parts.parts){
-    var partNames=Object.keys(parts.parts);
+  if(parts){
+    var partNames=Object.keys(parts);
     var partColors=['#ff00ff','#00ffff','#ffaa00','#ff4444','#44ff44','#ffff00','#ff6600','#00ff88','#8800ff'];
     partNames.forEach(function(pn,i){
-      var pd=parts.parts[pn]; if(!pd) return;
+      var pd=parts[pn]; if(!pd) return;
       var lon=pd.longitude||pd; if(lon==null) return;
       var r=R-65-(i%2)*12;
       var pos=toXY(lon,r);
