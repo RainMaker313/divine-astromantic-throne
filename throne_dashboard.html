@@ -1147,23 +1147,38 @@ function handleWheelHover(e){
   var rect=cv.getBoundingClientRect();
   var scaleX=cv.width/rect.width, scaleY=cv.height/rect.height;
   var mx=(e.clientX-rect.left)*scaleX, my=(e.clientY-rect.top)*scaleY;
-  // Check distance to each planet
   var chart=state.chart; if(!chart) return;
-  var asc=chart.asc||0, houses=chart.houses, parts=chart.arabic_parts;
+  var asc=chart.asc||0, houses=chart.houses;
   var CX=310, CY=310, R=250;
   function toXY(lon,r){ var rel=(lon-asc+360)%360; var ang=(180-rel)*(Math.PI/180); return {x:CX+r*Math.cos(ang),y:CY+r*Math.sin(ang)}; }
-  var best=null, bestDist=20;
+  var best=null, bestDist=18;
+  // Check planets at their actual drawn radii
+  var pCount=0;
   chart.planets.forEach(function(p){
     var lon=p.longitude, retro=p.retro||false;
     if(!zwShowRetro&&retro) return;
-    var r=R-30;
+    var r=R-35-Math.floor(pCount/3)*14; pCount++;
     var pos=toXY(lon,r);
     var d=Math.sqrt((mx-pos.x)*(mx-pos.x)+(my-pos.y)*(my-pos.y));
-    if(d<bestDist){bestDistance=d;best={name:p.name,lon:lon,retro:retro,house:getHouseForLon(lon,houses),x:pos.x,y:pos.y};}
+    if(d<bestDist){bestDist=d;best={name:p.name,lon:lon,retro:retro,house:getHouseForLon(lon,houses),x:pos.x,y:pos.y};}
   });
+  // Check Arabic parts
+  if(chart.arabic_parts&&chart.arabic_parts.parts){
+    var pNames=Object.keys(chart.arabic_parts.parts);
+    pNames.forEach(function(pn,i){
+      var pd=chart.arabic_parts.parts[pn]; if(!pd) return;
+      var lon=pd.longitude||pd; if(lon==null) return;
+      var r=R-65-(i%2)*12;
+      var pos=toXY(lon,r);
+      var d=Math.sqrt((mx-pos.x)*(mx-pos.x)+(my-pos.y)*(my-pos.y));
+      if(d<bestDist){bestDist=d;best={name:pn.replace('Part_of_',''),lon:lon,retro:false,house:getHouseForLon(lon,houses),x:pos.x,y:pos.y,isPart:true};}
+    });
+  }
   if(best){
     var sign=getSign(best.lon), deg=getDegInSign(best.lon);
-    $('zw-hover-info').textContent=best.name+' '+SIGN_SYMBOLS[getSignIndex(best.lon)]+' '+sign+' '+fmtDeg(deg)+' | House '+best.house+(best.retro?' | ☍ R':'');
+    var info=best.name+' '+SIGN_SYMBOLS[getSignIndex(best.lon)]+' '+sign+' '+fmtDeg(deg)+' | House '+best.house;
+    if(best.retro) info+=' | ☍ R';
+    $('zw-hover-info').textContent=info;
     zwHoverPlanet=best;
   } else {
     zwHoverPlanet=null;
@@ -1278,7 +1293,8 @@ function calcAndDrawWheel(){
   if(parts&&parts.parts){
     var partNames=Object.keys(parts.parts);
     partNames.forEach(function(pn,i){
-      var lon=parts.parts[pn]; if(lon==null) return;
+      var pd=parts.parts[pn]; if(!pd) return;
+      var lon=pd.longitude||pd; if(lon==null) return;
       var r=R-65-(i%2)*12;
       var pos=toXY(lon,r);
       ctx.save(); ctx.shadowColor='#ff00ff'; ctx.shadowBlur=5;
