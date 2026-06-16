@@ -1330,176 +1330,158 @@ function handleWheelHover(e){
 function calcAndDrawWheel(){
   var chart=state.chart, houses=chart&&chart.houses, parts=chart&&chart.arabic_parts;
   if(!chart||!chart.planets) return;
-  var cv=$('zodiac-wheel-canvas');
-  if(!cv) return;
+  var cv=$('zodiac-wheel-canvas'); if(!cv) return;
   var ctx=cv.getContext('2d');
   var W=cv.width, H=cv.height, CX=W/2, CY=H/2, R=240, R_INNER=150;
   var asc=chart.asc||(houses&&houses.asc)||0, now=Date.now();
   function toXY(lon,r){ var rel=(lon-asc+360)%360; var ang=(180-rel)*(Math.PI/180); return {x:CX+r*Math.cos(ang),y:CY+r*Math.sin(ang)}; }
 
-  // ── Background ──
+  // Background
   ctx.clearRect(0,0,W,H);
   var bg=ctx.createRadialGradient(CX,CY,0,CX,CY,R+30);
   bg.addColorStop(0,'rgba(5,0,20,0.97)'); bg.addColorStop(1,'rgba(0,0,0,0.99)');
   ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
 
-  // ── Outer ring glow ──
-  ctx.save(); ctx.shadowColor='#00ffff'; ctx.shadowBlur=12;
-  ctx.beginPath(); ctx.arc(CX,CY,R+3,0,Math.PI*2);
-  ctx.strokeStyle='rgba(0,255,255,0.12)'; ctx.lineWidth=1; ctx.stroke(); ctx.restore();
+  // Thin outer ring
+  ctx.beginPath(); ctx.arc(CX,CY,R,0,Math.PI*2);
+  ctx.strokeStyle='rgba(0,255,255,0.15)'; ctx.lineWidth=1; ctx.stroke();
 
-  // ── Zodiac sign segments ──
-  var signColorMap={
-    'Aries':['#ff2200','#ff4422'],'Taurus':['#00ff66','#33ff88'],'Gemini':['#ffcc00','#ffdd33'],
-    'Cancer':['#0088ff','#33aaff'],'Leo':['#ff2200','#ff4422'],'Virgo':['#00ff66','#33ff88'],
-    'Libra':['#ffcc00','#ffdd33'],'Scorpio':['#0088ff','#33aaff'],'Sagittarius':['#ff2200','#ff4422'],
-    'Capricorn':['#00ff66','#33ff88'],'Aquarius':['#ffcc00','#ffdd33'],'Pisces':['#0088ff','#33aaff']
-  };
+  // Zodiac sign segments
+  var signColors={Fire:'#ff0040',Earth:'#00ff66',Air:'#ffcc00',Water:'#0088ff'};
+  var signElements={Aries:'Fire',Taurus:'Earth',Gemini:'Air',Cancer:'Water',Leo:'Fire',Virgo:'Earth',Libra:'Air',Scorpio:'Water',Sagittarius:'Fire',Capricorn:'Earth',Aquarius:'Air',Pisces:'Water'};
   SIGNS.forEach(function(s,i){
     var lon1=i*30, lon2=(i+1)*30;
-    var ec=signColorMap[s]||['#888','#aaa'];
+    var el=signElements[s]||'Fire';
+    var col=signColors[el];
     var p1i=toXY(lon1,R_INNER), p2i=toXY(lon2,R_INNER), p1o=toXY(lon1,R), p2o=toXY(lon2,R);
-    // Segment fill
+    // Fill segment
     ctx.beginPath(); ctx.moveTo(p1i.x,p1i.y);
     ctx.arc(CX,CY,R_INNER,(180-lon1)*(Math.PI/180),(180-lon2)*(Math.PI/180),true);
     ctx.lineTo(p2o.x,p2o.y);
     ctx.arc(CX,CY,R,(180-lon2)*(Math.PI/180),(180-lon1)*(Math.PI/180),false);
     ctx.closePath();
-    var grad=ctx.createRadialGradient(CX,CY,R_INNER,CX,CY,R);
-    grad.addColorStop(0,ec[1]+'18'); grad.addColorStop(1,ec[0]+'08');
-    ctx.fillStyle=grad; ctx.fill();
-    // Segment border
-    ctx.save(); ctx.shadowColor=ec[0]; ctx.shadowBlur=6;
+    ctx.fillStyle=col+'15'; ctx.fill();
+    // Border
     ctx.beginPath(); ctx.moveTo(p1i.x,p1i.y);
     ctx.arc(CX,CY,R_INNER,(180-lon1)*(Math.PI/180),(180-lon2)*(Math.PI/180),true);
     ctx.lineTo(p2o.x,p2o.y);
     ctx.arc(CX,CY,R,(180-lon2)*(Math.PI/180),(180-lon1)*(Math.PI/180),false);
     ctx.closePath();
-    ctx.strokeStyle=ec[0]+'66'; ctx.lineWidth=1.2; ctx.stroke(); ctx.restore();
-    // Sign name — LARGER FONT
+    ctx.strokeStyle=col+'55'; ctx.lineWidth=1; ctx.stroke();
+    // Sign name
     var mid=toXY(lon1+15,(R+R_INNER)/2);
-    ctx.save(); ctx.shadowColor=ec[0]; ctx.shadowBlur=8;
-    ctx.font='bold 13px "Courier New",monospace'; ctx.textAlign='center'; ctx.textBaseline='middle';
-    ctx.fillStyle=ec[0]; ctx.fillText(s.toUpperCase(),mid.x,mid.y); ctx.restore();
+    ctx.save(); ctx.shadowColor=col; ctx.shadowBlur=6;
+    ctx.font='bold 14px "Courier New",monospace'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillStyle=col; ctx.fillText(s.toUpperCase(),mid.x,mid.y); ctx.restore();
+    // Degree tick marks
+    for(var d=0;d<30;d+=5){
+      if(d===0) continue;
+      var t1=toXY(lon1+d,R_INNER), t2=toXY(lon1+d,R_INNER+4);
+      ctx.beginPath(); ctx.moveTo(t1.x,t1.y); ctx.lineTo(t2.x,t2.y);
+      ctx.strokeStyle='rgba(255,255,255,0.1)'; ctx.lineWidth=0.5; ctx.stroke();
+    }
   });
 
-  // ── No house cusp lines on canvas — houses shown in HTML panel below ──
+  // Planets — spread evenly by angle, offset by name length to avoid overlap
+  var planetGlyphs={Sun:'☉',Moon:'☽',Mercury:'☿',Venus:'♀',Mars:'♂',Jupiter:'♃',Saturn:'♄',Uranus:'♅',Neptune:'♆',Pluto:'♇',Rahu:'☊',Ketu:'☋'};
+  var planetNeon={Sun:'#ffdd00',Moon:'#c0c0c0',Mercury:'#b0a0d0',Venus:'#00ff88',Mars:'#ff0040',Jupiter:'#ffaa00',Saturn:'#c8a860',Uranus:'#4dd0e1',Neptune:'#1565c0',Pluto:'#8d6e63',Rahu:'#ff6b35',Ketu:'#8b4513'};
+  var planetData=[];
+  var planets=chart.planets.filter(function(p){return p.name!='Rahu'||zwShowRetro||!p.retro;});
+  planets.forEach(function(p){
+    var lon=p.longitude, retro=p.retro||false;
+    var r=R-45;
+    var pos=toXY(lon,r);
+    var col=planetNeon[p.name]||'#fff';
+    planetData.push({name:p.name,lon:lon,x:pos.x,y:pos.y,col:col,retro:retro,glyph:planetGlyphs[p.name]||'?'});
+  });
 
-  // ── Arabic parts — clean dots ──
+  // Draw connecting lines between planets and their houses (subtle)
+  // No crisscrossing — just a subtle ring at the planet orbit
+  ctx.beginPath(); ctx.arc(CX,CY,R-45,0,Math.PI*2);
+  ctx.strokeStyle='rgba(255,255,255,0.05)'; ctx.lineWidth=0.5; ctx.stroke();
+
+  // Draw planet dots
+  planetData.forEach(function(pd){
+    // Glow
+    ctx.save(); ctx.shadowColor=pd.col; ctx.shadowBlur=8;
+    ctx.beginPath(); ctx.arc(pd.x,pd.y,9,0,Math.PI*2);
+    ctx.fillStyle=pd.col+'30'; ctx.fill(); ctx.restore();
+    // Body
+    ctx.beginPath(); ctx.arc(pd.x,pd.y,5,0,Math.PI*2);
+    ctx.fillStyle=pd.col; ctx.fill();
+    if(pd.retro){ ctx.strokeStyle='#ff0040'; ctx.lineWidth=1.5; ctx.stroke(); }
+    // Glyph (white, not black)
+    ctx.font='bold 11px monospace'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillStyle='#fff'; ctx.fillText(pd.glyph,pd.x,pd.y+1);
+    // Name below
+    ctx.save(); ctx.shadowColor=pd.col; ctx.shadowBlur=3;
+    ctx.font='bold 8px "Courier New",monospace'; ctx.fillStyle=pd.col;
+    ctx.fillText(pd.name+(pd.retro?' R':''),pd.x,pd.y+12); ctx.restore();
+  });
+
+  // Arabic parts
   if(parts){
     var partNames=Object.keys(parts);
-    var partColors=['#ff00ff','#00ffff','#ffaa00','#ff4444','#44ff44','#ffff00','#ff6600','#00ff88','#8800ff'];
+    var partCols=['#ff00ff','#00ffff','#ffaa00','#ff4444','#44ff44','#ffff00','#ff6600','#00ff88','#8800ff'];
     partNames.forEach(function(pn,i){
       var pd=parts[pn]; if(!pd) return;
       var lon=pd.longitude||pd; if(lon==null) return;
-      var r=R-60-(i%2)*10;
-      var pos=toXY(lon,r);
-      var col=partColors[i%partColors.length];
-      var pulse=Math.sin(now/250+i)*0.3+0.7;
-      ctx.save(); ctx.shadowColor=col; ctx.shadowBlur=10*pulse+5;
-      ctx.beginPath(); ctx.arc(pos.x,pos.y,5+2*pulse,0,Math.PI*2);
+      var pos=toXY(lon,R-65);
+      var col=partCols[i%partCols.length];
+      ctx.save(); ctx.shadowColor=col; ctx.shadowBlur=6;
+      ctx.beginPath(); ctx.arc(pos.x,pos.y,4,0,Math.PI*2);
       ctx.fillStyle=col; ctx.fill(); ctx.restore();
     });
   }
 
-  // ── Planets — LARGER with clean glow ──
-  var planetGlyphs={Sun:'☉',Moon:'☽',Mercury:'☿',Venus:'♀',Mars:'♂',Jupiter:'♃',Saturn:'♄',Uranus:'♅',Neptune:'♆',Pluto:'♇',Rahu:'☊',Ketu:'☋'};
-  var planetNeon={Sun:'#ffdd00',Moon:'#c0c0c0',Mercury:'#b0a0d0',Venus:'#00ff88',Mars:'#ff0040',Jupiter:'#ffaa00',Saturn:'#c8a860',Uranus:'#4dd0e1',Neptune:'#1565c0',Pluto:'#8d6e63',Rahu:'#ff6b35',Ketu:'#8b4513'};
-  var planetData=[];
-  chart.planets.forEach(function(p){
-    var lon=p.longitude, retro=p.retro||false;
-    if(!zwShowRetro&&retro) return;
-    var r=R-30-Math.floor(planetData.length/4)*12;
-    var pos=toXY(lon,r);
-    var col=planetNeon[p.name]||'#fff';
-    var houseNum=getHouseForLon(lon,houses);
-    var isHover=zwHoverPlanet&&zwHoverPlanet.name===p.name;
-    var sz=isHover?14:(p.name==='Sun'||p.name==='Moon'?12:10);
-    var pulse=Math.sin(now/300+planetData.length)*0.2+0.8;
-    planetData.push({name:p.name,lon:lon,x:pos.x,y:pos.y,col:col,sz:sz,retro:retro,house:houseNum,pulse:pulse,isHover:isHover,glyph:planetGlyphs[p.name]||'?'});
-  });
+  // Center dot
+  ctx.beginPath(); ctx.arc(CX,CY,2,0,Math.PI*2);
+  ctx.fillStyle='#00ffff'; ctx.fill();
 
-  // Draw planet glows
-  planetData.forEach(function(pd){
-    ctx.save(); ctx.shadowColor=pd.col; ctx.shadowBlur=pd.isHover?18:8;
-    ctx.beginPath(); ctx.arc(pd.x,pd.y,pd.sz+3+pd.pulse*2,0,Math.PI*2);
-    var grd=ctx.createRadialGradient(pd.x,pd.y,0,pd.x,pd.y,pd.sz+4);
-    grd.addColorStop(0,pd.col+'40'); grd.addColorStop(1,pd.col+'00');
-    ctx.fillStyle=grd; ctx.fill(); ctx.restore();
-  });
-
-  // Draw planet bodies
-  planetData.forEach(function(pd){
-    ctx.save(); ctx.shadowColor=pd.col; ctx.shadowBlur=6;
-    ctx.beginPath(); ctx.arc(pd.x,pd.y,pd.sz,0,Math.PI*2);
-    ctx.fillStyle=pd.col; ctx.fill();
-    if(pd.retro){ ctx.strokeStyle='#ff0040'; ctx.lineWidth=2; ctx.stroke(); }
-    ctx.restore();
-    // Glyph — LARGER
-    ctx.save();
-    ctx.font='bold 12px monospace'; ctx.textAlign='center'; ctx.textBaseline='middle';
-    ctx.fillStyle='#000'; ctx.fillText(pd.glyph,pd.x,pd.y+1);
-    ctx.restore();
-    // Name label — LARGER
-    ctx.save(); ctx.shadowColor=pd.col; ctx.shadowBlur=4;
-    ctx.font='bold 9px monospace'; ctx.fillStyle=pd.col; ctx.textAlign='center';
-    ctx.fillText(pd.name+(pd.retro?' R':''),pd.x,pd.y+pd.sz+10); ctx.restore();
-  });
-
-  // ── Center point ──
-  ctx.beginPath(); ctx.arc(CX,CY,3,0,Math.PI*2); ctx.fillStyle='#00ffff'; ctx.fill();
-
-  // ── Clock + location ──
+  // Clock
   var n=new Date();
   var c=$('zw-clock'); if(c) c.textContent=n.toLocaleTimeString();
-  var d=$('zw-date'); if(d) d.textContent=n.toLocaleDateString();
 
-  // ── Animation ──
+  // Animation
   if(zwAnimFrame) clearInterval(zwAnimFrame);
   zwAnimFrame=setInterval(function(){ calcAndDrawWheel(); }, 100);
 
-  // ── Render Aspects panel (HTML) ──
+  // HTML panels below
   var aspEl=$('zw-aspects-list');
   if(aspEl&&chart&&chart.aspects){
-    var aspColors={'Conjunction':'#ffdd00','Sextile':'#00ff88','Square':'#ff0040','Trine':'#00ccff','Opposition':'#ff4400'};
+    var ac={'Conjunction':'#ffdd00','Sextile':'#00ff88','Square':'#ff0040','Trine':'#00ccff','Opposition':'#ff4400'};
     var h='';
     chart.aspects.forEach(function(a){
-      var col=aspColors[a.aspect]||'#888';
+      var col=ac[a.aspect]||'#888';
       var app=a.orb<1?'<span style="color:#00ff88">●</span>':'';
       var parts=a.between.split(' - ');
-      h+='<div style="display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid rgba(255,255,255,.05)"><span style="color:'+col+'">'+a.aspect+'</span><span>'+parts[0]+' — '+parts[1]+'</span><span>'+app+'</span></div>';
+      h+='<div style="display:flex;gap:8px;padding:2px 0;border-bottom:1px solid rgba(255,255,255,.05)"><span style="color:'+col+'">'+a.aspect+'</span><span>'+parts[0]+' — '+parts[1]+'</span>'+app+'</div>';
     });
     aspEl.innerHTML=h;
   }
 
-  // ── Render Houses panel (HTML) ──
   var hoseEl=$('zw-houses-list');
   if(hoseEl&&houses&&houses.cusps){
     var h='';
-    var cuspKeys=Object.keys(houses.cusps).sort(function(a,b){return parseInt(a)-parseInt(b);});
-    cuspKeys.forEach(function(k){
+    var ck=Object.keys(houses.cusps).sort(function(a,b){return parseInt(a)-parseInt(b);});
+    ck.forEach(function(k){
       var lon=houses.cusps[k]; if(lon==null) return;
-      var sign=getSign(lon), deg=getDegInSign(lon);
       var isAxis=(k==='1st'||k==='4th'||k==='7th'||k==='10th');
-      var style=isAxis?' style="color:#ffd700"':'';
-      h+='<tr'+style+'><td>'+k+'</td><td>'+SIGN_SYMBOLS[Math.floor(lon/30)]+' '+sign+'</td><td>'+fmtDeg(deg)+'</td></tr>';
+      h+='<tr'+(isAxis?' style="color:#ffd700"':'')+'><td>'+k+'</td><td>'+SIGN_SYMBOLS[Math.floor(lon/30)]+' '+getSign(lon)+'</td><td>'+fmtDeg(lon%30)+'</td></tr>';
     });
-    hoseEl.innerHTML='<div class="table-wrap"><table><thead><tr><th>House</th><th>Sign</th><th>°</th></tr></thead><tbody>'+h+'</tbody></table></div>';
+    hoseEl.innerHTML='<table><thead><tr><th>House</th><th>Sign</th><th>°</th></tr></thead><tbody>'+h+'</tbody></table>';
   }
 
-  // ── Planet list (HTML) ──
   var pl=$('zw-planet-list');
   if(pl){
-    var h='<div class="table-wrap"><table><thead><tr><th></th><th>Planet</th><th>Sign</th><th>°</th><th>House</th></tr></thead><tbody>';
+    var h='<table><thead><tr><th></th><th>Planet</th><th>Sign</th><th>°</th><th>House</th></tr></thead><tbody>';
     planetData.sort(function(a,b){return a.lon-b.lon;});
     planetData.forEach(function(p){
       h+='<tr><td style="color:'+p.col+'">'+p.glyph+'</td><td style="color:'+p.col+'">'+p.name+(p.retro?' R':'')+'</td><td>'+SIGN_SYMBOLS[Math.floor(p.lon/30)]+' '+getSign(p.lon)+'</td><td>'+fmtDeg(p.lon%30)+'</td><td>'+(p.house||'?')+'</td></tr>';
     });
-    h+='</tbody></table></div>';
-    pl.innerHTML=h;
+    h+='</tbody></table>'; pl.innerHTML=h;
   }
 }
-
 function getHouseForLon(lon, houses){
   if(!houses||!houses.cusps) return '?';
   var cuspKeys=Object.keys(houses.cusps).sort(function(a,b){return parseInt(a)-parseInt(b);});
