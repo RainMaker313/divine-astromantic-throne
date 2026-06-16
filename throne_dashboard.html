@@ -319,21 +319,6 @@ tr:hover td{background:var(--surface-2)}
       <!-- CHART STUDY TAB -->
       <div class="tab-content" id="tab-chart-study"><div class="card"><h2><span class="icon">🔍</span> Chart Study</h2><div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:flex-end;margin-bottom:1rem"><div style="display:flex;flex-direction:column;gap:.15rem"><label style="font-size:.6rem;color:var(--text-muted);text-transform:uppercase">Date</label><input type="date" id="cs-date" style="background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:.3rem .4rem;border-radius:var(--radius);font-family:var(--font);font-size:.7rem"></div><div style="display:flex;flex-direction:column;gap:.15rem"><label style="font-size:.6rem;color:var(--text-muted);text-transform:uppercase">Time</label><input type="time" id="cs-time" style="background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:.3rem .4rem;border-radius:var(--radius);font-family:var(--font);font-size:.7rem"></div><div style="display:flex;flex-direction:column;gap:.15rem"><label style="font-size:.6rem;color:var(--text-muted);text-transform:uppercase">Lat</label><input type="number" id="cs-lat" value="-33.76" step=".01" style="background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:.3rem .4rem;border-radius:var(--radius);font-family:var(--font);font-size:.7rem;width:70px"></div><div style="display:flex;flex-direction:column;gap:.15rem"><label style="font-size:.6rem;color:var(--text-muted);text-transform:uppercase">Lon</label><input type="number" id="cs-lon" value="25.40" step=".01" style="background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:.3rem .4rem;border-radius:var(--radius);font-family:var(--font);font-size:.7rem;width:70px"></div><button class="btn-refresh" id="btn-calculate-chart">☆ Calc</button></div><div id="chart-study-result"></div></div></div>
 
-      <!-- TALISMAN TAB -->
-      
-      <!-- TALISMAN TAB -->
-      <div class="tab-content" 
-            <!-- SOLOMONIC SEALS TAB -->
-      <div class="tab-content" </div>
-      <!-- OCCULT ENCYCLOPEDIA TAB --><!-- OCCULT ENCYCLOPEDIA TAB -->
-      <div class="tab-content"       <!-- ORACLE TAB -->
-      <div class="tab-content" </div>
-      <!-- OCCULT ENCYCLOPEDIA TAB -->
-      <div class="tab-content" 
-      <div class="card"><h2><span class="icon">🪐</span> Occult Encyclopedia — Planetary Angels</h2><p style="color:var(--text-dim);font-size:.7rem;margin-bottom:.5rem">Angel values for each classical planet.</p><div id="occult-encyc-planets-content"></div></div></div>
-
-      <div class="card"><h2><span class="icon">🪐</span> Occult Encyclopedia — Planetary Angels</h2><p style="color:var(--text-dim);font-size:.7rem;margin-bottom:.5rem">Angel values for each classical planet.</p><div id="occult-encyc-planets-content"></div></div></div>
-    </div>
   </main>
   
 </div>
@@ -347,8 +332,9 @@ const PLANET_GLYPHS = {'Sun':'☉','Moon':'☽','Mercury':'☿','Venus':'♀','M
 const PLANET_COLORS = {'Sun':'#f4d03f','Moon':'#c0c0c0','Mercury':'#b0a0d0','Venus':'#f0a0c0','Mars':'#e05050','Jupiter':'#d4a017','Saturn':'#c8a860','Uranus':'#4dd0e1','Neptune':'#1565c0','Pluto':'#8d6e63','Rahu':'#ff6b35','Ketu':'#8b4513'};
 const ASPECT_COLORS = {'Conjunction':'#c9a84c','Sextile':'#64b5f6','Square':'#ff7043','Trine':'#81c784','Quincunx':'#ba68c8','Opposition':'#e57373'};
 var state = {};
+var CX, CY;
 // Load nakshatra sub-lord data
-fetch("/static/nakshatra_sublords.json").then(function(r){return r.json();}).then(function(d){state.nakSubLords=d;}).catch(function(){state.nakSubLords=null;});
+fetch("/static/nakshatra_sublords.json").then(function(r){return r.json();}).then(function(d){state.nakSubLords=d;console.log('nakSubLords loaded');if(typeof renderMansionTable==='function')renderMansionTable();}).catch(function(){setTimeout(function(){fetch("/static/nakshatra_sublords.json").then(function(r){return r.json();}).then(function(d){state.nakSubLords=d;console.log('nakSubLords retry ok');if(typeof renderMansionTable==='function')renderMansionTable();}).catch(function(){console.log('nakSubLords failed');});},2000);});
 
 function $(id) { return document.getElementById(id); }
 function getSign(lon) { return SIGNS[Math.floor(lon/30)%12]; }
@@ -453,7 +439,7 @@ async function loadAll() {
     ]);
     const [chart, hours, aspects, now, houses, dignities, lunarMansion, fixedStars, electional, beings, jinnCommanders, tahatil, magicSquareKings, planetaryHoursTalismans, arabicParts, occultChart, moonRiseSet, lunarEvents, lunarAspects, heliocentric, kitabAlAjnasNames, kitabAlAjnas, occultEncyclopedia, talismanData] = results.map(function(r){return r.value||null;});
     state = { chart, hours, aspects: aspects && (aspects.aspects || aspects), now, houses, dignities, lunarMansion, fixedStars, electional, beings, arabicParts, occultChart, moonRiseSet, lunarEvents, lunarAspects, heliocentric, jinnCommanders, tahatil, magicSquareKings, planetaryHoursTalismans, kitabAlAjnasNames, kitabAlAjnas, occultEncyclopedia, talismanData };
-    render();
+    render(); startWheelAnimation();
   } catch(e) { showError(e.message); }
 }
 
@@ -489,7 +475,7 @@ function render() {
   renderMagicSquareKings(magicSquareKings);
   renderPlanetaryHoursTalismans(planetaryHoursTalismans);
   renderOccultChart(occultChart);
-  if(state.kitabAlAjnasNames) renderAllBeings(state.kitabAlAjnasNames);
+  if(state.kitabAlAjnasNames&&typeof renderAllBeings==='function')renderAllBeings(state.kitabAlAjnasNames);
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -1083,15 +1069,22 @@ function renderPlanetaryHoursTalismans(data){
 
 
 
-ound
+function drawMansionWheel() {
+  var canvas = document.getElementById('mansion-wheel-canvas');
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var chart = state.chart || {};
+  if (!chart.planets) return;
+  var W = 620, H = 620;
+  CX = W/2; CY = H/2; var R = 250, R_INNER = 60, R_MID = 155, now = Date.now();
   ctx.clearRect(0,0,W,H);
   var bg=ctx.createRadialGradient(CX,CY,0,CX,CY,R+40);
   bg.addColorStop(0,'rgba(5,0,20,0.95)'); bg.addColorStop(1,'rgba(0,0,0,0.98)');
   ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
 
   // Get data
-  var mansions=state.mansions||[];
-  var fixedStars=state.fixedStars||[];
+  var mansions=state.mansionList||[];
+  var fixedStars = (state.fixedStars && state.fixedStars.conjunctions) || [];
   var starMansionSet={};
   fixedStars.forEach(function(s){
     var slon=s.ecliptic_lon_j2000||s.longitude; if(slon==null) return;
@@ -1102,25 +1095,36 @@ ound
     }
   });
 
-  // ── Draw house cusp lines (gold) ──
+  // ── Draw house cusp lines (gold) — MORE DISTINCT ──
   var houses=chart.houses;
   if(houses&&houses.cusps){
     var cuspKeys=['1st','4th','7th','10th'];
     var cuspLabels={'1st':'ASC','4th':'IC','7th':'DC','10th':'MC'};
+    var cuspNums={'1st':'1','2nd':'2','3rd':'3','4th':'4','5th':'5','6th':'6','7th':'7','8th':'8','9th':'9','10th':'10','11th':'11','12th':'12'};
     var allCuspKeys=Object.keys(houses.cusps).sort(function(a,b){return parseInt(a)-parseInt(b);});
     allCuspKeys.forEach(function(k){
       var lon=houses.cusps[k]; if(lon==null) return;
       var isAxis=cuspKeys.indexOf(k)>=0;
-      var p2=toXY(lon,R+12);
+      var outerR = isAxis ? R+16 : R+8;
+      var p2=toXY(lon, outerR);
       ctx.save();
-      if(isAxis){ ctx.shadowColor='#ffd700'; ctx.shadowBlur=10; ctx.strokeStyle='#ffd700'; ctx.lineWidth=2.5; }
-      else{ ctx.strokeStyle='rgba(255,215,0,0.3)'; ctx.lineWidth=0.8; }
+      if(isAxis){ ctx.shadowColor='#ffd700'; ctx.shadowBlur=14; ctx.strokeStyle='#ffd700'; ctx.lineWidth=3.5; }
+      else{ ctx.strokeStyle='rgba(255,215,0,0.45)'; ctx.lineWidth=1.5; }
       ctx.beginPath(); ctx.moveTo(CX,CY); ctx.lineTo(p2.x,p2.y); ctx.stroke();
+      // Axis labels
       if(isAxis){
-        var lp=toXY(lon,R+22);
-        ctx.save(); ctx.shadowColor='#ffd700'; ctx.shadowBlur=6;
-        ctx.font='bold 10px "Courier New",monospace'; ctx.fillStyle='#ffd700'; ctx.textAlign='center'; ctx.textBaseline='middle';
+        var lp=toXY(lon,R+26);
+        ctx.save(); ctx.shadowColor='#ffd700'; ctx.shadowBlur=8;
+        ctx.font='bold 12px "Courier New",monospace'; ctx.fillStyle='#ffd700'; ctx.textAlign='center'; ctx.textBaseline='middle';
         ctx.fillText(cuspLabels[k],lp.x,lp.y); ctx.restore();
+      }
+      // House numbers
+      if(!isAxis){
+        var hp=toXY(lon,R+20);
+        ctx.save();
+        ctx.font='bold 7px monospace'; ctx.fillStyle='rgba(255,215,0,0.5)';
+        ctx.textAlign='center'; ctx.textBaseline='middle';
+        ctx.fillText(cuspNums[k]||k,hp.x,hp.y); ctx.restore();
       }
       ctx.restore();
     });
@@ -1141,13 +1145,20 @@ ound
     ctx.fillStyle=hasStar?'rgba(255,215,0,0.1)':'rgba(255,255,255,0.04)';
     ctx.fill();
     ctx.save();
-    if(hasStar){ ctx.shadowColor='#ffd700'; ctx.shadowBlur=8; ctx.strokeStyle='rgba(255,215,0,0.6)'; ctx.lineWidth=2; }
-    else{ ctx.strokeStyle='rgba(255,255,255,0.2)'; ctx.lineWidth=0.7; }
+    if(hasStar){ ctx.shadowColor='#ffd700'; ctx.shadowBlur=12; ctx.strokeStyle='rgba(255,215,0,0.7)'; ctx.lineWidth=2.5; }
+    else{ ctx.strokeStyle='rgba(255,255,255,0.35)'; ctx.lineWidth=1.2; }
     ctx.beginPath(); ctx.moveTo(p1i.x,p1i.y);
     ctx.arc(CX,CY,R_INNER,(180-lon1)*(Math.PI/180),(180-lon2)*(Math.PI/180),true);
     ctx.lineTo(p2o.x,p2o.y);
     ctx.arc(CX,CY,R,(180-lon2)*(Math.PI/180),(180-lon1)*(Math.PI/180),false);
     ctx.closePath(); ctx.stroke(); ctx.restore();
+    // Mansion boundary tick marks on outer edge
+    var half=(lon1+lon2)/2;
+    var pa=toXY(lon1,R+6), pb=toXY(lon2,R+6);
+    ctx.save(); ctx.strokeStyle='rgba(255,255,255,0.25)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(pa.x,pa.y); ctx.lineTo(toXY(lon1,R-6).x,toXY(lon1,R-6).y); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(pb.x,pb.y); ctx.lineTo(toXY(lon2,R-6).x,toXY(lon2,R-6).y); ctx.stroke();
+    ctx.restore();
 
     // Mansion name — BIGGER FONT
     var mid=toXY(lon1+mSpan/2,(R+R_INNER)/2);
@@ -1162,8 +1173,8 @@ ound
   var moonLon=null;
   chart.planets.forEach(function(p){ if(p.name==='Moon') moonLon=p.longitude; });
   if(moonLon!=null){
-    var mp=toXY(moonLon,R-35), pulse=Math.sin(now/300)*0.3+0.7;
-    var sz=16+5*pulse;
+    var mp=toXY(moonLon,R-42), pulse=Math.sin(now/300)*0.3+0.7;
+    var sz=20+6*pulse;
     // Outer glow
     ctx.save(); ctx.shadowColor='#ffd700'; ctx.shadowBlur=30*pulse+15;
     ctx.beginPath(); ctx.arc(mp.x,mp.y,sz+4,0,Math.PI*2);
@@ -1191,33 +1202,33 @@ ound
   var rahuLon=null;
   chart.planets.forEach(function(p){ if(p.name==='Rahu') rahuLon=p.longitude; });
   if(rahuLon!=null){
-    var rp=toXY(rahuLon,R-50);
-    ctx.save(); ctx.shadowColor='#ff0040'; ctx.shadowBlur=10;
-    ctx.beginPath(); ctx.arc(rp.x,rp.y,6,0,Math.PI*2); ctx.fillStyle='#ff0040'; ctx.fill(); ctx.restore();
-    ctx.font='bold 8px monospace'; ctx.fillStyle='#ff0040'; ctx.textAlign='center';
-    ctx.fillText('Rahu',rp.x,rp.y-13);
+    var rp=toXY(rahuLon,R-56);
+    ctx.save(); ctx.shadowColor='#ff0040'; ctx.shadowBlur=14;
+    ctx.beginPath(); ctx.arc(rp.x,rp.y,9,0,Math.PI*2); ctx.fillStyle='#ff0040'; ctx.fill(); ctx.restore();
+    ctx.font='bold 9px monospace'; ctx.fillStyle='#ff0040'; ctx.textAlign='center';
+    ctx.fillText('Rahu',rp.x,rp.y-16);
   }
 
   // ── Ketu — green ──
   var ketuLon=null;
   chart.planets.forEach(function(p){ if(p.name==='Ketu') ketuLon=p.longitude; });
   if(ketuLon!=null){
-    var kp=toXY(ketuLon,R-50);
-    ctx.save(); ctx.shadowColor='#00ff44'; ctx.shadowBlur=10;
-    ctx.beginPath(); ctx.arc(kp.x,kp.y,6,0,Math.PI*2); ctx.fillStyle='#00ff44'; ctx.fill(); ctx.restore();
-    ctx.font='bold 8px monospace'; ctx.fillStyle='#00ff44'; ctx.textAlign='center';
-    ctx.fillText('Ketu',kp.x,kp.y-13);
+    var kp=toXY(ketuLon,R-56);
+    ctx.save(); ctx.shadowColor='#00ff44'; ctx.shadowBlur=14;
+    ctx.beginPath(); ctx.arc(kp.x,kp.y,9,0,Math.PI*2); ctx.fillStyle='#00ff44'; ctx.fill(); ctx.restore();
+    ctx.font='bold 9px monospace'; ctx.fillStyle='#00ff44'; ctx.textAlign='center';
+    ctx.fillText('Ketu',kp.x,kp.y-16);
   }
 
   // ── Arabic Parts ──
   if(chart.arabic_parts){
-    [{k:'Part_of_Fortune',n:'Fortune'},{k:'Part_of_Spirit',n:'Spirit'}].forEach(function(pt){
+    [{k:'Part_of_Fortune',n:'Fortune',c:'#ff00ff'},{k:'Part_of_Spirit',n:'Spirit',c:'#ff8800'}].forEach(function(pt){
       var pd=chart.arabic_parts[pt.k]; if(!pd||pd.longitude==null) return;
-      var pp=toXY(pd.longitude,R-65);
-      ctx.save(); ctx.shadowColor='#ff00ff'; ctx.shadowBlur=8;
-      ctx.beginPath(); ctx.arc(pp.x,pp.y,5,0,Math.PI*2); ctx.fillStyle='#ff00ff'; ctx.fill(); ctx.restore();
-      ctx.font='bold 8px monospace'; ctx.fillStyle='#ff00ff'; ctx.textAlign='center';
-      ctx.fillText(pt.n,pp.x,pp.y-11);
+      var pp=toXY(pd.longitude,R-68);
+      ctx.save(); ctx.shadowColor=pt.c; ctx.shadowBlur=12;
+      ctx.beginPath(); ctx.arc(pp.x,pp.y,7,0,Math.PI*2); ctx.fillStyle=pt.c; ctx.fill(); ctx.restore();
+      ctx.font='bold 9px monospace'; ctx.fillStyle=pt.c; ctx.textAlign='center';
+      ctx.fillText(pt.n,pp.x,pp.y-14);
     });
   }
 
@@ -1228,6 +1239,13 @@ ound
 
   // Clock
   var n=new Date(); var c=$('mw-clock'); if(c) c.textContent=n.toLocaleTimeString();
+  // Store planet positions for hover
+  state._mwPlanetPositions = [];
+  chart.planets.forEach(function(p) {
+    var lon = p.longitude;
+    state._mwPlanetPositions.push({name:p.name, lon:lon, x:toXY(lon,R-42).x, y:toXY(lon,R-42).y});
+  });
+
   // Moon phase
   var phaseEl=$('mw-phase');
   if(phaseEl&&chart.moon_phase){
@@ -1238,7 +1256,8 @@ ound
   // Mansion list with house info + nakshatra sub-lords
   var listEl=$('mw-mansion-list');
   if(listEl&&mansions.length){
-    var nakSubs=state.nakSubLords||[];
+    var renderMansionTable = function() {
+    var nakSubs=(state.nakSubLords&&state.nakSubLords.entries)||[];
     var h='<div class="table-wrap"><table><thead><tr><th>#</th><th>Mansion</th><th>Sign</th><th>Start</th><th>Ruler</th><th>Nature</th><th>House</th><th>Nakshatra</th><th>Star Lord</th><th>Sub Lord</th></tr></thead><tbody>';
     for(var i=0;i<mansions.length;i++){
       var m=mansions[i]; var hasStar=!!starMansionSet[i];
@@ -1266,8 +1285,70 @@ ound
       h+='<tr'+rc+'><td>'+(i+1)+'</td><td>'+m.name+'</td><td>'+SIGN_SYMBOLS[Math.floor(m.start_deg/30)]+'</td><td>'+fmtDeg(m.start_deg%30)+'</td><td>'+m.ruled_by+'</td><td>'+m.nature+'</td><td>'+mHouse+'</td><td style="color:#00ccff">'+nakInfo+'</td><td style="color:#ffaa00">'+starLord+'</td><td style="color:#ff00ff">'+subLord+'</td></tr>';
     }
     h+='</tbody></table></div>'; listEl.innerHTML=h;
+  }; // close renderMansionTable
+  renderMansionTable();
   }
+  // Handle async sub-lord data load
+  if(!state.nakSubLords||!state.nakSubLords.entries){
+    fetch("/static/nakshatra_sublords.json").then(function(r){return r.json();}).then(function(d){state.nakSubLords=d;renderMansionTable();}).catch(function(){});
+  }
+  setupMansionHover();
+}
 
+function setupMansionHover() {
+  var canvas = document.getElementById("mansion-wheel-canvas");
+  if (!canvas) return;
+  var hoverInfo = document.getElementById("mw-hover-info");
+  if (!hoverInfo) return;
+  canvas.addEventListener("mousemove", function(e) {
+    var rect = canvas.getBoundingClientRect();
+    var scaleX = canvas.width / rect.width;
+    var scaleY = canvas.height / rect.height;
+    var mx = (e.clientX - rect.left) * scaleX;
+    var my = (e.clientY - rect.top) * scaleY;
+    var dx = mx - CX, dy = my - CY;
+    var dist = Math.sqrt(dx*dx + dy*dy);
+    if (dist < 60 || dist > 270) { hoverInfo.textContent = ""; return; }
+    var angle = Math.atan2(dy, dx);
+    var chart = state.chart;
+    if (!chart || !chart.planets) return;
+    var asc = (chart.houses && chart.houses.asc) || 0;
+    var rel = (180 - angle * 180 / Math.PI + 360) % 360;
+    var lon = (rel + asc) % 360;
+    var closest = null, minDist = 999;
+    chart.planets.forEach(function(p) {
+      var d = Math.abs(p.longitude - lon);
+      if (d > 180) d = 360 - d;
+      if (d < minDist) { minDist = d; closest = p; }
+    });
+    if (closest && minDist < 6) {
+      var sign = SIGNS[Math.floor(closest.longitude/30)%12];
+      var deg = (closest.longitude % 30).toFixed(1);
+      var retro = closest.retro ? " \u21BA R" : "";
+      hoverInfo.innerHTML = "<span style=\"color:" + (PLANET_COLORS[closest.name]||"#fff") + ";font-weight:bold\">" + (PLANET_GLYPHS[closest.name]||closest.name) + " " + closest.name + "</span> " + sign + " " + deg + "\u00b0" + retro;
+    } else {
+      var chart2 = state.chart;
+      if(chart2 && chart2.arabic_parts) {
+        var parts = ["Part_of_Fortune","Part_of_Spirit"];
+        var found = false;
+        parts.forEach(function(pk) {
+          var pd = chart2.arabic_parts[pk];
+          if(pd && pd.longitude != null) {
+            var d = Math.abs(pd.longitude - lon);
+            if (d > 180) d = 360 - d;
+            if (d < 5) {
+              hoverInfo.innerHTML = "<span style=\"color:#ff00ff;font-weight:bold\">\u2297 " + pk.replace("Part_of_","") + "</span>";
+              found = true;
+            }
+          }
+        });
+        if(!found) hoverInfo.textContent = "";
+      } else {
+        hoverInfo.textContent = "";
+      }
+    }
+  });
+}
 
 function loadSolomonicSeals(){
   var container=$('solomonic-seals-content');
@@ -1390,11 +1471,11 @@ document.addEventListener('click',function(e){
     var sc=$('solar-system-container');
     if(sc) setTimeout(function(){initSolarSystem(state.heliocentric,sc.clientWidth||800,sc.clientHeight||500);},100);
   }
-  if(tabId==='angels'&&typeof loadAngels==='function')loadAngels();
-  if(tabId==='quranic'&&typeof loadQuranic==='function')loadQuranic();
-  if(tabId==='oracle'){var c=$('oracle-cards');if(c){c.innerHTML='<div style="color:rgba(255,215,0,.5);padding:1rem;text-align:center">⛧ Loading oracle...</div>';fetch('/static/oracle-cards/index.html').then(function(r){return r.text();}).then(function(h){c.innerHTML=h;}).catch(function(){c.innerHTML='<div style="color:var(--text-muted);padding:1rem;text-align:center">Oracle cards not found</div>';});}}
+  // if(tabId==='angels'&&typeof loadAngels==='function')loadAngels();
+  // if(tabId==='quranic'&&typeof loadQuranic==='function')loadQuranic();
+  if(tabId==='oracle' && typeof loadOracle==='function') loadOracle();
   
-  if(tabId==='occult-encyc'&&typeof loadOccultEncyc==='function')loadOccultEncyc();
+  // if(tabId==='occult-encyc'&&typeof loadOccultEncyc==='function')loadOccultEncyc();
   if(tabId==='zodiac-wheel'&&typeof loadZodiacWheel==='function')loadZodiacWheel();
   if(tabId==='mansion-wheel'&&typeof loadMansionWheel==='function')loadMansionWheel();
   if(tabId==='beings'&&typeof loadBeings==='function')loadBeings();
@@ -1413,58 +1494,290 @@ var csBtn=$('btn-calculate-chart');if(csBtn)csBtn.addEventListener('click',funct
 (function(){var now=new Date();var dateEl=$('cs-date');var timeEl=$('cs-time');if(dateEl)dateEl.value=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');if(timeEl)timeEl.value=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');})();
 
 // ═══════════════════════════════════════════════════════════════
+
+// ═══════════════════════════════════════════════════════════════
+// TAB WRAPPER FUNCTIONS
+// ═══════════════════════════════════════════════════════════════
+function loadZodiacWheel() { calcAndDrawWheel(); }
+function loadMansionWheel() {
+  if (!state.mansionList) {
+    fetchJSON(API+'/mansions/list').then(function(data) {
+      state.mansionList = data.mansions || [];
+      drawMansionWheel();
+    }).catch(function() {
+      state.mansionList = [];
+      drawMansionWheel();
+    });
+  } else {
+    drawMansionWheel();
+  }
+}
+function loadBeings() { if(state.hours && typeof renderBeings==="function") renderBeings(state.beings, state.hours); }
+function loadJinnCommanders() { if(typeof renderJinnCommanders==="function") renderJinnCommanders(state.jinnCommanders); }
+function loadTahatil() { if(typeof renderTahatil==="function") renderTahatil(state.tahatil); }
 // INTRO OVERLAY — HyperFrames centered text
 // ═══════════════════════════════════════════════════════════════
 (function(){
-  var g = typeof gsap !== 'undefined';
-  var overlay=$('intro-overlay'),skipBtn=$('intro-skip'),replayBtn=$('intro-replay');
-  var dismissed=false;
-  if(g && document.querySelectorAll('.intro-line').length){
-    var tl = gsap.timeline({paused:true});
-    var lines = document.querySelectorAll('.intro-line');
-    lines.forEach(function(el){
-      tl.set(el,{opacity:0,y:20});
-    });
-    lines.forEach(function(el,i){
-      tl.to(el,{opacity:1,y:0,duration:1.2,ease:'power2.out'})
-        .to(el,{opacity:0,y:-20,duration:1,ease:'power2.in'},'+=2');
-    });
-    tl.call(function(){setTimeout(dismiss,2000);});
-    tl.play();
-    setTimeout(function(){if(skipBtn)skipBtn.style.display='block';},1500);
-  } else {
-    setTimeout(dismiss,1500);
-    setTimeout(function(){if(skipBtn)skipBtn.style.display='block';},1500);
-  }
-  function dismiss(){
-    if(dismissed)return;
-    dismissed=true;
-    overlay.classList.add('fade-out');
+  var overlay=$('intro-overlay'),skipBtn=$('intro-skip');
+  if(overlay){
     setTimeout(function(){
       overlay.style.display='none';
       if(typeof loadAll==='function')loadAll();
-    },1500);
+    },300);
+    if(skipBtn)skipBtn.addEventListener('click',function(){
+      overlay.style.display='none';
+      if(typeof loadAll==='function')loadAll();
+    });
   }
-  skipBtn.addEventListener('click',dismiss);
-  replayBtn.addEventListener('click',function(){
-    dismissed=false;
-    overlay.classList.remove('fade-out');
-    overlay.style.display='flex';
-    if(g && document.querySelectorAll('.intro-line').length){
-      var tl2 = gsap.timeline();
-      document.querySelectorAll('.intro-line').forEach(function(el,i){
-        tl2.set(el,{opacity:0,y:20})
-          .to(el,{opacity:1,y:0,duration:1.2,ease:'power2.out'})
-          .to(el,{opacity:0,y:-20,duration:1,ease:'power2.in'},'+=2');
-      });
-      tl2.call(function(){setTimeout(dismiss,2000);});
-    }
-    this.style.display='none';
-    skipBtn.style.display='block';
-  });
 })();
 
+
 // ═══════════════════════════════════════════════════════════════
+
+// ═══════════════════════════════════════════════════════════════
+// ZODIAC WHEEL — Cyberpunk neon canvas
+// ═══════════════════════════════════════════════════════════════
+var wheelInterval = null;
+
+function toXY(lon, r) {
+  var asc = 0;
+  if(state.chart && state.chart.houses && state.chart.houses.asc != null) asc = state.chart.houses.asc;
+  else if(state.houses && state.houses.houses && state.houses.houses.asc != null) asc = state.houses.houses.asc;
+  var rel = ((lon - asc) % 360 + 360) % 360;
+  var ang = (180 - rel) * Math.PI / 180;
+  return { x: CX + r * Math.cos(ang), y: CY + r * Math.sin(ang) };
+}
+function renderWheelInfo(chart) {
+  var aspectsList = document.getElementById("zw-aspects-list");
+  if (aspectsList && chart && chart.aspects) {
+    aspectsList.innerHTML = chart.aspects.map(function(a) {
+      var c = ASPECT_COLORS[a.aspect] || "#fff";
+      return '<div style="padding:2px 0;border-bottom:1px solid rgba(0,255,255,0.08)"><span style="color:' + c + ';font-weight:600">' + a.aspect + '</span> <span style="color:rgba(255,255,255,0.5)">' + a.between + '</span> <span style="color:rgba(255,255,255,0.3);font-size:.6rem">' + a.orb + '°</span></div>';
+    }).join("") || '<div style="color:rgba(255,255,255,0.3)">No major aspects</div>';
+  }
+  var housesList = document.getElementById("zw-houses-list");
+  if (housesList && chart && chart.houses) {
+    var cusps = Object.values(chart.houses.cusps).map(Number);
+    var names = ["1st ASC","2nd","3rd","4th IC","5th","6th","7th DC","8th","9th","10th MC","11th","12th"];
+    housesList.innerHTML = cusps.map(function(lon,i) {
+      return '<div style="padding:1px 0;font-size:.6rem;color:rgba(255,255,255,0.6)"><span style="color:#00ffff;font-weight:600">' + names[i] + '</span> ' + SIGN_SYMBOLS[getSignIndex(lon)] + ' ' + getSign(lon) + ' ' + fmtDeg(getDegInSign(lon)) + '</div>';
+    }).join("");
+  }
+  var planetList = document.getElementById("zw-planet-list");
+  if (planetList && chart && chart.planets) {
+    planetList.innerHTML = '<div class="table-wrap"><table><tr><th>Planet</th><th>Sign</th><th>Deg</th><th>House</th><th>Speed</th></tr>' + chart.planets.map(function(p) {
+      var c = PLANET_COLORS[p.name]||"#fff";
+      var lon = p.longitude;
+      var house = "--";
+      var cusps2 = chart.houses ? Object.values(chart.houses.cusps).map(Number) : [];
+      if (cusps2.length) {
+        for (var hi=0; hi<12; hi++) {
+          var c1=cusps2[hi], c2=cusps2[(hi+1)%12];
+          if (c1 < c2) { if (lon >= c1 && lon < c2) { house = (hi+1); break; } }
+          else { if (lon >= c1 || lon < c2) { house = (hi+1); break; } }
+        }
+      }
+      return '<tr><td><span class="planet-dot" style="background:' + c + '"></span>' + p.name + '</td><td>' + SIGN_SYMBOLS[getSignIndex(lon)] + ' ' + getSign(lon) + '</td><td>' + fmtDeg(getDegInSign(lon)) + '</td><td>' + house + '</td><td>' + (p.retro ? '<span class="retro-badge">R</span>' : "Direct") + '</td></tr>';
+    }).join("") + '</table></div>';
+  }
+}
+
+function calcAndDrawWheel() {
+  var canvas = document.getElementById("zodiac-wheel-canvas");
+  if (!canvas) return;
+  var ctx = canvas.getContext("2d");
+  var chart = state.chart;
+  if (!chart || !chart.planets) return;
+  var W = 620, H = 620;
+  CX = W/2; CY = H/2; var R = 250;
+  var R_INNER = 60;
+  var now = Date.now();
+  ctx.clearRect(0, 0, W, H);
+  var bg = ctx.createRadialGradient(CX, CY, 0, CX, CY, R+40);
+  bg.addColorStop(0, "rgba(5,0,20,0.95)");
+  bg.addColorStop(1, "rgba(0,0,0,0.98)");
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, W, H);
+  var asc = 0;
+  if(chart.houses && chart.houses.asc != null) asc = chart.houses.asc;
+  function getElementColor(signName) {
+    var map = {"Aries":"#ff3333","Taurus":"#33cc33","Gemini":"#ffcc00","Cancer":"#3399ff","Leo":"#ff3333","Virgo":"#33cc33","Libra":"#ffcc00","Scorpio":"#3399ff","Sagittarius":"#ff3333","Capricorn":"#33cc33","Aquarius":"#ffcc00","Pisces":"#3399ff"};
+    return map[signName] || "#ffffff";
+  }
+  for (var si = 0; si < 12; si++) {
+    var startLon = si * 30;
+    var endLon = (si + 1) * 30;
+    var relStart = ((startLon - asc) % 360 + 360) % 360;
+    var relEnd = ((endLon - asc) % 360 + 360) % 360;
+    var angStart = (180 - relStart) * Math.PI / 180;
+    var angEnd = (180 - relEnd) * Math.PI / 180;
+    var col = getElementColor(SIGNS[si]);
+    ctx.beginPath(); ctx.arc(CX, CY, R, angStart, angEnd, (relStart < relEnd));
+    ctx.arc(CX, CY, R_INNER, angEnd, angStart, (relStart >= relEnd)); ctx.closePath();
+    ctx.fillStyle = col + "18"; ctx.fill();
+    ctx.strokeStyle = col + "80"; ctx.lineWidth = 2; ctx.stroke();
+    var midAng = (relStart + relEnd) / 2;
+    if (relEnd < relStart) midAng = (relStart + relEnd + 360) / 2;
+    var angLabel = (180 - midAng) * Math.PI / 180;
+    var labelR = (R + R_INNER) / 2;
+    var lx = CX + labelR * Math.cos(angLabel);
+    var ly = CY + labelR * Math.sin(angLabel);
+    ctx.save(); ctx.font = "bold 14px \"Courier New\",monospace";
+    ctx.fillStyle = col; ctx.shadowColor = col; ctx.shadowBlur = 10;
+    ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.fillText(SIGNS[si].toUpperCase(), lx, ly);
+    ctx.restore();
+    for (var d = 0; d < 30; d += 5) {
+      var deg = startLon + d;
+      var relD = ((deg - asc) % 360 + 360) % 360;
+      var da = (180 - relD) * Math.PI / 180;
+      ctx.beginPath();
+      ctx.moveTo(CX + (R-3) * Math.cos(da), CY + (R-3) * Math.sin(da));
+      ctx.lineTo(CX + (R - (d%10===0?10:6)) * Math.cos(da), CY + (R - (d%10===0?10:6)) * Math.sin(da));
+      ctx.strokeStyle = d%10===0 ? "rgba(255,255,255,0.25)" : "rgba(255,255,255,0.1)";
+      ctx.lineWidth = d%10===0 ? 1 : 0.5;
+      ctx.stroke();
+    }
+  }
+  // House cusps with labels and numbers
+  var cusps = chart.houses ? Object.values(chart.houses.cusps).map(Number) : [];
+  if (cusps.length) {
+    var axisLabels = ["ASC", "2", "3", "IC", "5", "6", "DC", "8", "9", "MC", "11", "12"];
+    for (var hi = 0; hi < cusps.length; hi++) {
+      var lon = cusps[hi]; var p = toXY(lon, R);
+      var angle = Math.atan2(p.y-CY, p.x-CX);
+      var isAxis = hi === 0 || hi === 3 || hi === 6 || hi === 9;
+      var innerR = isAxis ? R_INNER - 12 : R_INNER + 8;
+      ctx.save();
+      ctx.globalAlpha = isAxis ? 1.0 : 0.5;
+      ctx.beginPath();
+      ctx.moveTo(CX + innerR * Math.cos(angle), CY + innerR * Math.sin(angle));
+      ctx.lineTo(p.x, p.y);
+      if (isAxis) { ctx.strokeStyle = "#ffd700"; ctx.lineWidth = 3; ctx.shadowColor = "#ffd700"; ctx.shadowBlur = 12; }
+      else { ctx.strokeStyle = "rgba(255,215,0,0.35)"; ctx.lineWidth = 1.2; }
+      ctx.stroke();
+      ctx.globalAlpha = 1.0;
+      ctx.restore();
+      // House number / axis label
+      var labelR2 = R + (isAxis ? 22 : 16);
+      var lp = toXY(lon, labelR2);
+      ctx.save(); ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      if (isAxis) { ctx.font = "bold 11px monospace"; ctx.fillStyle = "#ffd700"; ctx.shadowColor = "#ffd700"; ctx.shadowBlur = 8; }
+      else { ctx.font = "bold 8px monospace"; ctx.fillStyle = "rgba(255,215,0,0.6)"; ctx.shadowBlur = 0; }
+      ctx.fillText(axisLabels[hi], lp.x, lp.y);
+      ctx.restore();
+    }
+  }
+  // Outer zodiac symbol ring (big symbols on outer edge)
+  for (var si = 0; si < 12; si++) {
+    var startLon = si * 30;
+    var endLon = (si + 1) * 30;
+    var relStart = ((startLon - asc) % 360 + 360) % 360;
+    var relEnd = ((endLon - asc) % 360 + 360) % 360;
+    var midAng = (relStart + relEnd) / 2;
+    if (relEnd < relStart) midAng = (relStart + relEnd + 360) / 2;
+    var angLabel = (180 - midAng) * Math.PI / 180;
+    var col = getElementColor(SIGNS[si]);
+    var sr = R + 14;
+    ctx.save(); ctx.font = "18px \"Courier New\",monospace";
+    ctx.fillStyle = col; ctx.shadowColor = col; ctx.shadowBlur = 6;
+    ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.fillText(SIGN_SYMBOLS[si], CX + sr * Math.cos(angLabel), CY + sr * Math.sin(angLabel));
+    ctx.restore();
+  }
+  // Planets
+  chart.planets.forEach(function(p) {
+    var lon = p.longitude; var pp = toXY(lon, R - 26);
+    var color = PLANET_COLORS[p.name] || "#ffffff";
+    var sz = p.name === "Sun" ? 11 : p.name === "Moon" ? 10 : 7;
+    var pulse = 1 + Math.sin(now/500 + lon) * 0.15;
+    ctx.save(); ctx.shadowColor = color; ctx.shadowBlur = 20 * pulse;
+    ctx.beginPath(); ctx.arc(pp.x, pp.y, sz * pulse, 0, Math.PI*2); ctx.fillStyle = color; ctx.fill();
+    ctx.restore();
+    ctx.save(); ctx.font = "bold 13px monospace";
+    ctx.fillStyle = color; ctx.shadowColor = color; ctx.shadowBlur = 8;
+    ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.fillText(PLANET_GLYPHS[p.name] || p.name[0], pp.x, pp.y - sz - 8);
+    ctx.restore();
+  });
+  // Arabic Parts
+  if (chart.arabic_parts) {
+    var partsList = [
+      {k:"Part_of_Fortune",n:"\u2297 Fortune",c:"#ff00ff"},
+      {k:"Part_of_Spirit",n:"\u2297 Spirit",c:"#ff8800"},
+      {k:"Part_of_Love",n:"\u2661 Love",c:"#ff4488"},
+      {k:"Part_of_Marriage",n:"\u26a4 Marriage",c:"#ff6699"}
+    ];
+    partsList.forEach(function(pt) {
+      var pd = chart.arabic_parts[pt.k];
+      if (!pd || pd.longitude == null) return;
+      var pp = toXY(pd.longitude, R - 44);
+      var flash = Math.sin(now/200) * 0.3 + 0.7;
+      ctx.save(); ctx.shadowColor = pt.c; ctx.shadowBlur = 14 * flash;
+      ctx.beginPath(); ctx.arc(pp.x, pp.y, 5 * flash, 0, Math.PI*2);
+      ctx.fillStyle = pt.c; ctx.fill(); ctx.restore();
+      ctx.save(); ctx.font = "bold 8px monospace";
+      ctx.fillStyle = pt.c; ctx.textAlign = "center";
+      ctx.fillText(pt.n.split(" ")[0], pp.x, pp.y - 10); ctx.restore();
+    });
+  }
+  // Center
+  ctx.strokeStyle = "rgba(255,215,0,0.15)"; ctx.lineWidth = 0.5; ctx.setLineDash([2,3]);
+  ctx.beginPath(); ctx.moveTo(CX-6,CY); ctx.lineTo(CX+6,CY); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(CX,CY-6); ctx.lineTo(CX,CY+6); ctx.stroke(); ctx.setLineDash([]);
+  renderWheelInfo(chart);
+}
+
+function setupZodiacHover() {
+  var canvas = document.getElementById("zodiac-wheel-canvas");
+  if (!canvas) return;
+  var hoverInfo = document.getElementById("zw-hover-info");
+  if (!hoverInfo) return;
+  canvas.addEventListener("mousemove", function(e) {
+    var rect = canvas.getBoundingClientRect();
+    var scaleX = canvas.width / rect.width;
+    var scaleY = canvas.height / rect.height;
+    var mx = (e.clientX - rect.left) * scaleX;
+    var my = (e.clientY - rect.top) * scaleY;
+    var dx = mx - CX, dy = my - CY;
+    var dist = Math.sqrt(dx*dx + dy*dy);
+    var R = 250, R_INNER = 60;
+    if (dist < R_INNER || dist > R + 20) { hoverInfo.textContent = ""; return; }
+    var chart = state.chart;
+    if (!chart || !chart.planets) return;
+    var asc = (chart.houses && chart.houses.asc) || 0;
+    var angle = Math.atan2(dy, dx);
+    var rel = (180 - angle * 180 / Math.PI + 360) % 360;
+    var lon = (rel + asc) % 360;
+    var closest = null, minDist = 999;
+    chart.planets.forEach(function(p) {
+      var d = Math.abs(p.longitude - lon);
+      if (d > 180) d = 360 - d;
+      if (d < minDist) { minDist = d; closest = p; }
+    });
+    if (closest && minDist < 8) {
+      var sign = SIGNS[Math.floor(closest.longitude/30)%12];
+      var deg = (closest.longitude % 30).toFixed(1);
+      var retro = closest.retro ? " \u21BA R" : "";
+      hoverInfo.innerHTML = "<span style=\"color:" + (PLANET_COLORS[closest.name]||"#fff") + "\">" + (PLANET_GLYPHS[closest.name]||closest.name) + " " + closest.name + "</span> " + sign + " " + deg + "\u00b0" + retro;
+    } else {
+      hoverInfo.textContent = "";
+    }
+  });
+}
+
+function startWheelAnimation() {
+  if (wheelInterval) clearInterval(wheelInterval);
+  wheelInterval = setInterval(function() {
+    var n = new Date();
+    var clock = document.getElementById("zw-clock");
+    if (clock) clock.textContent = n.toLocaleTimeString();
+    var dateEl = document.getElementById("zw-date");
+    if (dateEl) dateEl.textContent = n.toLocaleDateString("en-GB", {year:"numeric",month:"short",day:"numeric"});
+    calcAndDrawWheel();
+  }, 1000);
+  setupZodiacHover();
+}
 // ORIGINAL LOAD (called from intro dismiss)
 // ═══════════════════════════════════════════════════════════════
 
