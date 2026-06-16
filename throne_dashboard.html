@@ -196,10 +196,7 @@ tr:hover td{background:var(--surface-2)}
       <div class="nav-item" data-tab="beings"><span class="icon">👾</span> Beings</div>
       <div class="nav-item" data-tab="occult-chart"><span class="icon">🔮</span> Occult</div>
       <div class="nav-item" data-tab="chart-study"><span class="icon">🔍</span> Study</div>
-      <div class="nav-item" data-tab="oracle"><span class="icon">🃏</span> Oracle</div>
-      <div class="nav-item" data-tab="solomonic-seals"><span class="icon">⛧</span> Solomonic Seals</div>
-      <div class="nav-item" data-tab="occult-encyc"><span class="icon">📖</span> Occult Encyc</div>
-    </div>
+                      </div>
     <div class="sidebar-footer">⛧ <span>Hail Baphomet</span> ⛧</div>
   </nav>
 
@@ -327,12 +324,12 @@ tr:hover td{background:var(--surface-2)}
       <!-- TALISMAN TAB -->
       <div class="tab-content" 
             <!-- SOLOMONIC SEALS TAB -->
-      <div class="tab-content" id="tab-solomonic-seals"><div class="card"><h2><span class="icon">⛧</span> Solomonic Seals (Kitab Al-Ajnas)</h2><div id="solomonic-seals-content"></div></div></div>
+      <div class="tab-content" </div>
       <!-- OCCULT ENCYCLOPEDIA TAB --><!-- OCCULT ENCYCLOPEDIA TAB -->
       <div class="tab-content"       <!-- ORACLE TAB -->
-      <div class="tab-content" id="tab-oracle"><div class="card"><h2><span class="icon">🃏</span> Divine Oracle</h2><div id="oracle-cards" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.75rem"><div style="color:var(--text-muted);padding:1rem;text-align:center">Loading oracle...</div></div></div></div>
+      <div class="tab-content" </div>
       <!-- OCCULT ENCYCLOPEDIA TAB -->
-      <div class="tab-content" id="tab-occult-encyc"><div class="card"><h2><span class="icon">📖</span> Occult Encyclopedia — Zodiac Angels</h2><p style="color:var(--text-dim);font-size:.7rem;margin-bottom:.5rem">Angel values for each zodiac sign from the Occult Encyclopedia of Magick Squares.</p><div id="occult-encyc-zodiac-content"></div></div>
+      <div class="tab-content" 
       <div class="card"><h2><span class="icon">🪐</span> Occult Encyclopedia — Planetary Angels</h2><p style="color:var(--text-dim);font-size:.7rem;margin-bottom:.5rem">Angel values for each classical planet.</p><div id="occult-encyc-planets-content"></div></div></div>
 
       <div class="card"><h2><span class="icon">🪐</span> Occult Encyclopedia — Planetary Angels</h2><p style="color:var(--text-dim);font-size:.7rem;margin-bottom:.5rem">Angel values for each classical planet.</p><div id="occult-encyc-planets-content"></div></div></div>
@@ -1336,228 +1333,172 @@ function calcAndDrawWheel(){
   var cv=$('zodiac-wheel-canvas');
   if(!cv) return;
   var ctx=cv.getContext('2d');
-  var W=cv.width, H=cv.height, CX=W/2, CY=H/2, R=250, R_INNER=170, R_HOUSE=210;
-  var asc=chart.asc||(houses&&houses.asc)||0;
-
-  // Coordinate helpers
+  var W=cv.width, H=cv.height, CX=W/2, CY=H/2, R=240, R_INNER=150;
+  var asc=chart.asc||(houses&&houses.asc)||0, now=Date.now();
   function toXY(lon,r){ var rel=(lon-asc+360)%360; var ang=(180-rel)*(Math.PI/180); return {x:CX+r*Math.cos(ang),y:CY+r*Math.sin(ang)}; }
-  function arcPath(lon1,lon2,r){ var p1=toXY(lon1,r),p2=toXY(lon2,r); return {p1:p1,p2:p2}; }
 
   // ── Background ──
   ctx.clearRect(0,0,W,H);
-  // Dark radial bg
-  var bgGrad=ctx.createRadialGradient(CX,CY,0,CX,CY,R+40);
-  bgGrad.addColorStop(0,'rgba(15,5,35,0.95)');
-  bgGrad.addColorStop(0.7,'rgba(5,0,20,0.98)');
-  bgGrad.addColorStop(1,'rgba(0,0,0,1)');
-  ctx.fillStyle=bgGrad; ctx.fillRect(0,0,W,H);
+  var bg=ctx.createRadialGradient(CX,CY,0,CX,CY,R+30);
+  bg.addColorStop(0,'rgba(5,0,20,0.97)'); bg.addColorStop(1,'rgba(0,0,0,0.99)');
+  ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
 
-  // Scanline effect
-  zwScanY=(zwScanY+0.5)%H;
-  ctx.fillStyle='rgba(0,255,255,0.015)';
-  ctx.fillRect(0,zwScanY,W,2);
+  // ── Outer ring glow ──
+  ctx.save(); ctx.shadowColor='#00ffff'; ctx.shadowBlur=12;
+  ctx.beginPath(); ctx.arc(CX,CY,R+3,0,Math.PI*2);
+  ctx.strokeStyle='rgba(0,255,255,0.12)'; ctx.lineWidth=1; ctx.stroke(); ctx.restore();
 
-  // ── Neon outer ring glow ──
-  ctx.save();
-  ctx.shadowColor='#00ffff'; ctx.shadowBlur=15;
-  ctx.beginPath(); ctx.arc(CX,CY,R+5,0,Math.PI*2);
-  ctx.strokeStyle='rgba(0,255,255,0.15)'; ctx.lineWidth=1; ctx.stroke();
-  ctx.restore();
-
-  // ── Zodiac sign segments — elemental neon colors by name ──
+  // ── Zodiac sign segments ──
   var signColorMap={
-    'Aries':['#ff2200','#ff4422'],
-    'Taurus':['#00ff44','#22ff66'],
-    'Gemini':['#ffcc00','#ffdd33'],
-    'Cancer':['#0066ff','#3388ff'],
-    'Leo':['#ff4400','#ff6633'],
-    'Virgo':['#00dd44','#22ee66'],
-    'Libra':['#ffaa00','#ffcc33'],
-    'Scorpio':['#0044ff','#3366ff'],
-    'Sagittarius':['#ff0022','#ff3344'],
-    'Capricorn':['#00ff66','#33ff88'],
-    'Aquarius':['#ffdd00','#ffee44'],
-    'Pisces':['#0055ff','#3377ff']
+    'Aries':['#ff2200','#ff4422'],'Taurus':['#00ff66','#33ff88'],'Gemini':['#ffcc00','#ffdd33'],
+    'Cancer':['#0088ff','#33aaff'],'Leo':['#ff2200','#ff4422'],'Virgo':['#00ff66','#33ff88'],
+    'Libra':['#ffcc00','#ffdd33'],'Scorpio':['#0088ff','#33aaff'],'Sagittarius':['#ff2200','#ff4422'],
+    'Capricorn':['#00ff66','#33ff88'],'Aquarius':['#ffcc00','#ffdd33'],'Pisces':['#0088ff','#33aaff']
   };
   SIGNS.forEach(function(s,i){
     var lon1=i*30, lon2=(i+1)*30;
-    var ec=signColorMap[s]||['#ffffff','#ffffff'];
+    var ec=signColorMap[s]||['#888','#aaa'];
+    var p1i=toXY(lon1,R_INNER), p2i=toXY(lon2,R_INNER), p1o=toXY(lon1,R), p2o=toXY(lon2,R);
     // Segment fill
+    ctx.beginPath(); ctx.moveTo(p1i.x,p1i.y);
+    ctx.arc(CX,CY,R_INNER,(180-lon1)*(Math.PI/180),(180-lon2)*(Math.PI/180),true);
+    ctx.lineTo(p2o.x,p2o.y);
+    ctx.arc(CX,CY,R,(180-lon2)*(Math.PI/180),(180-lon1)*(Math.PI/180),false);
+    ctx.closePath();
     var grad=ctx.createRadialGradient(CX,CY,R_INNER,CX,CY,R);
-    grad.addColorStop(0,'rgba(0,0,0,0)');
-    grad.addColorStop(0.5,ec[0]+'18');
-    grad.addColorStop(1,ec[1]+'10');
-    var p1=toXY(lon1,R_INNER), p2=toXY(lon2,R_INNER), p1o=toXY(lon1,R), p2o=toXY(lon2,R);
-    ctx.beginPath(); ctx.moveTo(p1.x,p1.y);
+    grad.addColorStop(0,ec[1]+'18'); grad.addColorStop(1,ec[0]+'08');
+    ctx.fillStyle=grad; ctx.fill();
+    // Segment border
+    ctx.save(); ctx.shadowColor=ec[0]; ctx.shadowBlur=6;
+    ctx.beginPath(); ctx.moveTo(p1i.x,p1i.y);
     ctx.arc(CX,CY,R_INNER,(180-lon1)*(Math.PI/180),(180-lon2)*(Math.PI/180),true);
     ctx.lineTo(p2o.x,p2o.y);
     ctx.arc(CX,CY,R,(180-lon2)*(Math.PI/180),(180-lon1)*(Math.PI/180),false);
-    ctx.closePath(); ctx.fillStyle=grad; ctx.fill();
-    // Solid neon border
-    ctx.save(); ctx.shadowColor=ec[0]; ctx.shadowBlur=10;
-    ctx.beginPath(); ctx.moveTo(p1.x,p1.y);
-    ctx.arc(CX,CY,R_INNER,(180-lon1)*(Math.PI/180),(180-lon2)*(Math.PI/180),true);
-    ctx.lineTo(p2o.x,p2o.y);
-    ctx.arc(CX,CY,R,(180-lon2)*(Math.PI/180),(180-lon1)*(Math.PI/180),false);
-    ctx.closePath(); ctx.strokeStyle=ec[0]; ctx.lineWidth=1.5; ctx.stroke(); ctx.restore();
-    // Sign name in neon
+    ctx.closePath();
+    ctx.strokeStyle=ec[0]+'66'; ctx.lineWidth=1.2; ctx.stroke(); ctx.restore();
+    // Sign name — LARGER FONT
     var mid=toXY(lon1+15,(R+R_INNER)/2);
-    ctx.save(); ctx.shadowColor=ec[0]; ctx.shadowBlur=12;
-    ctx.font='bold 10px "Courier New",monospace'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.save(); ctx.shadowColor=ec[0]; ctx.shadowBlur=8;
+    ctx.font='bold 13px "Courier New",monospace'; ctx.textAlign='center'; ctx.textBaseline='middle';
     ctx.fillStyle=ec[0]; ctx.fillText(s.toUpperCase(),mid.x,mid.y); ctx.restore();
   });
 
-  // ── House cusp lines — solid and clear ──
+  // ── House cusp lines — only 4 axes prominent, others subtle ──
   if(houses&&houses.cusps){
     var cuspKeys=Object.keys(houses.cusps).sort(function(a,b){return parseInt(a)-parseInt(b);});
     cuspKeys.forEach(function(k){
       var lon=houses.cusps[k]; if(lon==null) return;
       var isAxis=(k==='1st'||k==='4th'||k==='7th'||k==='10th');
-      // Draw solid line from center outward
-      var pOut=toXY(lon,R+10);
+      var pEnd=toXY(lon,isAxis?R+8:R-5);
       ctx.save();
-      if(isAxis){ ctx.shadowColor='#00ffff'; ctx.shadowBlur=12; }
-      ctx.beginPath(); ctx.moveTo(CX,CY); ctx.lineTo(pOut.x,pOut.y);
-      ctx.strokeStyle=isAxis?'#00ffff':'rgba(150,150,200,0.5)';
-      ctx.lineWidth=isAxis?2.5:1;
-      ctx.stroke(); ctx.restore();
-      // House number label
-      var lp=toXY(lon,R+24);
-      var lbl;
-      if(k==='1st') lbl='ASC';
-      else if(k==='10th') lbl='MC';
-      else if(k==='7th') lbl='DC';
-      else if(k==='4th') lbl='IC';
-      else lbl=k.replace('th','').replace('st','').replace('nd','').replace('rd','');
-      ctx.save(); ctx.shadowColor=isAxis?'#00ffff':'rgba(150,150,200,0.6)'; ctx.shadowBlur=isAxis?8:4;
-      ctx.font='bold 9px "Courier New",monospace'; ctx.textAlign='center'; ctx.textBaseline='middle';
-      ctx.fillStyle=isAxis?'#00ffff':'rgba(180,180,220,0.8)';
-      ctx.fillText(lbl,lp.x,lp.y); ctx.restore();
+      if(isAxis){
+        ctx.shadowColor='#ffd700'; ctx.shadowBlur=8;
+        ctx.beginPath(); ctx.moveTo(CX,CY); ctx.lineTo(pEnd.x,pEnd.y);
+        ctx.strokeStyle='#ffd700'; ctx.lineWidth=2.5; ctx.stroke();
+      } else {
+        ctx.beginPath(); ctx.moveTo(CX,CY); ctx.lineTo(pEnd.x,pEnd.y);
+        ctx.strokeStyle='rgba(150,150,200,0.2)'; ctx.lineWidth=0.5; ctx.stroke();
+      }
+      ctx.restore();
+      // Labels only for axes
+      if(isAxis){
+        var lp=toXY(lon,R+20);
+        var lbl=k==='1st'?'ASC':k==='10th'?'MC':k==='7th'?'DC':'IC';
+        ctx.save(); ctx.shadowColor='#ffd700'; ctx.shadowBlur=6;
+        ctx.font='bold 11px "Courier New",monospace'; ctx.textAlign='center'; ctx.textBaseline='middle';
+        ctx.fillStyle='#ffd700'; ctx.fillText(lbl,lp.x,lp.y); ctx.restore();
+      }
     });
   }
 
-  // ── Arabic parts — flashing radiance ──
+  // ── Arabic parts — clean dots ──
   if(parts){
     var partNames=Object.keys(parts);
     var partColors=['#ff00ff','#00ffff','#ffaa00','#ff4444','#44ff44','#ffff00','#ff6600','#00ff88','#8800ff'];
     partNames.forEach(function(pn,i){
       var pd=parts[pn]; if(!pd) return;
       var lon=pd.longitude||pd; if(lon==null) return;
-      var r=R-65-(i%2)*12;
+      var r=R-60-(i%2)*10;
       var pos=toXY(lon,r);
       var col=partColors[i%partColors.length];
-      var pulse=Math.sin(now/200+i)*0.4+0.6;
-      // Outer glow ring
-      ctx.save(); ctx.shadowColor=col; ctx.shadowBlur=15*pulse+10;
-      ctx.beginPath(); ctx.arc(pos.x,pos.y,8+4*pulse,0,Math.PI*2);
-      ctx.strokeStyle=col+'80'; ctx.lineWidth=1.5; ctx.stroke();
-      // Core dot
-      ctx.beginPath(); ctx.arc(pos.x,pos.y,4+2*pulse,0,Math.PI*2);
+      var pulse=Math.sin(now/250+i)*0.3+0.7;
+      ctx.save(); ctx.shadowColor=col; ctx.shadowBlur=10*pulse+5;
+      ctx.beginPath(); ctx.arc(pos.x,pos.y,5+2*pulse,0,Math.PI*2);
       ctx.fillStyle=col; ctx.fill(); ctx.restore();
-      // Label
-      ctx.save(); ctx.shadowColor=col; ctx.shadowBlur=6;
-      ctx.font='bold 7px "Courier New",monospace'; ctx.fillStyle=col; ctx.textAlign='center';
-      ctx.fillText(pn.replace('Part_of_',''),pos.x,pos.y+12); ctx.restore();
     });
   }
 
-  // ── Planets with 8-bit neon style ──
+  // ── Planets — LARGER with clean glow ──
   var planetGlyphs={Sun:'☉',Moon:'☽',Mercury:'☿',Venus:'♀',Mars:'♂',Jupiter:'♃',Saturn:'♄',Uranus:'♅',Neptune:'♆',Pluto:'♇',Rahu:'☊',Ketu:'☋'};
-  var planetNeon={Sun:'#ffdd00',Moon:'#c0c0c0',Mercury:'#b0a0d0',Venus:'#00ff88',Mars:'#ff0040',Jupiter:'#ffaa00',Saturn:'#cc8840',Uranus:'#4dd0e1',Neptune:'#1565c0',Pluto:'#8d6e63',Rahu:'#ff6b35',Ketu:'#8b4513'};
-  var planetData=[], now=Date.now();
+  var planetNeon={Sun:'#ffdd00',Moon:'#c0c0c0',Mercury:'#b0a0d0',Venus:'#00ff88',Mars:'#ff0040',Jupiter:'#ffaa00',Saturn:'#c8a860',Uranus:'#4dd0e1',Neptune:'#1565c0',Pluto:'#8d6e63',Rahu:'#ff6b35',Ketu:'#8b4513'};
+  var planetData=[];
   chart.planets.forEach(function(p){
     var lon=p.longitude, retro=p.retro||false;
     if(!zwShowRetro&&retro) return;
-    var r=R-35-Math.floor(planetData.length/3)*14;
+    var r=R-30-Math.floor(planetData.length/4)*12;
     var pos=toXY(lon,r);
     var col=planetNeon[p.name]||'#fff';
     var houseNum=getHouseForLon(lon,houses);
     var isHover=zwHoverPlanet&&zwHoverPlanet.name===p.name;
-    var sz=isHover?10:(p.name==='Sun'||p.name==='Moon'?8:6);
-    var pulse=Math.sin(now/300+planetData.length)*0.3+0.7;
-    planetData.push({name:p.name,lon:lon,retro:retro,house:houseNum,x:pos.x,y:pos.y,col:col,sz:sz,pulse:pulse,isHover:isHover});
+    var sz=isHover?14:(p.name==='Sun'||p.name==='Moon'?12:10);
+    var pulse=Math.sin(now/300+planetData.length)*0.2+0.8;
+    planetData.push({name:p.name,lon:lon,x:pos.x,y:pos.y,col:col,sz:sz,retro:retro,house:houseNum,pulse:pulse,isHover:isHover,glyph:planetGlyphs[p.name]||'?'});
   });
 
-  // Draw planet orbits (faint circles)
+  // Draw planet glows
   planetData.forEach(function(pd){
-    ctx.save(); ctx.shadowColor=pd.col; ctx.shadowBlur=3;
-    ctx.beginPath(); ctx.arc(CX,CY,Math.sqrt((pd.x-CX)*(pd.x-CX)+(pd.y-CY)*(pd.y-CY)),0,Math.PI*2);
-    ctx.strokeStyle=pd.col+'15'; ctx.lineWidth=0.5; ctx.stroke(); ctx.restore();
-  });
-
-  // Draw planets
-  planetData.forEach(function(pd){
-    var glowSz=pd.sz+4+pd.pulse*3;
-    // Outer glow
-    ctx.save(); ctx.shadowColor=pd.col; ctx.shadowBlur=pd.isHover?20:10;
-    ctx.beginPath(); ctx.arc(pd.x,pd.y,glowSz,0,Math.PI*2);
-    var grd=ctx.createRadialGradient(pd.x,pd.y,0,pd.x,pd.y,glowSz);
+    ctx.save(); ctx.shadowColor=pd.col; ctx.shadowBlur=pd.isHover?18:8;
+    ctx.beginPath(); ctx.arc(pd.x,pd.y,pd.sz+3+pd.pulse*2,0,Math.PI*2);
+    var grd=ctx.createRadialGradient(pd.x,pd.y,0,pd.x,pd.y,pd.sz+4);
     grd.addColorStop(0,pd.col+'40'); grd.addColorStop(1,pd.col+'00');
     ctx.fillStyle=grd; ctx.fill(); ctx.restore();
-    // Core
-    ctx.save(); ctx.shadowColor=pd.col; ctx.shadowBlur=8;
-    ctx.beginPath(); ctx.arc(pd.x,pd.y,pd.sz,0,Math.PI*2);
-    ctx.fillStyle=pd.col; ctx.fill();
-    // Retrograde indicator
-    if(pd.retro){ ctx.strokeStyle='#ff0040'; ctx.lineWidth=1.5; ctx.stroke(); }
-    ctx.restore();
-    // Glyph
-    ctx.save();
-    ctx.font='bold 9px monospace'; ctx.textAlign='center'; ctx.textBaseline='middle';
-    ctx.fillStyle=pd.col; ctx.fillText(planetGlyphs[pd.name],pd.x,pd.y+1);
-    ctx.restore();
-    // Name label
-    var lx=pd.x+16, ly=pd.y-8;
-    ctx.save(); ctx.shadowColor=pd.col; ctx.shadowBlur=4;
-    ctx.font='7px monospace'; ctx.fillStyle=pd.col; ctx.textAlign='center';
-    ctx.fillText(pd.name+(pd.retro?' R':''),lx,ly); ctx.restore();
   });
 
-  // ── Center cross-hair ──
-  ctx.save(); ctx.strokeStyle='rgba(0,255,255,0.3)'; ctx.lineWidth=0.5;
-  ctx.setLineDash([2,4]);
-  ctx.beginPath(); ctx.moveTo(CX-8,CY); ctx.lineTo(CX+8,CY); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(CX,CY-8); ctx.lineTo(CX,CY+8); ctx.stroke();
-  ctx.setLineDash([]); ctx.restore();
+  // Draw planet bodies
+  planetData.forEach(function(pd){
+    ctx.save(); ctx.shadowColor=pd.col; ctx.shadowBlur=6;
+    ctx.beginPath(); ctx.arc(pd.x,pd.y,pd.sz,0,Math.PI*2);
+    ctx.fillStyle=pd.col; ctx.fill();
+    if(pd.retro){ ctx.strokeStyle='#ff0040'; ctx.lineWidth=2; ctx.stroke(); }
+    ctx.restore();
+    // Glyph — LARGER
+    ctx.save();
+    ctx.font='bold 12px monospace'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillStyle='#000'; ctx.fillText(pd.glyph,pd.x,pd.y+1);
+    ctx.restore();
+    // Name label — LARGER
+    ctx.save(); ctx.shadowColor=pd.col; ctx.shadowBlur=4;
+    ctx.font='bold 9px monospace'; ctx.fillStyle=pd.col; ctx.textAlign='center';
+    ctx.fillText(pd.name+(pd.retro?' R':''),pd.x,pd.y+pd.sz+10); ctx.restore();
+  });
 
-  // ── Update planet list ──
-  var pl=$('zw-planet-list');
-  if(pl){
-    var h='<div class="table-wrap"><table><thead><tr><th></th><th>Planet</th><th>Sign</th><th>°</th><th>House</th><th></th></tr></thead><tbody>';
-    planetData.sort(function(a,b){return a.lon-b.lon;});
-    planetData.forEach(function(p){
-      h+='<tr><td style="color:'+p.col+'">'+planetGlyphs[p.name]+'</td><td style="color:'+p.col+'">'+p.name+'</td><td>'+SIGN_SYMBOLS[getSignIndex(p.lon)]+' '+getSign(p.lon)+'</td><td>'+fmtDeg(getDegInSign(p.lon))+'</td><td style="color:var(--gold-dim)">'+p.house+'</td><td>'+(p.retro?'<span style="color:#ff0040;font-size:.6rem">R</span>':'')+'</td></tr>';
-    });
-    h+='</tbody></table></div>'; pl.innerHTML=h;
-  }
+  // ── Center point ──
+  ctx.beginPath(); ctx.arc(CX,CY,3,0,Math.PI*2); ctx.fillStyle='#00ffff'; ctx.fill();
 
   // ── Clock + location ──
   var n=new Date();
   var c=$('zw-clock'); if(c) c.textContent=n.toLocaleTimeString();
   var d=$('zw-date'); if(d) d.textContent=n.toLocaleDateString();
-  var ll=$('zw-latlon');
-  if(ll&&chart){ ll.textContent='Loc: '+(chart.lat||'--')+','+(chart.lon||'--')+' | ASC: '+fmtDeg(asc%30)+' '+SIGN_SYMBOLS[Math.floor(asc/30)]; }
 
-  // Animate — use setInterval instead of recursive rAF
+  // ── Animation ──
   if(zwAnimFrame) clearInterval(zwAnimFrame);
   zwAnimFrame=setInterval(function(){ calcAndDrawWheel(); }, 100);
 
-  // ── Render Aspects panel ──
+  // ── Render Aspects panel (HTML) ──
   var aspEl=$('zw-aspects-list');
   if(aspEl&&chart&&chart.aspects){
-    var aspColors={'Conjunction':'#ffdd00','Sextile':'#00ff88','Square':'#ff0040','Trine':'#00ccff','Oppression':'#aa00ff','Opposition':'#ff4400'};
+    var aspColors={'Conjunction':'#ffdd00','Sextile':'#00ff88','Square':'#ff0040','Trine':'#00ccff','Opposition':'#ff4400'};
     var h='';
     chart.aspects.forEach(function(a){
       var col=aspColors[a.aspect]||'#888';
-      var app='';
-      if(a.orb<1) app='<span style="color:#00ff88">●</span>';
+      var app=a.orb<1?'<span style="color:#00ff88">●</span>':'';
       var parts=a.between.split(' - ');
       h+='<div style="display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid rgba(255,255,255,.05)"><span style="color:'+col+'">'+a.aspect+'</span><span>'+parts[0]+' — '+parts[1]+'</span><span>'+app+'</span></div>';
     });
-    aspEl.innerHTML=h||'<div style="color:var(--text-muted)">No aspects</div>';
+    aspEl.innerHTML=h;
   }
 
-  // ── Render Houses panel ──
+  // ── Render Houses panel (HTML) ──
   var hoseEl=$('zw-houses-list');
   if(hoseEl&&houses&&houses.cusps){
     var h='';
@@ -1566,9 +1507,22 @@ function calcAndDrawWheel(){
       var lon=houses.cusps[k]; if(lon==null) return;
       var sign=getSign(lon), deg=getDegInSign(lon);
       var isAxis=(k==='1st'||k==='4th'||k==='7th'||k==='10th');
-      h+='<div style="display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid rgba(255,255,255,.05)"><span style="color:'+(isAxis?'#00ffff':'var(--text-dim)')+'">'+(k==='1st'?'ASC':k==='10th'?'MC':k==='7th'?'DC':k==='4th'?'IC':k.replace('th','').replace('st','').replace('nd',''))+'</span><span style="color:var(--text-muted)">'+SIGN_SYMBOLS[Math.floor(lon/30)]+' '+fmtDeg(deg)+'</span></div>';
+      var style=isAxis?' style="color:#ffd700"':'';
+      h+='<tr'+style+'><td>'+k+'</td><td>'+SIGN_SYMBOLS[Math.floor(lon/30)]+' '+sign+'</td><td>'+fmtDeg(deg)+'</td></tr>';
     });
-    hoseEl.innerHTML=h;
+    hoseEl.innerHTML='<div class="table-wrap"><table><thead><tr><th>House</th><th>Sign</th><th>°</th></tr></thead><tbody>'+h+'</tbody></table></div>';
+  }
+
+  // ── Planet list (HTML) ──
+  var pl=$('zw-planet-list');
+  if(pl){
+    var h='<div class="table-wrap"><table><thead><tr><th></th><th>Planet</th><th>Sign</th><th>°</th><th>House</th></tr></thead><tbody>';
+    planetData.sort(function(a,b){return a.lon-b.lon;});
+    planetData.forEach(function(p){
+      h+='<tr><td style="color:'+p.col+'">'+p.glyph+'</td><td style="color:'+p.col+'">'+p.name+(p.retro?' R':'')+'</td><td>'+SIGN_SYMBOLS[Math.floor(p.lon/30)]+' '+getSign(p.lon)+'</td><td>'+fmtDeg(p.lon%30)+'</td><td>'+(p.house||'?')+'</td></tr>';
+    });
+    h+='</tbody></table></div>';
+    pl.innerHTML=h;
   }
 }
 
@@ -2142,228 +2096,172 @@ function calcAndDrawWheel(){
   var cv=$('zodiac-wheel-canvas');
   if(!cv) return;
   var ctx=cv.getContext('2d');
-  var W=cv.width, H=cv.height, CX=W/2, CY=H/2, R=250, R_INNER=170, R_HOUSE=210;
-  var asc=chart.asc||(houses&&houses.asc)||0;
-
-  // Coordinate helpers
+  var W=cv.width, H=cv.height, CX=W/2, CY=H/2, R=240, R_INNER=150;
+  var asc=chart.asc||(houses&&houses.asc)||0, now=Date.now();
   function toXY(lon,r){ var rel=(lon-asc+360)%360; var ang=(180-rel)*(Math.PI/180); return {x:CX+r*Math.cos(ang),y:CY+r*Math.sin(ang)}; }
-  function arcPath(lon1,lon2,r){ var p1=toXY(lon1,r),p2=toXY(lon2,r); return {p1:p1,p2:p2}; }
 
   // ── Background ──
   ctx.clearRect(0,0,W,H);
-  // Dark radial bg
-  var bgGrad=ctx.createRadialGradient(CX,CY,0,CX,CY,R+40);
-  bgGrad.addColorStop(0,'rgba(15,5,35,0.95)');
-  bgGrad.addColorStop(0.7,'rgba(5,0,20,0.98)');
-  bgGrad.addColorStop(1,'rgba(0,0,0,1)');
-  ctx.fillStyle=bgGrad; ctx.fillRect(0,0,W,H);
+  var bg=ctx.createRadialGradient(CX,CY,0,CX,CY,R+30);
+  bg.addColorStop(0,'rgba(5,0,20,0.97)'); bg.addColorStop(1,'rgba(0,0,0,0.99)');
+  ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
 
-  // Scanline effect
-  zwScanY=(zwScanY+0.5)%H;
-  ctx.fillStyle='rgba(0,255,255,0.015)';
-  ctx.fillRect(0,zwScanY,W,2);
+  // ── Outer ring glow ──
+  ctx.save(); ctx.shadowColor='#00ffff'; ctx.shadowBlur=12;
+  ctx.beginPath(); ctx.arc(CX,CY,R+3,0,Math.PI*2);
+  ctx.strokeStyle='rgba(0,255,255,0.12)'; ctx.lineWidth=1; ctx.stroke(); ctx.restore();
 
-  // ── Neon outer ring glow ──
-  ctx.save();
-  ctx.shadowColor='#00ffff'; ctx.shadowBlur=15;
-  ctx.beginPath(); ctx.arc(CX,CY,R+5,0,Math.PI*2);
-  ctx.strokeStyle='rgba(0,255,255,0.15)'; ctx.lineWidth=1; ctx.stroke();
-  ctx.restore();
-
-  // ── Zodiac sign segments — elemental neon colors by name ──
+  // ── Zodiac sign segments ──
   var signColorMap={
-    'Aries':['#ff2200','#ff4422'],
-    'Taurus':['#00ff44','#22ff66'],
-    'Gemini':['#ffcc00','#ffdd33'],
-    'Cancer':['#0066ff','#3388ff'],
-    'Leo':['#ff4400','#ff6633'],
-    'Virgo':['#00dd44','#22ee66'],
-    'Libra':['#ffaa00','#ffcc33'],
-    'Scorpio':['#0044ff','#3366ff'],
-    'Sagittarius':['#ff0022','#ff3344'],
-    'Capricorn':['#00ff66','#33ff88'],
-    'Aquarius':['#ffdd00','#ffee44'],
-    'Pisces':['#0055ff','#3377ff']
+    'Aries':['#ff2200','#ff4422'],'Taurus':['#00ff66','#33ff88'],'Gemini':['#ffcc00','#ffdd33'],
+    'Cancer':['#0088ff','#33aaff'],'Leo':['#ff2200','#ff4422'],'Virgo':['#00ff66','#33ff88'],
+    'Libra':['#ffcc00','#ffdd33'],'Scorpio':['#0088ff','#33aaff'],'Sagittarius':['#ff2200','#ff4422'],
+    'Capricorn':['#00ff66','#33ff88'],'Aquarius':['#ffcc00','#ffdd33'],'Pisces':['#0088ff','#33aaff']
   };
   SIGNS.forEach(function(s,i){
     var lon1=i*30, lon2=(i+1)*30;
-    var ec=signColorMap[s]||['#ffffff','#ffffff'];
+    var ec=signColorMap[s]||['#888','#aaa'];
+    var p1i=toXY(lon1,R_INNER), p2i=toXY(lon2,R_INNER), p1o=toXY(lon1,R), p2o=toXY(lon2,R);
     // Segment fill
+    ctx.beginPath(); ctx.moveTo(p1i.x,p1i.y);
+    ctx.arc(CX,CY,R_INNER,(180-lon1)*(Math.PI/180),(180-lon2)*(Math.PI/180),true);
+    ctx.lineTo(p2o.x,p2o.y);
+    ctx.arc(CX,CY,R,(180-lon2)*(Math.PI/180),(180-lon1)*(Math.PI/180),false);
+    ctx.closePath();
     var grad=ctx.createRadialGradient(CX,CY,R_INNER,CX,CY,R);
-    grad.addColorStop(0,'rgba(0,0,0,0)');
-    grad.addColorStop(0.5,ec[0]+'18');
-    grad.addColorStop(1,ec[1]+'10');
-    var p1=toXY(lon1,R_INNER), p2=toXY(lon2,R_INNER), p1o=toXY(lon1,R), p2o=toXY(lon2,R);
-    ctx.beginPath(); ctx.moveTo(p1.x,p1.y);
+    grad.addColorStop(0,ec[1]+'18'); grad.addColorStop(1,ec[0]+'08');
+    ctx.fillStyle=grad; ctx.fill();
+    // Segment border
+    ctx.save(); ctx.shadowColor=ec[0]; ctx.shadowBlur=6;
+    ctx.beginPath(); ctx.moveTo(p1i.x,p1i.y);
     ctx.arc(CX,CY,R_INNER,(180-lon1)*(Math.PI/180),(180-lon2)*(Math.PI/180),true);
     ctx.lineTo(p2o.x,p2o.y);
     ctx.arc(CX,CY,R,(180-lon2)*(Math.PI/180),(180-lon1)*(Math.PI/180),false);
-    ctx.closePath(); ctx.fillStyle=grad; ctx.fill();
-    // Solid neon border
-    ctx.save(); ctx.shadowColor=ec[0]; ctx.shadowBlur=10;
-    ctx.beginPath(); ctx.moveTo(p1.x,p1.y);
-    ctx.arc(CX,CY,R_INNER,(180-lon1)*(Math.PI/180),(180-lon2)*(Math.PI/180),true);
-    ctx.lineTo(p2o.x,p2o.y);
-    ctx.arc(CX,CY,R,(180-lon2)*(Math.PI/180),(180-lon1)*(Math.PI/180),false);
-    ctx.closePath(); ctx.strokeStyle=ec[0]; ctx.lineWidth=1.5; ctx.stroke(); ctx.restore();
-    // Sign name in neon
+    ctx.closePath();
+    ctx.strokeStyle=ec[0]+'66'; ctx.lineWidth=1.2; ctx.stroke(); ctx.restore();
+    // Sign name — LARGER FONT
     var mid=toXY(lon1+15,(R+R_INNER)/2);
-    ctx.save(); ctx.shadowColor=ec[0]; ctx.shadowBlur=12;
-    ctx.font='bold 10px "Courier New",monospace'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.save(); ctx.shadowColor=ec[0]; ctx.shadowBlur=8;
+    ctx.font='bold 13px "Courier New",monospace'; ctx.textAlign='center'; ctx.textBaseline='middle';
     ctx.fillStyle=ec[0]; ctx.fillText(s.toUpperCase(),mid.x,mid.y); ctx.restore();
   });
 
-  // ── House cusp lines — solid and clear ──
+  // ── House cusp lines — only 4 axes prominent, others subtle ──
   if(houses&&houses.cusps){
     var cuspKeys=Object.keys(houses.cusps).sort(function(a,b){return parseInt(a)-parseInt(b);});
     cuspKeys.forEach(function(k){
       var lon=houses.cusps[k]; if(lon==null) return;
       var isAxis=(k==='1st'||k==='4th'||k==='7th'||k==='10th');
-      // Draw solid line from center outward
-      var pOut=toXY(lon,R+10);
+      var pEnd=toXY(lon,isAxis?R+8:R-5);
       ctx.save();
-      if(isAxis){ ctx.shadowColor='#00ffff'; ctx.shadowBlur=12; }
-      ctx.beginPath(); ctx.moveTo(CX,CY); ctx.lineTo(pOut.x,pOut.y);
-      ctx.strokeStyle=isAxis?'#00ffff':'rgba(150,150,200,0.5)';
-      ctx.lineWidth=isAxis?2.5:1;
-      ctx.stroke(); ctx.restore();
-      // House number label
-      var lp=toXY(lon,R+24);
-      var lbl;
-      if(k==='1st') lbl='ASC';
-      else if(k==='10th') lbl='MC';
-      else if(k==='7th') lbl='DC';
-      else if(k==='4th') lbl='IC';
-      else lbl=k.replace('th','').replace('st','').replace('nd','').replace('rd','');
-      ctx.save(); ctx.shadowColor=isAxis?'#00ffff':'rgba(150,150,200,0.6)'; ctx.shadowBlur=isAxis?8:4;
-      ctx.font='bold 9px "Courier New",monospace'; ctx.textAlign='center'; ctx.textBaseline='middle';
-      ctx.fillStyle=isAxis?'#00ffff':'rgba(180,180,220,0.8)';
-      ctx.fillText(lbl,lp.x,lp.y); ctx.restore();
+      if(isAxis){
+        ctx.shadowColor='#ffd700'; ctx.shadowBlur=8;
+        ctx.beginPath(); ctx.moveTo(CX,CY); ctx.lineTo(pEnd.x,pEnd.y);
+        ctx.strokeStyle='#ffd700'; ctx.lineWidth=2.5; ctx.stroke();
+      } else {
+        ctx.beginPath(); ctx.moveTo(CX,CY); ctx.lineTo(pEnd.x,pEnd.y);
+        ctx.strokeStyle='rgba(150,150,200,0.2)'; ctx.lineWidth=0.5; ctx.stroke();
+      }
+      ctx.restore();
+      // Labels only for axes
+      if(isAxis){
+        var lp=toXY(lon,R+20);
+        var lbl=k==='1st'?'ASC':k==='10th'?'MC':k==='7th'?'DC':'IC';
+        ctx.save(); ctx.shadowColor='#ffd700'; ctx.shadowBlur=6;
+        ctx.font='bold 11px "Courier New",monospace'; ctx.textAlign='center'; ctx.textBaseline='middle';
+        ctx.fillStyle='#ffd700'; ctx.fillText(lbl,lp.x,lp.y); ctx.restore();
+      }
     });
   }
 
-  // ── Arabic parts — flashing radiance ──
+  // ── Arabic parts — clean dots ──
   if(parts){
     var partNames=Object.keys(parts);
     var partColors=['#ff00ff','#00ffff','#ffaa00','#ff4444','#44ff44','#ffff00','#ff6600','#00ff88','#8800ff'];
     partNames.forEach(function(pn,i){
       var pd=parts[pn]; if(!pd) return;
       var lon=pd.longitude||pd; if(lon==null) return;
-      var r=R-65-(i%2)*12;
+      var r=R-60-(i%2)*10;
       var pos=toXY(lon,r);
       var col=partColors[i%partColors.length];
-      var pulse=Math.sin(now/200+i)*0.4+0.6;
-      // Outer glow ring
-      ctx.save(); ctx.shadowColor=col; ctx.shadowBlur=15*pulse+10;
-      ctx.beginPath(); ctx.arc(pos.x,pos.y,8+4*pulse,0,Math.PI*2);
-      ctx.strokeStyle=col+'80'; ctx.lineWidth=1.5; ctx.stroke();
-      // Core dot
-      ctx.beginPath(); ctx.arc(pos.x,pos.y,4+2*pulse,0,Math.PI*2);
+      var pulse=Math.sin(now/250+i)*0.3+0.7;
+      ctx.save(); ctx.shadowColor=col; ctx.shadowBlur=10*pulse+5;
+      ctx.beginPath(); ctx.arc(pos.x,pos.y,5+2*pulse,0,Math.PI*2);
       ctx.fillStyle=col; ctx.fill(); ctx.restore();
-      // Label
-      ctx.save(); ctx.shadowColor=col; ctx.shadowBlur=6;
-      ctx.font='bold 7px "Courier New",monospace'; ctx.fillStyle=col; ctx.textAlign='center';
-      ctx.fillText(pn.replace('Part_of_',''),pos.x,pos.y+12); ctx.restore();
     });
   }
 
-  // ── Planets with 8-bit neon style ──
+  // ── Planets — LARGER with clean glow ──
   var planetGlyphs={Sun:'☉',Moon:'☽',Mercury:'☿',Venus:'♀',Mars:'♂',Jupiter:'♃',Saturn:'♄',Uranus:'♅',Neptune:'♆',Pluto:'♇',Rahu:'☊',Ketu:'☋'};
-  var planetNeon={Sun:'#ffdd00',Moon:'#c0c0c0',Mercury:'#b0a0d0',Venus:'#00ff88',Mars:'#ff0040',Jupiter:'#ffaa00',Saturn:'#cc8840',Uranus:'#4dd0e1',Neptune:'#1565c0',Pluto:'#8d6e63',Rahu:'#ff6b35',Ketu:'#8b4513'};
-  var planetData=[], now=Date.now();
+  var planetNeon={Sun:'#ffdd00',Moon:'#c0c0c0',Mercury:'#b0a0d0',Venus:'#00ff88',Mars:'#ff0040',Jupiter:'#ffaa00',Saturn:'#c8a860',Uranus:'#4dd0e1',Neptune:'#1565c0',Pluto:'#8d6e63',Rahu:'#ff6b35',Ketu:'#8b4513'};
+  var planetData=[];
   chart.planets.forEach(function(p){
     var lon=p.longitude, retro=p.retro||false;
     if(!zwShowRetro&&retro) return;
-    var r=R-35-Math.floor(planetData.length/3)*14;
+    var r=R-30-Math.floor(planetData.length/4)*12;
     var pos=toXY(lon,r);
     var col=planetNeon[p.name]||'#fff';
     var houseNum=getHouseForLon(lon,houses);
     var isHover=zwHoverPlanet&&zwHoverPlanet.name===p.name;
-    var sz=isHover?10:(p.name==='Sun'||p.name==='Moon'?8:6);
-    var pulse=Math.sin(now/300+planetData.length)*0.3+0.7;
-    planetData.push({name:p.name,lon:lon,retro:retro,house:houseNum,x:pos.x,y:pos.y,col:col,sz:sz,pulse:pulse,isHover:isHover});
+    var sz=isHover?14:(p.name==='Sun'||p.name==='Moon'?12:10);
+    var pulse=Math.sin(now/300+planetData.length)*0.2+0.8;
+    planetData.push({name:p.name,lon:lon,x:pos.x,y:pos.y,col:col,sz:sz,retro:retro,house:houseNum,pulse:pulse,isHover:isHover,glyph:planetGlyphs[p.name]||'?'});
   });
 
-  // Draw planet orbits (faint circles)
+  // Draw planet glows
   planetData.forEach(function(pd){
-    ctx.save(); ctx.shadowColor=pd.col; ctx.shadowBlur=3;
-    ctx.beginPath(); ctx.arc(CX,CY,Math.sqrt((pd.x-CX)*(pd.x-CX)+(pd.y-CY)*(pd.y-CY)),0,Math.PI*2);
-    ctx.strokeStyle=pd.col+'15'; ctx.lineWidth=0.5; ctx.stroke(); ctx.restore();
-  });
-
-  // Draw planets
-  planetData.forEach(function(pd){
-    var glowSz=pd.sz+4+pd.pulse*3;
-    // Outer glow
-    ctx.save(); ctx.shadowColor=pd.col; ctx.shadowBlur=pd.isHover?20:10;
-    ctx.beginPath(); ctx.arc(pd.x,pd.y,glowSz,0,Math.PI*2);
-    var grd=ctx.createRadialGradient(pd.x,pd.y,0,pd.x,pd.y,glowSz);
+    ctx.save(); ctx.shadowColor=pd.col; ctx.shadowBlur=pd.isHover?18:8;
+    ctx.beginPath(); ctx.arc(pd.x,pd.y,pd.sz+3+pd.pulse*2,0,Math.PI*2);
+    var grd=ctx.createRadialGradient(pd.x,pd.y,0,pd.x,pd.y,pd.sz+4);
     grd.addColorStop(0,pd.col+'40'); grd.addColorStop(1,pd.col+'00');
     ctx.fillStyle=grd; ctx.fill(); ctx.restore();
-    // Core
-    ctx.save(); ctx.shadowColor=pd.col; ctx.shadowBlur=8;
-    ctx.beginPath(); ctx.arc(pd.x,pd.y,pd.sz,0,Math.PI*2);
-    ctx.fillStyle=pd.col; ctx.fill();
-    // Retrograde indicator
-    if(pd.retro){ ctx.strokeStyle='#ff0040'; ctx.lineWidth=1.5; ctx.stroke(); }
-    ctx.restore();
-    // Glyph
-    ctx.save();
-    ctx.font='bold 9px monospace'; ctx.textAlign='center'; ctx.textBaseline='middle';
-    ctx.fillStyle=pd.col; ctx.fillText(planetGlyphs[pd.name],pd.x,pd.y+1);
-    ctx.restore();
-    // Name label
-    var lx=pd.x+16, ly=pd.y-8;
-    ctx.save(); ctx.shadowColor=pd.col; ctx.shadowBlur=4;
-    ctx.font='7px monospace'; ctx.fillStyle=pd.col; ctx.textAlign='center';
-    ctx.fillText(pd.name+(pd.retro?' R':''),lx,ly); ctx.restore();
   });
 
-  // ── Center cross-hair ──
-  ctx.save(); ctx.strokeStyle='rgba(0,255,255,0.3)'; ctx.lineWidth=0.5;
-  ctx.setLineDash([2,4]);
-  ctx.beginPath(); ctx.moveTo(CX-8,CY); ctx.lineTo(CX+8,CY); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(CX,CY-8); ctx.lineTo(CX,CY+8); ctx.stroke();
-  ctx.setLineDash([]); ctx.restore();
+  // Draw planet bodies
+  planetData.forEach(function(pd){
+    ctx.save(); ctx.shadowColor=pd.col; ctx.shadowBlur=6;
+    ctx.beginPath(); ctx.arc(pd.x,pd.y,pd.sz,0,Math.PI*2);
+    ctx.fillStyle=pd.col; ctx.fill();
+    if(pd.retro){ ctx.strokeStyle='#ff0040'; ctx.lineWidth=2; ctx.stroke(); }
+    ctx.restore();
+    // Glyph — LARGER
+    ctx.save();
+    ctx.font='bold 12px monospace'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillStyle='#000'; ctx.fillText(pd.glyph,pd.x,pd.y+1);
+    ctx.restore();
+    // Name label — LARGER
+    ctx.save(); ctx.shadowColor=pd.col; ctx.shadowBlur=4;
+    ctx.font='bold 9px monospace'; ctx.fillStyle=pd.col; ctx.textAlign='center';
+    ctx.fillText(pd.name+(pd.retro?' R':''),pd.x,pd.y+pd.sz+10); ctx.restore();
+  });
 
-  // ── Update planet list ──
-  var pl=$('zw-planet-list');
-  if(pl){
-    var h='<div class="table-wrap"><table><thead><tr><th></th><th>Planet</th><th>Sign</th><th>°</th><th>House</th><th></th></tr></thead><tbody>';
-    planetData.sort(function(a,b){return a.lon-b.lon;});
-    planetData.forEach(function(p){
-      h+='<tr><td style="color:'+p.col+'">'+planetGlyphs[p.name]+'</td><td style="color:'+p.col+'">'+p.name+'</td><td>'+SIGN_SYMBOLS[getSignIndex(p.lon)]+' '+getSign(p.lon)+'</td><td>'+fmtDeg(getDegInSign(p.lon))+'</td><td style="color:var(--gold-dim)">'+p.house+'</td><td>'+(p.retro?'<span style="color:#ff0040;font-size:.6rem">R</span>':'')+'</td></tr>';
-    });
-    h+='</tbody></table></div>'; pl.innerHTML=h;
-  }
+  // ── Center point ──
+  ctx.beginPath(); ctx.arc(CX,CY,3,0,Math.PI*2); ctx.fillStyle='#00ffff'; ctx.fill();
 
   // ── Clock + location ──
   var n=new Date();
   var c=$('zw-clock'); if(c) c.textContent=n.toLocaleTimeString();
   var d=$('zw-date'); if(d) d.textContent=n.toLocaleDateString();
-  var ll=$('zw-latlon');
-  if(ll&&chart){ ll.textContent='Loc: '+(chart.lat||'--')+','+(chart.lon||'--')+' | ASC: '+fmtDeg(asc%30)+' '+SIGN_SYMBOLS[Math.floor(asc/30)]; }
 
-  // Animate — use setInterval instead of recursive rAF
+  // ── Animation ──
   if(zwAnimFrame) clearInterval(zwAnimFrame);
   zwAnimFrame=setInterval(function(){ calcAndDrawWheel(); }, 100);
 
-  // ── Render Aspects panel ──
+  // ── Render Aspects panel (HTML) ──
   var aspEl=$('zw-aspects-list');
   if(aspEl&&chart&&chart.aspects){
-    var aspColors={'Conjunction':'#ffdd00','Sextile':'#00ff88','Square':'#ff0040','Trine':'#00ccff','Oppression':'#aa00ff','Opposition':'#ff4400'};
+    var aspColors={'Conjunction':'#ffdd00','Sextile':'#00ff88','Square':'#ff0040','Trine':'#00ccff','Opposition':'#ff4400'};
     var h='';
     chart.aspects.forEach(function(a){
       var col=aspColors[a.aspect]||'#888';
-      var app='';
-      if(a.orb<1) app='<span style="color:#00ff88">●</span>';
+      var app=a.orb<1?'<span style="color:#00ff88">●</span>':'';
       var parts=a.between.split(' - ');
       h+='<div style="display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid rgba(255,255,255,.05)"><span style="color:'+col+'">'+a.aspect+'</span><span>'+parts[0]+' — '+parts[1]+'</span><span>'+app+'</span></div>';
     });
-    aspEl.innerHTML=h||'<div style="color:var(--text-muted)">No aspects</div>';
+    aspEl.innerHTML=h;
   }
 
-  // ── Render Houses panel ──
+  // ── Render Houses panel (HTML) ──
   var hoseEl=$('zw-houses-list');
   if(hoseEl&&houses&&houses.cusps){
     var h='';
@@ -2372,9 +2270,22 @@ function calcAndDrawWheel(){
       var lon=houses.cusps[k]; if(lon==null) return;
       var sign=getSign(lon), deg=getDegInSign(lon);
       var isAxis=(k==='1st'||k==='4th'||k==='7th'||k==='10th');
-      h+='<div style="display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid rgba(255,255,255,.05)"><span style="color:'+(isAxis?'#00ffff':'var(--text-dim)')+'">'+(k==='1st'?'ASC':k==='10th'?'MC':k==='7th'?'DC':k==='4th'?'IC':k.replace('th','').replace('st','').replace('nd',''))+'</span><span style="color:var(--text-muted)">'+SIGN_SYMBOLS[Math.floor(lon/30)]+' '+fmtDeg(deg)+'</span></div>';
+      var style=isAxis?' style="color:#ffd700"':'';
+      h+='<tr'+style+'><td>'+k+'</td><td>'+SIGN_SYMBOLS[Math.floor(lon/30)]+' '+sign+'</td><td>'+fmtDeg(deg)+'</td></tr>';
     });
-    hoseEl.innerHTML=h;
+    hoseEl.innerHTML='<div class="table-wrap"><table><thead><tr><th>House</th><th>Sign</th><th>°</th></tr></thead><tbody>'+h+'</tbody></table></div>';
+  }
+
+  // ── Planet list (HTML) ──
+  var pl=$('zw-planet-list');
+  if(pl){
+    var h='<div class="table-wrap"><table><thead><tr><th></th><th>Planet</th><th>Sign</th><th>°</th><th>House</th></tr></thead><tbody>';
+    planetData.sort(function(a,b){return a.lon-b.lon;});
+    planetData.forEach(function(p){
+      h+='<tr><td style="color:'+p.col+'">'+p.glyph+'</td><td style="color:'+p.col+'">'+p.name+(p.retro?' R':'')+'</td><td>'+SIGN_SYMBOLS[Math.floor(p.lon/30)]+' '+getSign(p.lon)+'</td><td>'+fmtDeg(p.lon%30)+'</td><td>'+(p.house||'?')+'</td></tr>';
+    });
+    h+='</tbody></table></div>';
+    pl.innerHTML=h;
   }
 }
 
@@ -2801,7 +2712,7 @@ document.addEventListener('click',function(e){
   if(tabId==='angels'&&typeof loadAngels==='function')loadAngels();
   if(tabId==='quranic'&&typeof loadQuranic==='function')loadQuranic();
   if(tabId==='oracle'){var c=$('oracle-cards');if(c){c.innerHTML='<div style="color:rgba(255,215,0,.5);padding:1rem;text-align:center">⛧ Loading oracle...</div>';fetch('/static/oracle-cards/index.html').then(function(r){return r.text();}).then(function(h){c.innerHTML=h;}).catch(function(){c.innerHTML='<div style="color:var(--text-muted);padding:1rem;text-align:center">Oracle cards not found</div>';});}}
-  if(tabId==='solomonic-seals'&&typeof renderSolomonicSeals==='function')renderSolomonicSeals(state.kitabAlAjnas || state.kitabAlAjnasNames);
+  
   if(tabId==='occult-encyc'&&typeof loadOccultEncyc==='function')loadOccultEncyc();
   if(tabId==='zodiac-wheel'&&typeof loadZodiacWheel==='function')loadZodiacWheel();
   if(tabId==='mansion-wheel'&&typeof loadMansionWheel==='function')loadMansionWheel();
@@ -2809,10 +2720,10 @@ document.addEventListener('click',function(e){
   if(tabId==='jinn-commanders'&&typeof loadJinnCommanders==='function')loadJinnCommanders();
   if(tabId==='tahatil'&&typeof loadTahatil==='function')loadTahatil();
   if(tabId==='solomonic-seals'&&typeof renderSolomonicSeals==='function')renderSolomonicSeals(state.kitabAlAjnas);
-  if(tabId==='occult-encyc'&&typeof renderOccultEncyc==='function')renderOccultEncyc(state.occultEncyclopedia);
+  
   if(tabId==='occult-chart'&&typeof renderOccultChart==='function')renderOccultChart(state.chart);
   if(tabId==='chart-study'){var cs=$('chart-study-result');if(cs)cs.innerHTML='';}
-  if(tabId==='oracle'&&typeof loadOracle==='function')loadOracle();
+  
 });
 
 var refreshBtn=$('btn-refresh');if(refreshBtn)refreshBtn.addEventListener('click',function(e){e.preventDefault();loadAll();});
