@@ -326,11 +326,13 @@ tr:hover td{background:var(--surface-2)}
       <!-- TALISMAN TAB -->
       <div class="tab-content" id="tab-talisman"><div class="card"><h2><span class="icon">🔯</span> Talisman Construction</h2><div id="talisman-builder"><div style="margin-bottom:1rem"><label style="color:var(--text-dim);font-size:.8rem;display:block;margin-bottom:.3rem">Intent:</label><select id="talisman-intent" onchange="loadTalisman()" style="width:100%;background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:.4rem .5rem;border-radius:var(--radius);font-family:var(--font);font-size:.75rem"><option value="wealth">💰 Wealth &amp; Prosperity</option><option value="strength">⚔️ Strength &amp; Protection</option><option value="love">❤️ Love &amp; Attraction</option><option value="wisdom">📖 Wisdom &amp; Knowledge</option><option value="protection">🛡️ Protection &amp; Binding</option><option value="glory">🌟 Glory &amp; Honor</option><option value="foundation">🌙 Foundation &amp; Dreams</option><option value="crown">👑 Crown &amp; Divinity</option></select></div><div id="talisman-result"><div style="color:rgba(255,0,255,.5);padding:1rem;text-align:center;font-size:.7rem">⚗ Select an intent to begin talisman construction</div></div></div></div></div>
       <!-- TALISMAN TAB -->
-      <div class="tab-content" id="tab-mansion-wheel">
-      <!-- SOLOMONIC SEALS TAB -->
+      <div class="tab-content" 
+            <!-- SOLOMONIC SEALS TAB -->
       <div class="tab-content" id="tab-solomonic-seals"><div class="card"><h2><span class="icon">⛧</span> Solomonic Seals (Kitab Al-Ajnas)</h2><div id="solomonic-seals-content"></div></div></div>
-      <!-- OCCULT ENCYCLOPEDIA TAB -->
-      <div class="tab-content" id="tab-occult-encyc"><div class="card"><h2><span class="icon">📖</span> Occult Encyclopedia — Zodiac Angels</h2><p style="color:var(--text-dim);font-size:.7rem;margin-bottom:.5rem">Angel values for each zodiac sign from the Occult Encyclopedia of Magick Squares.</p><div id="occult-encyc-zodiac-content"></div></div>
+      <!-- OCCULT ENCYCLOPEDIA TAB --><!-- OCCULT ENCYCLOPEDIA TAB -->
+      <div class="tab-content"       <!-- ORACLE TAB -->
+      <div class="tab-content" id="tab-oracle"><div class="card"><h2><span class="icon">🃏</span> Divine Oracle</h2><div id="oracle-cards" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.75rem"><div style="color:var(--text-muted);padding:1rem;text-align:center">Loading oracle...</div></div></div></div>
+id="tab-occult-encyc"><div class="card"><h2><span class="icon">📖</span> Occult Encyclopedia — Zodiac Angels</h2><p style="color:var(--text-dim);font-size:.7rem;margin-bottom:.5rem">Angel values for each zodiac sign from the Occult Encyclopedia of Magick Squares.</p><div id="occult-encyc-zodiac-content"></div></div>
       <div class="card"><h2><span class="icon">🪐</span> Occult Encyclopedia — Planetary Angels</h2><p style="color:var(--text-dim);font-size:.7rem;margin-bottom:.5rem">Angel values for each classical planet.</p><div id="occult-encyc-planets-content"></div></div></div>
     </div>
   </main>
@@ -2804,9 +2806,11 @@ document.addEventListener('click',function(e){
   if(tabId==='beings'&&typeof loadBeings==='function')loadBeings();
   if(tabId==='jinn-commanders'&&typeof loadJinnCommanders==='function')loadJinnCommanders();
   if(tabId==='tahatil'&&typeof loadTahatil==='function')loadTahatil();
-  if(tabId==='magic-square-kings'&&typeof loadMagicSquareKings==='function')loadMagicSquareKings();
-  if(tabId==='planetary-hours-talismans'&&typeof loadPlanetaryHoursTalismans==='function')loadPlanetaryHoursTalismans();
-  if(tabId==='mansions'&&typeof loadMansions==='function')loadMansions();
+  if(tabId==='solomonic-seals'&&typeof renderSolomonicSeals==='function')renderSolomonicSeals(state.kitabAlAjnas);
+  if(tabId==='occult-encyc'&&typeof renderOccultEncyc==='function')renderOccultEncyc(state.occultEncyclopedia);
+  if(tabId==='occult-chart'&&typeof renderOccultChart==='function')renderOccultChart(state.chart);
+  if(tabId==='chart-study'){var cs=$('chart-study-result');if(cs)cs.innerHTML='';}
+  if(tabId==='talisman'){var tb=$('talisman-result');if(tb)tb.innerHTML='<div style="color:rgba(255,0,255,.5);padding:1rem;text-align:center;font-size:.7rem">\u2697 Select an intent</div>';}
 });
 
 var refreshBtn=$('btn-refresh');if(refreshBtn)refreshBtn.addEventListener('click',function(e){e.preventDefault();loadAll();});
@@ -2905,15 +2909,24 @@ async function loadMansions() {
 // TALISMAN TAB
 // ═══════════════════════════════════════════════════════════════
 var talismanData = null;
-fetchJSON(API+'/static/talisman_data.json').catch(function(){return null})
-  .then(function(d){talismanData=d;}).catch(function(){talismanData=null;});
+// talismanData loaded via loadAll → state.talismanData
 
 function loadTalisman() {
   var container = $('talisman-result');
   if(!container) return;
   var sel = document.getElementById('talisman-intent');
   var td=state.talismanData||talismanData||window.talismanData;
-  if(!sel||!td) { container.innerHTML='<div style="color:rgba(255,0,255,.5);padding:1rem;text-align:center;font-size:.7rem">⚗ Loading talisman data...</div>'; return; }
+  if(!sel||!td) { 
+    if(!td && sel) {
+      // Data not yet loaded, show loading
+      container.innerHTML='<div style="color:rgba(255,0,255,.5);padding:1rem;text-align:center;font-size:.7rem">⚗ Awaiting talisman data...</div>';
+      // Try loading directly
+      fetchJSON(API+'/static/talisman_data.json').then(function(d){state.talismanData=d;loadTalisman();}).catch(function(){});
+    } else {
+      container.innerHTML='<div style="color:var(--text-muted);padding:1rem;text-align:center">No talisman data</div>';
+    }
+    return;
+  }
   var intent = sel.value;
   var intents = td.intents;
   var intentData = intents[intent];
