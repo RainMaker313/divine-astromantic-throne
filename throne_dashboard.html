@@ -196,7 +196,6 @@ tr:hover td{background:var(--surface-2)}
       <div class="nav-item" data-tab="beings"><span class="icon">👾</span> Beings</div>
       <div class="nav-item" data-tab="occult-chart"><span class="icon">🔮</span> Occult</div>
       <div class="nav-item" data-tab="chart-study"><span class="icon">🔍</span> Study</div>
-      <div class="nav-item" data-tab="talisman"><span class="icon">🔯</span> Talisman</div>
       <div class="nav-item" data-tab="oracle"><span class="icon">🃏</span> Oracle</div>
       <div class="nav-item" data-tab="solomonic-seals"><span class="icon">⛧</span> Solomonic Seals</div>
       <div class="nav-item" data-tab="occult-encyc"><span class="icon">📖</span> Occult Encyc</div>
@@ -324,7 +323,7 @@ tr:hover td{background:var(--surface-2)}
       <div class="tab-content" id="tab-chart-study"><div class="card"><h2><span class="icon">🔍</span> Chart Study</h2><div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:flex-end;margin-bottom:1rem"><div style="display:flex;flex-direction:column;gap:.15rem"><label style="font-size:.6rem;color:var(--text-muted);text-transform:uppercase">Date</label><input type="date" id="cs-date" style="background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:.3rem .4rem;border-radius:var(--radius);font-family:var(--font);font-size:.7rem"></div><div style="display:flex;flex-direction:column;gap:.15rem"><label style="font-size:.6rem;color:var(--text-muted);text-transform:uppercase">Time</label><input type="time" id="cs-time" style="background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:.3rem .4rem;border-radius:var(--radius);font-family:var(--font);font-size:.7rem"></div><div style="display:flex;flex-direction:column;gap:.15rem"><label style="font-size:.6rem;color:var(--text-muted);text-transform:uppercase">Lat</label><input type="number" id="cs-lat" value="-33.76" step=".01" style="background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:.3rem .4rem;border-radius:var(--radius);font-family:var(--font);font-size:.7rem;width:70px"></div><div style="display:flex;flex-direction:column;gap:.15rem"><label style="font-size:.6rem;color:var(--text-muted);text-transform:uppercase">Lon</label><input type="number" id="cs-lon" value="25.40" step=".01" style="background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:.3rem .4rem;border-radius:var(--radius);font-family:var(--font);font-size:.7rem;width:70px"></div><button class="btn-refresh" id="btn-calculate-chart">☆ Calc</button></div><div id="chart-study-result"></div></div></div>
 
       <!-- TALISMAN TAB -->
-      <div class="tab-content" id="tab-talisman"><div class="card"><h2><span class="icon">🔯</span> Talisman Construction</h2><div id="talisman-builder"><div style="margin-bottom:1rem"><label style="color:var(--text-dim);font-size:.8rem;display:block;margin-bottom:.3rem">Intent:</label><select id="talisman-intent" onchange="loadTalisman()" style="width:100%;background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:.4rem .5rem;border-radius:var(--radius);font-family:var(--font);font-size:.75rem"><option value="wealth">💰 Wealth &amp; Prosperity</option><option value="strength">⚔️ Strength &amp; Protection</option><option value="love">❤️ Love &amp; Attraction</option><option value="wisdom">📖 Wisdom &amp; Knowledge</option><option value="protection">🛡️ Protection &amp; Binding</option><option value="glory">🌟 Glory &amp; Honor</option><option value="foundation">🌙 Foundation &amp; Dreams</option><option value="crown">👑 Crown &amp; Divinity</option></select></div><div id="talisman-result"><div style="color:rgba(255,0,255,.5);padding:1rem;text-align:center;font-size:.7rem">⚗ Select an intent to begin talisman construction</div></div></div></div></div>
+      
       <!-- TALISMAN TAB -->
       <div class="tab-content" 
             <!-- SOLOMONIC SEALS TAB -->
@@ -2798,8 +2797,8 @@ document.addEventListener('click',function(e){
   }
   if(tabId==='angels'&&typeof loadAngels==='function')loadAngels();
   if(tabId==='quranic'&&typeof loadQuranic==='function')loadQuranic();
-  if(tabId==='oracle'&&typeof loadOracle==='function')loadOracle();
-  if(tabId==='solomonic-seals'&&typeof loadSolomonicSeals==='function')loadSolomonicSeals();
+  if(tabId==='oracle'){var c=$('oracle-cards');if(c){c.innerHTML='<div style="color:rgba(255,215,0,.5);padding:1rem;text-align:center">⛧ Loading oracle...</div>';fetch('/static/oracle-cards/index.html').then(function(r){return r.text();}).then(function(h){c.innerHTML=h;}).catch(function(){c.innerHTML='<div style="color:var(--text-muted);padding:1rem;text-align:center">Oracle cards not found</div>';});}}
+  if(tabId==='solomonic-seals'&&typeof renderSolomonicSeals==='function')renderSolomonicSeals(state.kitabAlAjnas || state.kitabAlAjnasNames);
   if(tabId==='occult-encyc'&&typeof loadOccultEncyc==='function')loadOccultEncyc();
   if(tabId==='zodiac-wheel'&&typeof loadZodiacWheel==='function')loadZodiacWheel();
   if(tabId==='mansion-wheel'&&typeof loadMansionWheel==='function')loadMansionWheel();
