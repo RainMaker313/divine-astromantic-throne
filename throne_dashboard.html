@@ -451,8 +451,8 @@ async function loadAll() {
       fetchJSON(API+'/occult-encyclopedia').catch(function(){return null}),
       fetchJSON(API+'/static/talisman_data.json').catch(function(){return null})
     ]);
-    const [chart, hours, aspects, now, houses, dignities, lunarMansion, fixedStars, electional, beings, jinnCommanders, tahatil, magicSquareKings, planetaryHoursTalismans, arabicParts, occultChart, moonRiseSet, lunarEvents, lunarAspects, heliocentric, kitabAlAjnasNames, occultEncyclopedia, talismanData] = results.map(function(r){return r.value||null;});
-    state = { chart, hours, aspects: aspects && (aspects.aspects || aspects), now, houses, dignities, lunarMansion, fixedStars, electional, beings, arabicParts, occultChart, moonRiseSet, lunarEvents, lunarAspects, heliocentric, jinnCommanders, tahatil, magicSquareKings, planetaryHoursTalismans, kitabAlAjnasNames, occultEncyclopedia, talismanData };
+    const [chart, hours, aspects, now, houses, dignities, lunarMansion, fixedStars, electional, beings, jinnCommanders, tahatil, magicSquareKings, planetaryHoursTalismans, arabicParts, occultChart, moonRiseSet, lunarEvents, lunarAspects, heliocentric, kitabAlAjnasNames, kitabAlAjnas, occultEncyclopedia, talismanData] = results.map(function(r){return r.value||null;});
+    state = { chart, hours, aspects: aspects && (aspects.aspects || aspects), now, houses, dignities, lunarMansion, fixedStars, electional, beings, arabicParts, occultChart, moonRiseSet, lunarEvents, lunarAspects, heliocentric, jinnCommanders, tahatil, magicSquareKings, planetaryHoursTalismans, kitabAlAjnasNames, kitabAlAjnas, occultEncyclopedia, talismanData };
     render();
   } catch(e) { showError(e.message); }
 }
@@ -2809,7 +2809,7 @@ document.addEventListener('click',function(e){
   if(tabId==='occult-encyc'&&typeof renderOccultEncyc==='function')renderOccultEncyc(state.occultEncyclopedia);
   if(tabId==='occult-chart'&&typeof renderOccultChart==='function')renderOccultChart(state.chart);
   if(tabId==='chart-study'){var cs=$('chart-study-result');if(cs)cs.innerHTML='';}
-  if(tabId==='talisman'){var tb=$('talisman-result');if(tb)tb.innerHTML='<div style="color:rgba(255,0,255,.5);padding:1rem;text-align:center;font-size:.7rem">\u2697 Select an intent</div>';}
+  if(tabId==='oracle'){var oc=$('oracle-cards');if(oc){oc.innerHTML='<div style="color:rgba(255,215,0,.5);padding:1rem;text-align:center">Loading oracle...</div>';fetch('/static/oracle-cards/index.html').then(function(r){return r.text();}).then(function(h){oc.innerHTML=h;}).catch(function(){oc.innerHTML='<div style="color:var(--text-muted);padding:1rem;text-align:center">Oracle cards not found</div>';});}}
 });
 
 var refreshBtn=$('btn-refresh');if(refreshBtn)refreshBtn.addEventListener('click',function(e){e.preventDefault();loadAll();});
