@@ -331,7 +331,10 @@ tr:hover td{background:var(--surface-2)}
       <!-- OCCULT ENCYCLOPEDIA TAB --><!-- OCCULT ENCYCLOPEDIA TAB -->
       <div class="tab-content"       <!-- ORACLE TAB -->
       <div class="tab-content" id="tab-oracle"><div class="card"><h2><span class="icon">🃏</span> Divine Oracle</h2><div id="oracle-cards" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.75rem"><div style="color:var(--text-muted);padding:1rem;text-align:center">Loading oracle...</div></div></div></div>
-id="tab-occult-encyc"><div class="card"><h2><span class="icon">📖</span> Occult Encyclopedia — Zodiac Angels</h2><p style="color:var(--text-dim);font-size:.7rem;margin-bottom:.5rem">Angel values for each zodiac sign from the Occult Encyclopedia of Magick Squares.</p><div id="occult-encyc-zodiac-content"></div></div>
+      <!-- OCCULT ENCYCLOPEDIA TAB -->
+      <div class="tab-content" id="tab-occult-encyc"><div class="card"><h2><span class="icon">📖</span> Occult Encyclopedia — Zodiac Angels</h2><p style="color:var(--text-dim);font-size:.7rem;margin-bottom:.5rem">Angel values for each zodiac sign from the Occult Encyclopedia of Magick Squares.</p><div id="occult-encyc-zodiac-content"></div></div>
+      <div class="card"><h2><span class="icon">🪐</span> Occult Encyclopedia — Planetary Angels</h2><p style="color:var(--text-dim);font-size:.7rem;margin-bottom:.5rem">Angel values for each classical planet.</p><div id="occult-encyc-planets-content"></div></div></div>
+
       <div class="card"><h2><span class="icon">🪐</span> Occult Encyclopedia — Planetary Angels</h2><p style="color:var(--text-dim);font-size:.7rem;margin-bottom:.5rem">Angel values for each classical planet.</p><div id="occult-encyc-planets-content"></div></div></div>
     </div>
   </main>
@@ -2809,7 +2812,7 @@ document.addEventListener('click',function(e){
   if(tabId==='occult-encyc'&&typeof renderOccultEncyc==='function')renderOccultEncyc(state.occultEncyclopedia);
   if(tabId==='occult-chart'&&typeof renderOccultChart==='function')renderOccultChart(state.chart);
   if(tabId==='chart-study'){var cs=$('chart-study-result');if(cs)cs.innerHTML='';}
-  if(tabId==='oracle'){var oc=$('oracle-cards');if(oc){oc.innerHTML='<div style="color:rgba(255,215,0,.5);padding:1rem;text-align:center">Loading oracle...</div>';fetch('/static/oracle-cards/index.html').then(function(r){return r.text();}).then(function(h){oc.innerHTML=h;}).catch(function(){oc.innerHTML='<div style="color:var(--text-muted);padding:1rem;text-align:center">Oracle cards not found</div>';});}}
+  if(tabId==='oracle'&&typeof loadOracle==='function')loadOracle();
 });
 
 var refreshBtn=$('btn-refresh');if(refreshBtn)refreshBtn.addEventListener('click',function(e){e.preventDefault();loadAll();});
