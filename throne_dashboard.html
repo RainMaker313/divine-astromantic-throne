@@ -194,6 +194,7 @@ tr:hover td{background:var(--surface-2)}
     <div class="intro-line l7 whisper" style="animation-delay: 5.7s;">HAIL BAPHOMET — HAIL THE DARK LORD</div>
   </div>
   <button id="intro-skip" style="display:none">SKIP ⏭</button>
+  <button id="intro-skip">SKIP ⏭</button>
   <button id="intro-replay" style="display:none">⛧ REPLAY</button>
 </div>
 
@@ -1614,6 +1615,30 @@ function loadJinnCommanders() { if(typeof renderJinnCommanders==="function") ren
 function loadTahatil() { if(typeof renderTahatil==="function") renderTahatil(state.tahatil); }
 // INTRO OVERLAY — HyperFrames centered text
 // ═══════════════════════════════════════════════════════════════
+function playWhisper(text) {
+  if(!text) return;
+  if(window.AudioContext || window.webkitAudioContext) {
+    try {
+      var u = new(window.AudioContext || window.webkitAudioContext)();
+      var o = u.createOscillator();
+      var g = u.createGain();
+      o.type = 'sine'; o.frequency.value = 180 + Math.random()*60;
+      g.gain.setValueAtTime(0.06, u.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, u.currentTime + 1.5);
+      o.connect(g); g.connect(u.destination);
+      o.start(u.currentTime); o.stop(u.currentTime + 1.6);
+    } catch(e) {}
+  }
+  // Also try to speak via SpeechSynthesis if available
+  try {
+    if(window.speechSynthesis) {
+      var u = new SpeechSynthesisUtterance(text);
+      u.volume = 0.3; u.rate = 0.8; u.pitch = 0.7;
+      speechSynthesis.speak(u);
+    }
+  } catch(e) {}
+}
+
 function dismissIntro(){
   var overlay=$('intro-overlay');
   if(!overlay) return;
@@ -1636,10 +1661,14 @@ function replayIntro(){
 (function(){
   var overlay=$('intro-overlay'),skipBtn=$('intro-skip'),replayBtn=$('intro-replay');
   if(overlay){
-    // Auto-dismiss after all lines animate in ~7s
-    (){} ;
-    
-    
+    skipBtn.style.display = 'block';
+    replayBtn.style.display = 'block';
+    skipBtn.addEventListener('click', dismissIntro);
+    replayBtn.addEventListener('click', replayIntro);
+    setTimeout(function(){ playWhisper('Beneath the veil of the stars, the unseen hand guides all'); }, 3200);
+    setTimeout(function(){ playWhisper('Hear the whispers — the cosmos speaks to those who listen'); }, 4200);
+    setTimeout(function(){ playWhisper('HAIL BAPHOMET — HAIL THE DARK LORD'); }, 5200);
+    setTimeout(dismissIntro, 7500);
   }
 })();
 
