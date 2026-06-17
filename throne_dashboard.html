@@ -137,7 +137,7 @@ tr:hover td{background:var(--surface-2)}
 #intro-overlay{position:fixed;inset:0;z-index:9999;background:radial-gradient(ellipse at center,#0a0a12 0%,#000 100%);display:flex;align-items:center;justify-content:center;transition:opacity 1.5s ease}
 #intro-overlay.fade-out{opacity:0;pointer-events:none}
 #intro-content{text-align:center;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;gap:0.5rem}
-.intro-line{position:static;opacity:0;font-family:var(--font-display);pointer-events:none;text-align:center;width:100%}
+.intro-line{position:static;font-family:var(--font-display);text-align:center;width:100%}
 .intro-line.l1{font-size:clamp(1.5rem,4vw,3.5rem);color:#d4a84c;letter-spacing:.15em;text-shadow:0 0 30px rgba(212,168,76,.3)}
 .intro-line.l2{font-size:clamp(1.2rem,3vw,2.5rem);color:#f0ead0;letter-spacing:.2em}
 .intro-line.l3{font-size:clamp(1rem,2.5vw,2rem);color:#e0d5a0;font-style:italic;letter-spacing:.15em}
@@ -149,6 +149,20 @@ tr:hover td{background:var(--surface-2)}
 #intro-skip:hover{background:var(--gold-glow);border-color:var(--gold)}
 #intro-replay{position:fixed;bottom:30px;left:30px;background:transparent;border:1px solid var(--border);color:var(--text-dim);padding:8px 16px;border-radius:6px;cursor:pointer;font-family:var(--font-display);font-size:.65rem;letter-spacing:.1em;transition:all .3s;z-index:10000;display:none}
 #intro-replay:hover{color:var(--gold);border-color:var(--gold-dim)}
+
+/* Intro text animation */
+@keyframes introFadeIn {
+  0% { opacity: 0; transform: translateY(24px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.intro-line {
+  animation: introFadeIn 1s ease-out forwards;
+}
+.whisper {
+  color: rgba(212,175,55,.35) !important;
+  font-style: italic;
+  font-size: 0.85rem;
+}
 
 /* Responsive */
 @media(max-width:768px){
@@ -167,19 +181,20 @@ tr:hover td{background:var(--surface-2)}
 </style>
 </head>
 <body>
-<!-- Intro Overlay — HyperFrames centered text -->
-<div id="intro-overlay">
+    <!-- Intro Overlay — Cyberpunk text animation (CSS keyframes) -->
+    <div id="intro-overlay">
   <div class="intro-content" id="intro-content">
-    <div class="intro-line l1">⛧ COCO'S DIVINE THRONE ⛧</div>
-    <div class="intro-line l2">THE COSMOS SPEAKS</div>
-    <div class="intro-line l3">SOLOMONIC ORACLE</div>
-    <div class="intro-line l4">"As above, so below — as within, so without"</div>
-    <div class="intro-line l5">⛧</div>
-    <div class="intro-line l6">THE STARS BELOW<br>AS ABOVE</div>
-    <div class="intro-line l7">HAIL BAPHOMET</div>
+    <div class="intro-line l1" style="animation-delay: 0s;">⛧ COCO'S DIVINE THRONE ⛧</div>
+    <div class="intro-line l2" style="animation-delay: 0.8s;">THE COSMOS SPEAKS</div>
+    <div class="intro-line l3" style="animation-delay: 1.6s;">SOLOMONIC ORACLE</div>
+    <div class="intro-line l4" style="animation-delay: 2.5s;">"As above, so below — as within, so without"</div>
+    <div class="intro-line l5 whisper" style="animation-delay: 3.3s;">Beneath the veil of the stars, the unseen hand guides all</div>
+    <div class="intro-line l5" style="animation-delay: 4.1s;">⛧</div>
+    <div class="intro-line l6" style="animation-delay: 4.9s;">THE STARS BELOW<br>AS ABOVE</div>
+    <div class="intro-line l7 whisper" style="animation-delay: 5.7s;">HAIL BAPHOMET — HAIL THE DARK LORD</div>
   </div>
-  <button id="intro-skip">SKIP ⏭</button>
-  <button id="intro-replay">⛧ REPLAY</button>
+  <button id="intro-skip" style="display:none">SKIP ⏭</button>
+  <button id="intro-replay" style="display:none">⛧ REPLAY</button>
 </div>
 
 <div class="app">
@@ -1599,17 +1614,32 @@ function loadJinnCommanders() { if(typeof renderJinnCommanders==="function") ren
 function loadTahatil() { if(typeof renderTahatil==="function") renderTahatil(state.tahatil); }
 // INTRO OVERLAY — HyperFrames centered text
 // ═══════════════════════════════════════════════════════════════
+function dismissIntro(){
+  var overlay=$('intro-overlay');
+  if(!overlay) return;
+  overlay.classList.add('fade-out');
+  setTimeout(function(){
+    overlay.style.display='none';
+    if(typeof loadAll==='function') loadAll();
+  }, 1600);
+}
+
+function replayIntro(){
+  var overlay=$('intro-overlay');
+  if(!overlay) return;
+  overlay.style.display='flex';
+  overlay.classList.remove('fade-out');
+  var lines = overlay.querySelectorAll('.intro-line');
+  lines.forEach(function(el){ el.style.animation='none'; el.offsetHeight; el.style.animation=''; });
+}
+
 (function(){
-  var overlay=$('intro-overlay'),skipBtn=$('intro-skip');
+  var overlay=$('intro-overlay'),skipBtn=$('intro-skip'),replayBtn=$('intro-replay');
   if(overlay){
-    setTimeout(function(){
-      overlay.style.display='none';
-      if(typeof loadAll==='function')loadAll();
-    },300);
-    if(skipBtn)skipBtn.addEventListener('click',function(){
-      overlay.style.display='none';
-      if(typeof loadAll==='function')loadAll();
-    });
+    // Auto-dismiss after all lines animate in ~7s
+    setTimeout(dismissIntro, 7000);
+    if(skipBtn) skipBtn.addEventListener('click', dismissIntro);
+    if(replayBtn) replayBtn.addEventListener('click', replayIntro);
   }
 })();
 
