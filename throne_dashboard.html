@@ -191,7 +191,10 @@ tr:hover td{background:var(--surface-2)}
       <div class="nav-item" data-tab="dignities"><span class="icon">★</span> Dignities</div>
       <div class="nav-item" data-tab="fixed-stars"><span class="icon">✧</span> Stars</div>
       <div class="nav-item" data-tab="electional"><span class="icon">⌛</span> Electional</div>
-<div class="nav-item" data-tab="jinn-commanders"><span class="icon">⚔️</span> Commanders</div>
+      <div class="nav-item" data-tab="arabic-mode"><span class="icon">م</span> عربي</div>
+      <div class="nav-item" data-tab="soundscaper"><span class="icon">🎵</span> Frequencies</div>
+      <div class="nav-item" data-tab="talisman-timer"><span class="icon">⏱️</span> Ritual Timer</div>
+      <div class="nav-item" data-tab="jinn-commanders"><span class="icon">⚔️</span> Commanders</div>
       <div class="nav-item" data-tab="tahatil"><span class="icon">🜁</span> Tahatil</div>
       <div class="nav-item" data-tab="beings"><span class="icon">👾</span> Beings</div>
       <div class="nav-item" data-tab="occult-chart"><span class="icon">🔮</span> Occult</div>
@@ -318,6 +321,56 @@ tr:hover td{background:var(--surface-2)}
       <div class="tab-content" id="tab-occult-chart"><div class="card"><h2><span class="icon">🔮</span> Occult Chart</h2><div id="occult-chart-content"></div></div></div>
       <!-- CHART STUDY TAB -->
       <div class="tab-content" id="tab-chart-study"><div class="card"><h2><span class="icon">🔍</span> Chart Study</h2><div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:flex-end;margin-bottom:1rem"><div style="display:flex;flex-direction:column;gap:.15rem"><label style="font-size:.6rem;color:var(--text-muted);text-transform:uppercase">Date</label><input type="date" id="cs-date" style="background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:.3rem .4rem;border-radius:var(--radius);font-family:var(--font);font-size:.7rem"></div><div style="display:flex;flex-direction:column;gap:.15rem"><label style="font-size:.6rem;color:var(--text-muted);text-transform:uppercase">Time</label><input type="time" id="cs-time" style="background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:.3rem .4rem;border-radius:var(--radius);font-family:var(--font);font-size:.7rem"></div><div style="display:flex;flex-direction:column;gap:.15rem"><label style="font-size:.6rem;color:var(--text-muted);text-transform:uppercase">Lat</label><input type="number" id="cs-lat" value="-33.76" step=".01" style="background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:.3rem .4rem;border-radius:var(--radius);font-family:var(--font);font-size:.7rem;width:70px"></div><div style="display:flex;flex-direction:column;gap:.15rem"><label style="font-size:.6rem;color:var(--text-muted);text-transform:uppercase">Lon</label><input type="number" id="cs-lon" value="25.40" step=".01" style="background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:.3rem .4rem;border-radius:var(--radius);font-family:var(--font);font-size:.7rem;width:70px"></div><button class="btn-refresh" id="btn-calculate-chart">☆ Calc</button></div><div id="chart-study-result"></div></div></div>
+
+      <!-- ARABIC MODE TAB -->
+      <div class="tab-content" id="tab-arabic-mode"><div class="card"><h2><span class="icon">م</span> وضع عربي — Arabic Only Mode</h2>
+        <p style="color:var(--text-dim);font-size:.7rem;margin-bottom:.8rem">All names, directions, and UI rendered in Arabic with Arabic-Indic numerals.</p>
+        <label style="color:var(--gold);font-size:.8rem;display:flex;align-items:center;gap:.5rem"><input type="checkbox" id="arabic-toggle" onchange="toggleArabicMode(this.checked)"> تفعيل وضع عربي (Enable Arabic Mode)</label>
+        <div id="arabic-preview" style="margin-top:1rem;display:none;border:1px solid var(--border);border-radius:var(--radius);padding:1rem">
+          <div style="font-family:var(--font-display);font-size:.9rem;color:var(--gold);margin-bottom:.5rem">الساعة الكوكبية</div>
+          <div style="color:var(--text);font-size:.75rem;direction:rtl">الحاكم: <span id="ap-ruler">---</span></div>
+          <div style="color:var(--text-dim);font-size:.7rem;direction:rtl;margin-top:.3rem">المنزل القمري: <span id="ap-mansion">---</span></div>
+          <div style="color:var(--text-dim);font-size:.7rem;direction:rtl;margin-top:.2rem">الجزء العربي: <span id="ap-parts">---</span></div>
+        </div>
+      </div>
+
+      <!-- SOUNDSCAPER TAB -->
+      <div class="tab-content" id="tab-soundscaper"><div class="card"><h2><span class="icon">🎵</span> Planetary Frequencies + Chakras</h2>
+        <p style="color:var(--text-dim);font-size:.7rem;margin-bottom:.8rem">Layered planetary tones mapped to sacred frequencies. Each planet + chakra vibrates at its tuning-fork frequency.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem" id="freq-toggles"></div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:.8rem">
+          <button class="btn-refresh" id="btn-play-freq" style="margin-right:.5rem">▶ Play All</button>
+          <button class="btn-refresh" id="btn-stop-freq">■ Stop</button>
+          <div style="color:var(--text-muted);font-size:.65rem;margin-top:.4rem">Volume affects all layers. Each frequency loops continuously while active.</div>
+        </div>
+        <div style="margin-top:1rem">
+          <h3 style="color:var(--gold-dim);font-size:.7rem;margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.05em">Frequencies Reference</h3>
+          <div style="font-size:.6rem;color:var(--text-dim);line-height:1.7" id="freq-legend"></div>
+        </div>
+      </div>
+
+      <!-- TALISMAN RITUAL TIMER TAB -->
+      <div class="tab-content" id="tab-talisman-timer"><div class="card"><h2><span class="icon">⏱️</span> Talisman Ritual Timer</h2>
+        <p style="color:var(--text-dim);font-size:.7rem;margin-bottom:.8rem">Select your intent. The timer counts down to the next optimal hour, factoring in <strong>planetary hour + lunar mansion</strong> where the Moon resides at that time.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin-bottom:1rem">
+          <label style="color:var(--text-dim);font-size:.7rem">Intent:</label>
+          <select id="timer-intent" style="background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:.35rem .5rem;border-radius:var(--radius);font-family:var(--font);font-size:.75rem">
+            <option value="wealth">Wealth 💰</option>
+            <option value="love">Love ❤️</option>
+            <option value="protection">Protection 🛡️</option>
+            <option value="wisdom">Wisdom 📜</option>
+            <option value="health">Health 🌿</option>
+            <option value="binding">Binding ⛓️</option>
+            <option value="glory">Glory 👑</option>
+            <option value="foundation">Foundation 🏛️</option>
+          </select>
+          <button class="btn-refresh" id="btn-find-optimal">Find Optimal Hour</button>
+        </div>
+        <div id="timer-status" style="color:var(--text-muted);font-size:.7rem;margin-bottom:.5rem">Select an intent to begin.</div>
+        <div id="timer-display" style="font-family:var(--font-display);font-size:2.5rem;color:var(--gold);text-align:center;margin:1rem 0;display:none">00:00:00</div>
+        <div id="timer-details" style="font-size:.65rem;color:var(--text-dim);line-height:1.6;margin-bottom:.5rem"></div>
+        <div id="timer-mansion-info" style="font-size:.6rem;color:var(--text-muted);margin-top:.3rem;font-style:italic"></div>
+      </div>
 
   </main>
   
@@ -1485,6 +1538,10 @@ document.addEventListener('click',function(e){
   
   if(tabId==='occult-chart'&&typeof renderOccultChart==='function')renderOccultChart(state.chart);
   if(tabId==='chart-study'){var cs=$('chart-study-result');if(cs)cs.innerHTML='';}
+
+  if(tabId==='arabic-mode' && typeof loadArabicMode==='function') loadArabicMode();
+  if(tabId==='soundscaper' && typeof loadSoundscaper==='function') loadSoundscaper();
+  if(tabId==='talisman-timer' && typeof loadTalismanTimer==='function') loadTalismanTimer();
   
 });
 
@@ -1928,12 +1985,240 @@ function loadOracle() {
       } else {
         container.innerHTML = '<div style="color:var(--text-muted);padding:1rem;text-align:center">Oracle cards not found</div>';
       }
-    })
-    .catch(function(e) {
+      })
+      .catch(function(e) {
       container.innerHTML = '<div style="color:var(--danger);padding:1rem">Error loading oracle: ' + e.message + '</div>';
-    });
-}
+      });
+      }
 
+      // ═══════════════════════════════════════════════════════════════
+      // ARABIC MODE TAB
+      // ═══════════════════════════════════════════════════════════════
+
+      function toArabicNum(n) {
+      var ar = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
+      return String(n).split('').map(function(c){return /\d/.test(c)?ar[+c]:c;}).join('');
+      }
+
+      function toggleArabicMode(on) {
+      var preview = $('arabic-preview');
+      if(preview) preview.style.display = on ? 'block' : 'none';
+      if(on) loadArabicMode();
+      }
+
+      function loadArabicMode() {
+      var rulerEl = $('ap-ruler'), mansionEl = $('ap-mansion'), partsEl = $('ap-parts');
+      if(state.hours && state.hours.current && rulerEl) {
+      rulerEl.textContent = state.hours.current.ruler + ' ' + (state.hours.current.symbol||'');
+      }
+      if(state.lunarMansion && mansionEl) {
+      mansionEl.textContent = toArabicNum(state.lunarMansion.number||'--') + ' — ' + (state.lunarMansion.name||'---');
+      }
+      if(state.arabicParts && partsEl) {
+      var names = ['Fortune','Love','Gain','Loss'];
+      names.forEach(function(n){ state.arabicParts[n] = state.arabicParts[n]||{longitude:0}; });
+      partsEl.textContent = 'Fortune: ' + toArabicNum(state.arabicParts.Fortune.longitude.toFixed(1)) + '° | Love: ' + toArabicNum(state.arabicParts.Love.longitude.toFixed(1)) + '°';
+      }
+      }
+
+      // ═══════════════════════════════════════════════════════════════
+      // SOUNDSCAPER TAB — Planetary Frequencies + Chakras
+      // ═══════════════════════════════════════════════════════════════
+
+      var audioCtx = null, sciNodes = {}, activeFreqs = {}, freqMasterGain = null;
+      var PLANET_FREQS = {
+      'Sun':    {'freq': 126.22, 'chakra': 'Solar Plexus',  'note': 'C',  'color': '#f4d03f', 'desc': '3rd chakra — personal power'},
+      'Moon':   {'freq': 210.92, 'chakra': 'Crown',  'note': 'G#', 'color': '#c0c0c0', 'desc': '7th chakra — universal connection'},
+      'Mercury':{'freq': 141.27, 'chakra': 'Throat',  'note': 'D#', 'color': '#b0a0d0', 'desc': '5th chakra — expression'},
+      'Venus':  {'freq': 126.22, 'chakra': 'Heart',   'note': 'F',  'color': '#f0a0c0', 'desc': '4th chakra — love'},
+      'Mars':   {'freq': 144.72, 'chakra': 'Root',    'note': 'C#', 'color': '#e05050', 'desc': '1st chakra — survival'},
+      'Jupiter':{'freq': 183.58, 'chakra': 'Third Eye','note': 'F#', 'color': '#d4a017', 'desc': '6th chakra — insight'},
+      'Saturn': {'freq': 108.00, 'chakra': 'Sacral',  'note': 'A',  'color': '#c8a860', 'desc': '2nd chakra — creation'},
+      'Rahu':   {'freq': 136.10, 'chakra': 'Root',    'note': 'C#', 'color': '#ff6b35', 'desc': 'Shadow chakra — release'},
+      'Ketu':   {'freq': 111.00, 'chakra': 'Crown',   'note': 'G#', 'color': '#8b4513', 'desc': 'Moksha chakra — liberation'}
+      };
+
+      function loadSoundscaper() {
+      // Build frequency toggles
+      var container = $('freq-toggles');
+      if(container && container.children.length === 0) {
+      Object.keys(PLANET_FREQS).forEach(function(p) {
+        var inf = PLANET_FREQS[p];
+        var label = document.createElement('label');
+        label.style.cssText = 'display:flex;align-items:center;gap:.4rem;cursor:pointer;background:var(--surface-2);border:1px solid var(--border);padding:.4rem .6rem;border-radius:var(--radius);font-size:.7rem';
+        label.innerHTML = '<input type="checkbox" data-planet="'+p+'" class="freq-check"> <span style="font-weight:600;color:'+inf.color+'">'+p+'</span> <span style="color:var(--text-muted)">'+inf.freq+'Hz</span>';
+        label.addEventListener('change', function(){ togglFreq(p, this.querySelector('input').checked); });
+        container.appendChild(label);
+      });
+      // Build legend
+      var legend = $('freq-legend');
+      if(legend) {
+        var html = '';
+        Object.keys(PLANET_FREQS).forEach(function(p) {
+          var inf = PLANET_FREQS[p];
+          html += '<div><strong style="color:'+inf.color+'">'+p+'</strong> — '+inf.freq+'Hz — '+
+                  inf.note+' — '+inf.chakra+' — '+inf.desc+'</div>';
+        });
+        html += '<div style="margin-top:.4rem"><em>Note: pure sine waves at sacred tuning. Add overtones for richer sound.</em></div>';
+        legend.innerHTML = html;
+      }
+      }
+      // Wire master control buttons
+      var playBtn = $('btn-play-freq'), stopBtn = $('btn-stop-freq');
+      if(playBtn && !playBtn._wired) { playBtn._wired = true; playBtn.addEventListener('click', playAllFreqs); }
+      if(stopBtn && !stopBtn._wired) { stopBtn._wired = true; stopBtn.addEventListener('click', stopAllFreqs); }
+      }
+
+      function togglFreq(planet, on) {
+      if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+      if(!freqMasterGain) { freqMasterGain = audioCtx.createGain(); freqMasterGain.gain.value = 0.15; freqMasterGain.connect(audioCtx.destination); }
+      if(activeFreqs[planet]) { activeFreqs[planet].stop(); activeFreqs[planet] = null; }
+      if(on && PLANET_FREQS[planet]) {
+      var inf = PLANET_FREQS[planet];
+      var osc = audioCtx.createOscillator();
+      var g = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = inf.freq;
+      g.gain.value = 1;
+      osc.connect(g); g.connect(freqMasterGain);
+      osc.start();
+      activeFreqs[planet] = osc;
+      }
+      }
+
+      function playAllFreqs() {
+      Object.keys(PLANET_FREQS).forEach(function(p){ togglFreq(p, true); });
+      }
+
+      function stopAllFreqs() {
+      Object.keys(activeFreqs).forEach(function(p){ if(activeFreqs[p]){activeFreqs[p].stop(); activeFreqs[p]=null;} });
+      }
+
+      // ═══════════════════════════════════════════════════════════════
+      // TALISMAN RITUAL TIMER TAB
+      // ═══════════════════════════════════════════════════════════════
+
+      var ritualTimerInterval = null, ritualTargetTime = null;
+
+      var INTENT_PLANET_MAP = {
+      'wealth':'Jupiter','love':'Venus','protection':'Saturn','wisdom':'Mercury',
+      'health':'Sun','binding':'Mars','glory':'Sun','foundation':'Saturn'
+      };
+      var INTENT_INCENSE_MAP = {
+      'wealth':'sandalwood & saffron','love':'rose & amber',
+      'protection':'frankincense & myrrh',
+      'wisdom':'sage & cinnamon',
+      'health':'eucalyptus & mint',
+      'binding':'black pepper & asafoetida',
+      'glory':'aloeswood & gold dust',
+      'foundation':'cedar & salt'
+      };
+
+      function loadTalismanTimer() {
+      var btn = $('btn-find-optimal');
+      if(btn && !btn._wired) {
+      btn._wired = true;
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        findOptimalRitualTime();
+      });
+      }
+      }
+
+      function findOptimalRitualTime() {
+      if(!state.hours || !state.hours.hours) {
+      toast('No planetary hours data available.');
+      return;
+      }
+      var intent = ($('timer-intent')||{}).value || 'general';
+      var targetPlanet = INTENT_PLANET_MAP[intent] || 'Sun';
+      var daytime = state.hours.hours.day || [];
+      var allHours = daytime.concat(state.hours.hours.night || []);
+
+      // Score each upcoming hour for this intent
+      var best = null, bestScore = -1;
+      for(var i = 0; i < allHours.length && i < 24; i++) {
+      var h = allHours[i];
+      var score = 0;
+      if(h.planet === targetPlanet) score += 5;
+      if(h.planet === 'Sun' || h.planet === 'Jupiter') score += 1;
+      var mansionNum = getMoonMansionForJD ? getMoonMansionForJD(h.jd_start) : null;
+      if(mansionNum >= 1 && mansionNum <= 3) score += 2;  // fortunate mansions
+      score += Math.random(); // break ties randomly
+
+      if(score > bestScore) {
+        bestScore = score;
+        best = h;
+      }
+      }
+
+      if(!best) {
+      ($('timer-status')||{}).textContent = 'No upcoming hour found.';
+      return;
+      }
+
+      // Clear previous timer
+      if(ritualTimerInterval) { clearInterval(ritualTimerInterval); ritualTimerInterval = null; }
+      ritualTargetTime = new Date(best.start_iso || new Date().toISOString());
+
+      var statusEl = $('timer-status');
+      var detailsEl = $('timer-details');
+      var mansionEl = $('timer-mansion-info');
+      var dispEl = $('timer-display');
+
+      if(statusEl) statusEl.textContent = 'Optimal hour found: ' + best.ruler + ' ' + (best.symbol||'');
+      if(detailsEl) {
+      detailsEl.innerHTML =
+        'Planet: <strong style="color:'+(PLANET_COLORS[best.planet]||'#fff')+'">'+best.planet+'</strong><br>'+
+        'Incense: '+INTENT_INCENSE_MAP[intent]+'<br>'+
+        'Hour: '+best.hour_number+' / 24 | '+best.period+'<br>'+
+        'From: '+formatDT(ritualTargetTime)+'<br>'+
+        'To: '+formatDT(new Date((best.end_iso||ritualTargetTime.toISOString())));
+      }
+      if(mansionEl && best.mansion_number) {
+      mansionEl.textContent = '🌙 Lunar Mansion at start: #' + best.mansion_number + ' — ' + (best.mansion_name||'');
+      }
+
+      if(dispEl) {
+      dispEl.style.display = 'block';
+      ritualTimerInterval = setInterval(function(){
+        var now = new Date();
+        var diff = ritualTargetTime - now;
+        if(diff <= 0) {
+          clearInterval(ritualTimerInterval);
+          ritualTimerInterval = null;
+          dispEl.textContent = '00:00:00';
+          ($('timer-status')||{}).textContent = '⏰ Optimal hour is NOW — perform your ritual.';
+          // Auto fire drum beat for 10s
+          try { if(audioCtx) playDrumBeat(10); } catch(e){}
+          return;
+        }
+        var s = Math.floor(diff/1000);
+        var h = Math.floor(s/3600), m = Math.floor((s%3600)/60), sec = s%60;
+        dispEl.textContent = toArabicNum(String(h).padStart(2,'0'))+':'+toArabicNum(String(m).padStart(2,'0'))+':'+toArabicNum(String(sec).padStart(2,'0'));
+      }, 250);
+      }
+      }
+
+      function formatDT(d) {
+      if(!d) return '--';
+      return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+      }
+
+      function playDrumBeat(seconds) {
+      if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+      var now = audioCtx.currentTime;
+      var interval = 0.6;
+      for(var i=0;i<seconds*Math.floor(1/interval);i++){
+      var t = now + i*interval;
+      var o = audioCtx.createOscillator(), g = audioCtx.createGain();
+      o.type = 'sine'; o.frequency.value = 60;
+      g.gain.setValueAtTime(0.8,t);
+      g.gain.exponentialRampToValueAtTime(0.001,t+0.25);
+      o.connect(g); g.connect(audioCtx.destination);
+      o.start(t); o.stop(t+0.3);
+      }
+      }
 </script>
 </body>
 </html>
