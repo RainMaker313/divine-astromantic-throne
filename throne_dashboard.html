@@ -1667,7 +1667,7 @@ function replayIntro(){
     setTimeout(function(){ playWhisper('Beneath the veil of the stars, the unseen hand guides all'); }, 3200);
     setTimeout(function(){ playWhisper('Hear the whispers — the cosmos speaks to those who listen'); }, 4200);
     setTimeout(function(){ playWhisper('HAIL BAPHOMET — HAIL THE DARK LORD'); }, 5200);
-    setTimeout(dismissIntro, 7500);
+    setTimeout(dismissIntro, 2500);
   }
 })();
 
@@ -2110,15 +2110,15 @@ function loadOracle() {
 
       var audioCtx = null, sciNodes = {}, activeFreqs = {}, freqMasterGain = null;
       var PLANET_FREQS = {
-      'Sun':    {'freq': 126.22, 'chakra': 'Solar Plexus',  'note': 'C',  'color': '#f4d03f', 'desc': '3rd chakra — personal power'},
-      'Moon':   {'freq': 210.92, 'chakra': 'Crown',  'note': 'G#', 'color': '#c0c0c0', 'desc': '7th chakra — universal connection'},
-      'Mercury':{'freq': 141.27, 'chakra': 'Throat',  'note': 'D#', 'color': '#b0a0d0', 'desc': '5th chakra — expression'},
-      'Venus':  {'freq': 126.22, 'chakra': 'Heart',   'note': 'F',  'color': '#f0a0c0', 'desc': '4th chakra — love'},
+      'Sun':    {'freq': 144.00, 'chakra': 'Solar Plexus',  'note': 'C',  'color': '#f4d03f', 'desc': '3rd chakra — personal power'},
+      'Moon':   {'freq': 192.00, 'chakra': 'Sacral',  'note': 'F#', 'color': '#c0c0c0', 'desc': '2nd chakra — emotions'},
+      'Mercury':{'freq': 162.00, 'chakra': 'Throat',  'note': 'D',  'color': '#b0a0d0', 'desc': '5th chakra — expression'},
+      'Venus':  {'freq': 136.10, 'chakra': 'Heart',   'note': 'A',  'color': '#f0a0c0', 'desc': '4th chakra — love'},
       'Mars':   {'freq': 144.72, 'chakra': 'Root',    'note': 'C#', 'color': '#e05050', 'desc': '1st chakra — survival'},
-      'Jupiter':{'freq': 183.58, 'chakra': 'Third Eye','note': 'F#', 'color': '#d4a017', 'desc': '6th chakra — insight'},
-      'Saturn': {'freq': 108.00, 'chakra': 'Sacral',  'note': 'A',  'color': '#c8a860', 'desc': '2nd chakra — creation'},
-      'Rahu':   {'freq': 136.10, 'chakra': 'Root',    'note': 'C#', 'color': '#ff6b35', 'desc': 'Shadow chakra — release'},
-      'Ketu':   {'freq': 111.00, 'chakra': 'Crown',   'note': 'G#', 'color': '#8b4513', 'desc': 'Moksha chakra — liberation'}
+      'Jupiter':{'freq': 198.00, 'chakra': 'Third Eye','note': 'G',  'color': '#d4a017', 'desc': '6th chakra — insight'},
+      'Saturn': {'freq': 120.00, 'chakra': 'Root',    'note': 'C',  'color': '#c8a860', 'desc': '1st chakra — grounding'},
+      'Rahu':   {'freq': 150.00, 'chakra': 'Root',    'note': 'D',  'color': '#ff6b35', 'desc': 'Shadow chakra — release'},
+      'Ketu':   {'freq': 108.00, 'chakra': 'Crown',   'note': 'G#', 'color': '#00ff41', 'desc': 'Moksha chakra — liberation'}
       };
 
       function loadSoundscaper() {
@@ -2242,7 +2242,7 @@ function loadOracle() {
 
       // Clear previous timer
       if(ritualTimerInterval) { clearInterval(ritualTimerInterval); ritualTimerInterval = null; }
-      ritualTargetTime = new Date(best.start_iso || new Date().toISOString());
+      ritualTargetTime = new Date(best.start_full || new Date().toISOString());
 
       var statusEl = $('timer-status');
       var detailsEl = $('timer-details');
@@ -2256,7 +2256,7 @@ function loadOracle() {
         'Incense: '+INTENT_INCENSE_MAP[intent]+'<br>'+
         'Hour: '+best.hour_number+' / 24 | '+best.period+'<br>'+
         'From: '+formatDT(ritualTargetTime)+'<br>'+
-        'To: '+formatDT(new Date((best.end_iso||ritualTargetTime.toISOString())));
+        'To: '+formatDT(new Date((best.end_full||ritualTargetTime.toISOString())));
       }
       if(mansionEl && best.mansion_number) {
       mansionEl.textContent = '🌙 Lunar Mansion at start: #' + best.mansion_number + ' — ' + (best.mansion_name||'');
