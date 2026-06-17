@@ -158,6 +158,12 @@ tr:hover td{background:var(--surface-2)}
 .sidebar-nav .nav-item{padding:.3rem .5rem;font-size:.65rem}
 .main{margin-left:0}
 }
+
+/* Neon name classifications */
+.neon-angel { color: #ffd700; text-shadow: 0 0 6px rgba(255,215,0,0.5); font-weight: 600; }
+.neon-jinn { color: #ff8c00; text-shadow: 0 0 6px rgba(255,140,0,0.5); font-weight: 600; }
+.neon-divine { color: #00ff41; text-shadow: 0 0 6px rgba(0,255,65,0.5); font-weight: 700; }
+.neon-gold { color: #ffd700; text-shadow: 0 0 8px rgba(255,215,0,0.6); }
 </style>
 </head>
 <body>
@@ -390,6 +396,25 @@ var CX, CY;
 fetch("/static/nakshatra_sublords.json").then(function(r){return r.json();}).then(function(d){state.nakSubLords=d;console.log('nakSubLords loaded');if(typeof renderMansionTable==='function')renderMansionTable();}).catch(function(){setTimeout(function(){fetch("/static/nakshatra_sublords.json").then(function(r){return r.json();}).then(function(d){state.nakSubLords=d;console.log('nakSubLords retry ok');if(typeof renderMansionTable==='function')renderMansionTable();}).catch(function(){console.log('nakSubLords failed');});},2000);});
 
 function $(id) { return document.getElementById(id); }
+function $(id) { return document.getElementById(id); }
+
+// Neon name classification
+var ANGEL_NAMES = ['Rooqaya'eel','Jibra'eel','Samsamaa'eel','Meekaa'eel','Sorfaya'eel','Anya'eel','Kasfaya'eel','Metatron','Rapaqel','Azrael','Michael','Gabriel','Kamael','Raphael','Uriel','Suriel','Zadkiel','Haniel','Cassiel','Sandalphon','Jophiel','Chamuel','Raziel','Remiel'];
+var JINN_NAMES = ['al-Mudhhib','Murra al-Abyad','al-Ahmar','Burqan','Shamhurish','Shamhoorash','Abyad','Maymun','Khandash','Abu Ma'bad Zanbur','Maymun Aba Nuh','al-Ahmar al-Qurashi','Zawba'ah','Muzemil','Shamshamail','Sawsim','Mikail','Sarfiail','Kisfyail',''anyail'];
+var DIVINE_NAMES = ['Allah','Baphomet','Ahriman','Ra','Amun-Ra','AmunRa','Elohim','Yahweh','Jehovah','Adonai','El Shaddai','Tetragrammaton','Al-Rahman','Al-Rahim','Al-Malik','Al-Quddus','Al-Salam','Al-Mu'min','Al-Muhaymin','Al-Aziz','Al-Jabbar','Al-Mutakabbir','Al-Khaliq','Al-Bari','Al-Musawwir','Al-Ghaffar','Al-Qahhar','Al-Wahhab','Al-Razzaq','Al-Fattah','Al-Alim','Al-Qabid','Al-Basit','Al-Khafid','Al-Rafi','Al-Mu'izz','Al-Mudhill','Al-Sam','Al-Basir','Al-Hakam','Al-Adl','Al-Latif','Al-Khabir','Al-Halim','Al-Azim','Al-Ghafur','Al-Shakur','Al-Karim','Al-Razzaq','Al-Fattah','Al-Muqsit','Al-Jami','Al-Ghani','Al-Mughni','Al-Mani','Al-Nafi','Al-Nur','Al-Hadi','Al-Badi','Al-Baqi','Al-Warith','Al-Rashid','Al-Sabur'];
+
+function classifyName(name) {
+  name = String(name).trim();
+  for (var i=0;i<ANGEL_NAMES.length;i++) if (name.indexOf(ANGEL_NAMES[i])>=0) return 'angel';
+  for (var i=0;i<JINN_NAMES.length;i++) if (name.indexOf(JINN_NAMES[i])>=0) return 'jinn';
+  for (var i=0;i<DIVINE_NAMES.length;i++) if (name.indexOf(DIVINE_NAMES[i])>=0) return 'divine';
+  return null;
+}
+function neon(name) {
+  var t = classifyName(name);
+  if (!t) return String(name);
+  return '<span class=\"neon-'+t+'\">'+String(name)+'</span>';
+}
 function getSign(lon) { return SIGNS[Math.floor(lon/30)%12]; }
 function getSignIndex(lon) { return Math.floor(lon/30)%12; }
 function getDegInSign(lon) { return (lon%30).toFixed(2); }
@@ -1052,7 +1077,7 @@ function renderJinnCommanders(data){
   var cmdrs = Array.isArray(data.commanders) ? data.commanders : Object.entries(data.commanders).map(function(e){return {name:e[0],description:e[1]};});
   cmdrs.forEach(function(c){
     h+='<div class="stat" style="text-align:left;padding:.5rem .6rem;margin-bottom:.3rem">';
-    h+='<div style="font-weight:600;color:var(--gold);font-size:.8rem">'+c.name+'</div>';
+    h+='<div style="font-weight:600;color:var(--gold);font-size:.8rem">'+neon(c.name)+'</div>';
     if(c.meaning) h+='<div style="font-size:.65rem;color:var(--text-dim)">'+c.meaning+'</div>';
     if(c.description) h+='<div style="font-size:.7rem;margin-top:.2rem">'+c.description+'</div>';
     h+='</div>';
