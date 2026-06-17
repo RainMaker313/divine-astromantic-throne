@@ -137,7 +137,7 @@ tr:hover td{background:var(--surface-2)}
 #intro-overlay{position:fixed;inset:0;z-index:9999;background:radial-gradient(ellipse at center,#0a0a12 0%,#000 100%);display:flex;align-items:center;justify-content:center;transition:opacity 1.5s ease}
 #intro-overlay.fade-out{opacity:0;pointer-events:none}
 #intro-content{text-align:center;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;gap:0.5rem}
-.intro-line{position:static;font-family:var(--font-display);text-align:center;width:100%}
+.intro-line{position:static;font-family:var(--font-display);text-align:center;width:100%;animation:introFadeIn 1s ease-out forwards}
 .intro-line.l1{font-size:clamp(1.5rem,4vw,3.5rem);color:#d4a84c;letter-spacing:.15em;text-shadow:0 0 30px rgba(212,168,76,.3)}
 .intro-line.l2{font-size:clamp(1.2rem,3vw,2.5rem);color:#f0ead0;letter-spacing:.2em}
 .intro-line.l3{font-size:clamp(1rem,2.5vw,2rem);color:#e0d5a0;font-style:italic;letter-spacing:.15em}
@@ -193,9 +193,8 @@ tr:hover td{background:var(--surface-2)}
     <div class="intro-line l6" style="animation-delay: 4.9s;">THE STARS BELOW<br>AS ABOVE</div>
     <div class="intro-line l7 whisper" style="animation-delay: 5.7s;">HAIL BAPHOMET — HAIL THE DARK LORD</div>
   </div>
-  <button id="intro-skip" style="display:none">SKIP ⏭</button>
-  <button id="intro-skip">SKIP ⏭</button>
-  <button id="intro-replay" style="display:none">⛧ REPLAY</button>
+  <button id="intro-skip" >SKIP ⏭</button>
+  <button id="intro-replay">⛧ REPLAY</button>
 </div>
 
 <div class="app">
@@ -415,9 +414,9 @@ function $(id) { return document.getElementById(id); }
 function $(id) { return document.getElementById(id); }
 
 // Neon name classification
-var ANGEL_NAMES = ['Rooqaya'eel','Jibra'eel','Samsamaa'eel','Meekaa'eel','Sorfaya'eel','Anya'eel','Kasfaya'eel','Metatron','Rapaqel','Azrael','Michael','Gabriel','Kamael','Raphael','Uriel','Suriel','Zadkiel','Haniel','Cassiel','Sandalphon','Jophiel','Chamuel','Raziel','Remiel'];
-var JINN_NAMES = ['al-Mudhhib','Murra al-Abyad','al-Ahmar','Burqan','Shamhurish','Shamhoorash','Abyad','Maymun','Khandash','Abu Ma'bad Zanbur','Maymun Aba Nuh','al-Ahmar al-Qurashi','Zawba'ah','Muzemil','Shamshamail','Sawsim','Mikail','Sarfiail','Kisfyail',''anyail'];
-var DIVINE_NAMES = ['Allah','Baphomet','Ahriman','Ra','Amun-Ra','AmunRa','Elohim','Yahweh','Jehovah','Adonai','El Shaddai','Tetragrammaton','Al-Rahman','Al-Rahim','Al-Malik','Al-Quddus','Al-Salam','Al-Mu'min','Al-Muhaymin','Al-Aziz','Al-Jabbar','Al-Mutakabbir','Al-Khaliq','Al-Bari','Al-Musawwir','Al-Ghaffar','Al-Qahhar','Al-Wahhab','Al-Razzaq','Al-Fattah','Al-Alim','Al-Qabid','Al-Basit','Al-Khafid','Al-Rafi','Al-Mu'izz','Al-Mudhill','Al-Sam','Al-Basir','Al-Hakam','Al-Adl','Al-Latif','Al-Khabir','Al-Halim','Al-Azim','Al-Ghafur','Al-Shakur','Al-Karim','Al-Razzaq','Al-Fattah','Al-Muqsit','Al-Jami','Al-Ghani','Al-Mughni','Al-Mani','Al-Nafi','Al-Nur','Al-Hadi','Al-Badi','Al-Baqi','Al-Warith','Al-Rashid','Al-Sabur'];
+var ANGEL_NAMES = ['Rooqaya\u0027eel','Jibra\u0027eel','Samsamaa\u0027eel','Meekaa\u0027eel','Sorfaya\u0027eel','Anya\u0027eel','Kasfaya\u0027eel','Metatron','Rapaqel','Azrael','Michael','Gabriel','Kamael','Raphael','Uriel','Suriel','Zadkiel','Haniel','Cassiel','Sandalphon','Jophiel','Chamuel','Raziel','Remiel'];
+var JINN_NAMES = ['al-Mudhhib','Murra al-Abyad','al-Ahmar','Burqan','Shamhurish','Shamhoorash','Abyad','Maymun','Khandash','Abu Ma\u0027bad Zanbur','Maymun Aba Nuh','al-Ahmar al-Qurashi','Zawba\u0027ah','Muzemil','Shamshamail','Sawsim','Mikail','Sarfiail','Kisfyail','\u0027anyail'];
+var DIVINE_NAMES = ['Allah','Baphomet','Ahriman','Ra','Amun-Ra','AmunRa','Elohim','Yahweh','Jehovah','Adonai','El Shaddai','Tetragrammaton','Al-Rahman','Al-Rahim','Al-Malik','Al-Quddus','Al-Salam','Al-Mu\u0027min','Al-Muhaymin','Al-Aziz','Al-Jabbar','Al-Mutakabbir','Al-Khaliq','Al-Bari','Al-Musawwir','Al-Ghaffar','Al-Qahhar','Al-Wahhab','Al-Razzaq','Al-Fattah','Al-Alim','Al-Qabid','Al-Basit','Al-Khafid','Al-Rafi','Al-Mu\u0027izz','Al-Mudhill','Al-Sam','Al-Basir','Al-Hakam','Al-Adl','Al-Latif','Al-Khabir','Al-Halim','Al-Azim','Al-Ghafur','Al-Shakur','Al-Karim','Al-Razzaq','Al-Fattah','Al-Muqsit','Al-Jami','Al-Ghani','Al-Mughni','Al-Mani','Al-Nafi','Al-Nur','Al-Hadi','Al-Badi','Al-Baqi','Al-Warith','Al-Rashid','Al-Sabur'];
 
 function classifyName(name) {
   name = String(name).trim();
