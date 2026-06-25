@@ -1,0 +1,1734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⛧ Coco's Divine Astromantic Throne ⛧</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
+<!-- GSAP - animation library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<!-- ScrollTrigger removed -->
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   COCO'S DIVINE ASTROMANTIC THRONE v9 — THE CINEMATIC REBIRTH
+   ═══════════════════════════════════════════════════════════════ */
+:root {
+  --bg:#030308; --bg-soft:#08080f; --surface:#0d0d18; --surface-2:#14142a;
+  --border:#1e1e3a; --border-glow:#2a2a5a;
+  --text:#e8e8f8; --text-dim:#9090b8; --text-muted:#5a5a80;
+  --gold:#d4a84c; --gold-bright:#ffd700;
+  --cyan:#00e5ff; --magenta:#ff00ff; --red:#ff0044; --green:#00ff88;
+  --purple:#8b5cf6; --sidebar-width:210px;
+  --radius:10px; --radius-lg:16px;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{font-size:15px}
+body{font-family:'Rajdhani',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;line-height:1.6}
+a{color:var(--cyan);text-decoration:none}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--gold),var(--magenta));border-radius:3px}
+
+/* ─── CANVASES ─── */
+#webgl-bg{position:fixed;inset:0;z-index:0}
+#particle-canvas{position:fixed;inset:0;z-index:1;pointer-events:none}
+
+/* ─── APP ─── */
+.app{display:flex;min-height:100vh;position:relative;z-index:2}
+
+/* ─── SIDEBAR ─── */
+.sidebar{width:var(--sidebar-width);background:linear-gradient(180deg,rgba(8,8,18,.97),rgba(5,5,12,.97));border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;overflow-y:auto;z-index:50;backdrop-filter:blur(20px);box-shadow:4px 0 40px rgba(0,0,0,.6)}
+.sidebar-brand{padding:1.5rem .75rem;text-align:center;border-bottom:1px solid var(--border);position:relative}
+.sidebar-brand::after{content:'';position:absolute;bottom:-1px;left:15%;right:15%;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.brand-symbol{font-size:2rem;color:var(--gold-bright);text-shadow:0 0 20px rgba(255,215,0,.5),0 0 40px rgba(255,215,0,.2);animation:glowPulse 3s ease-in-out infinite alternate}
+@keyframes glowPulse{0%{opacity:.7}100%{opacity:1;text-shadow:0 0 20px rgba(255,215,0,.6),0 0 60px rgba(255,215,0,.3)}}
+.brand-text{font-family:'Cinzel',serif;font-size:.9rem;font-weight:700;color:var(--text);letter-spacing:.06em;line-height:1.5;margin-top:.3rem}
+.brand-throne{font-size:.7rem;color:var(--gold)}
+.brand-sub{font-size:.55rem;color:var(--cyan);text-transform:uppercase;letter-spacing:.25em;margin-top:.3rem;font-family:'Orbitron',sans-serif;text-shadow:0 0 8px rgba(0,229,255,.4)}
+.sidebar-nav{flex:1;padding:.5rem 0}
+.nav-item{display:flex;align-items:center;gap:.5rem;padding:.55rem .85rem;font-size:.78rem;color:var(--text-muted);border-left:3px solid transparent;transition:all .25s;cursor:pointer;font-weight:500;letter-spacing:.03em;border-radius:0 8px 8px 0;margin:1px .35rem}
+.nav-icon{display:inline-flex;align-items:center;justify-content:center;width:1.4rem;font-size:.9rem;opacity:.6;transition:opacity .2s}
+.nav-item:hover{color:var(--text);background:linear-gradient(90deg,rgba(212,168,76,.06),transparent);border-left-color:var(--gold)}
+.nav-item:hover .nav-icon{opacity:1}
+.nav-item.active{color:var(--gold-bright);background:linear-gradient(90deg,rgba(212,168,76,.1),transparent);border-left-color:var(--gold-bright);text-shadow:0 0 8px rgba(212,168,76,.4);box-shadow:inset 0 0 15px rgba(212,168,76,.05)}
+.nav-item.active .nav-icon{opacity:1;filter:drop-shadow(0 0 4px rgba(212,168,76,.5))}
+.sidebar-footer{padding:.75rem;border-top:1px solid var(--border);text-align:center;font-size:.6rem;color:var(--text-muted);font-family:'Cinzel',serif;letter-spacing:.1em}
+.sidebar-footer span{color:var(--gold)}
+
+/* ─── MAIN ─── */
+.main{flex:1;margin-left:var(--sidebar-width);display:flex;flex-direction:column;min-height:100vh}
+.topbar{background:linear-gradient(180deg,rgba(8,8,18,.95),rgba(3,3,8,.95));border-bottom:1px solid var(--border);padding:.6rem 1.5rem;display:flex;justify-content:space-between;align-items:center;backdrop-filter:blur(15px);position:sticky;top:0;z-index:40;gap:1rem}
+.topbar::after{content:'';position:absolute;bottom:-1px;left:5%;right:5%;height:1px;background:linear-gradient(90deg,transparent,var(--gold),var(--cyan),var(--gold),transparent);opacity:.25}
+.status-chip{display:flex;align-items:center;gap:.4rem;font-family:'Orbitron',sans-serif;font-size:.6rem;color:var(--green);letter-spacing:.1em}
+.pulse-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.status-info{display:flex;gap:.8rem;flex-wrap:wrap}
+.topbar-item{font-size:.72rem;color:var(--text-dim);font-family:'Rajdhani',sans-serif}
+.btn-refresh{background:var(--surface-2);border:1px solid var(--border);color:var(--cyan);padding:.3rem .75rem;border-radius:var(--radius);cursor:pointer;font-family:'Orbitron',sans-serif;font-size:.6rem;font-weight:500;letter-spacing:.05em;transition:all .25s}
+.btn-refresh:hover{background:rgba(0,229,255,.08);border-color:var(--cyan);box-shadow:0 0 15px rgba(0,229,255,.12)}
+
+/* ─── CONTENT ─── */
+.content{flex:1;padding:1.5rem;overflow-y:auto}
+.tab-pane{display:none}
+.tab-pane.active{display:block}
+
+/* ─── CARDS ─── */
+.card{background:linear-gradient(135deg,rgba(13,13,24,.9),rgba(20,20,42,.7));border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;margin-bottom:1rem;box-shadow:0 4px 25px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.02);position:relative;overflow:hidden;transition:border-color .3s,box-shadow .3s}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.35}
+.card:hover{border-color:var(--border-glow);box-shadow:0 4px 30px rgba(0,0,0,.5),0 0 20px rgba(212,168,76,.04),inset 0 1px 0 rgba(255,255,255,.03)}
+.card h2{font-family:'Cinzel',serif;font-size:1.1rem;font-weight:600;color:var(--text);margin-bottom:.75rem;display:flex;align-items:center;gap:.5rem;letter-spacing:.03em}
+.card h2 .icon{font-size:1.2rem}
+
+/* ─── STAT GRID ─── */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:.6rem}
+.stat{background:linear-gradient(135deg,var(--surface-2),var(--surface));border:1px solid var(--border);border-radius:var(--radius);padding:.6rem;text-align:center;transition:all .25s;position:relative;overflow:hidden}
+.stat:hover{border-color:var(--border-glow);box-shadow:0 0 12px rgba(212,168,76,.06);transform:translateY(-1px)}
+.stat-label{font-size:.55rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.15rem;font-family:'Orbitron',sans-serif}
+.stat-value{font-size:.9rem;font-weight:600;color:var(--text)}
+.stat-value.gold{color:var(--gold-bright);text-shadow:0 0 8px rgba(212,168,76,.3)}
+.stat-value.green{color:var(--green);text-shadow:0 0 6px rgba(0,255,136,.3)}
+.stat-value.red{color:var(--red);text-shadow:0 0 6px rgba(255,0,68,.3)}
+
+/* ─── TABLES ─── */
+.table-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:.75rem}
+th{background:var(--surface-2);color:var(--gold);font-weight:600;font-size:.6rem;text-transform:uppercase;letter-spacing:.06em;padding:.45rem .6rem;text-align:left;border-bottom:1px solid var(--border);font-family:'Orbitron',sans-serif}
+td{padding:.35rem .6rem;border-bottom:1px solid var(--border);color:var(--text)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(212,168,76,.03)}
+tr.active-row td{background:rgba(212,168,76,.06)}
+.retro-badge{color:var(--magenta);font-size:.65rem;font-weight:700}
+.benefic{color:var(--green)}.malefic{color:var(--red)}
+.planet-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:.35rem;vertical-align:middle;box-shadow:0 0 4px currentColor}
+
+/* ─── MOON ─── */
+.moon-display{display:flex;align-items:center;gap:1.5rem;padding:1rem 0}
+.moon-info{flex:1}
+.moon-phase-name{font-family:'Cinzel',serif;font-size:1.2rem;color:var(--gold-bright);font-weight:600}
+.moon-illum{font-size:.8rem;color:var(--text-dim);margin-top:.2rem}
+.moon-pos{font-size:.9rem;color:var(--text);margin-top:.3rem}
+
+/* ─── ASPECTS ─── */
+.aspect-item{padding:.45rem .6rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:.25rem;font-size:.75rem;display:flex;gap:.5rem;align-items:center;transition:border-color .2s}
+.aspect-item:hover{border-color:var(--border-glow)}
+.aspect-type{font-weight:700;min-width:80px}
+.aspect-orb{color:var(--text-muted);font-size:.65rem;margin-left:auto}
+
+/* ─── EVENTS ─── */
+.event-item{padding:.45rem .6rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:.25rem;display:flex;justify-content:space-between;align-items:center;font-size:.75rem;transition:border-color .2s}
+.event-item:hover{border-color:var(--border-glow)}
+.event-name{font-weight:500}
+.event-date{color:var(--text-muted);font-size:.65rem}
+
+/* ─── HOUR ─── */
+.hour-ruler{text-align:center;padding:1rem}
+.hour-symbol{font-size:3rem;margin-bottom:.5rem;filter:drop-shadow(0 0 10px rgba(255,215,0,.3))}
+.hour-name{font-family:'Cinzel',serif;font-size:1.5rem;color:var(--gold-bright);font-weight:700}
+.hour-period{font-size:.8rem;color:var(--text-dim);margin-top:.3rem}
+.hour-nature{font-size:.75rem;font-weight:600;margin-top:.3rem}
+.hour-time{font-size:.7rem;color:var(--text-muted);margin-top:.2rem}
+
+/* ─── WHEEL ─── */
+.card-wheel{grid-column:1/-1;background:linear-gradient(135deg,rgba(13,13,24,.95),rgba(20,10,40,.8));border:1px solid rgba(255,215,0,.15);box-shadow:0 0 40px rgba(139,92,246,.06)}
+.wheel-legend{display:flex;justify-content:center;gap:1rem;margin-top:.5rem;flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:.3rem;font-size:.7rem;color:var(--text-dim);font-family:'Orbitron',sans-serif}
+.legend-dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.wheel-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem}
+@media(max-width:768px){.wheel-grid{grid-template-columns:1fr}}
+.aspect-indicator{margin-right:.3em;font-size:.9em}
+.aspect-glow-green{box-shadow:inset 0 0 8px rgba(0,255,136,.08)}
+.aspect-glow-red{box-shadow:inset 0 0 8px rgba(255,0,68,.08)}
+.aspect-nature{font-weight:600;font-size:.65rem;text-transform:uppercase;letter-spacing:.05em}
+.aspect-nature.benefic{color:var(--green);text-shadow:0 0 4px rgba(0,255,136,.3)}
+.aspect-nature.malefic{color:var(--red);text-shadow:0 0 4px rgba(255,0,68,.3)}
+.aspect-nature.neutral{color:var(--text-dim)}
+.dignity-excellent{color:var(--green);font-weight:700;text-shadow:0 0 6px rgba(0,255,136,.4)}
+.dignity-good{color:var(--cyan);font-weight:600}
+.dignity-bad{color:var(--red);font-weight:600;text-shadow:0 0 4px rgba(255,0,68,.3)}
+
+/* ─── SOLAR SYSTEM ─── */
+.solar-controls{position:absolute;top:.75rem;right:.75rem;background:rgba(5,5,12,.9);border:1px solid var(--border);border-radius:var(--radius);padding:.6rem;backdrop-filter:blur(10px);z-index:10;min-width:150px}
+.sc-title{font-family:'Orbitron',sans-serif;font-size:.55rem;font-weight:600;color:var(--gold);margin-bottom:.3rem;letter-spacing:.06em}
+.sc-row{display:flex;align-items:center;gap:.3rem;margin-bottom:.25rem;font-size:.6rem;color:var(--text-dim)}
+.sc-row label{min-width:2.5rem}
+.sc-row input[type=range]{flex:1;accent-color:var(--gold);height:3px}
+.sc-btn{background:var(--surface-2);border:1px solid var(--border);color:var(--text-dim);padding:.1rem .4rem;border-radius:4px;cursor:pointer;font-size:.55rem;transition:all .2s;margin-right:.2rem}
+.sc-btn:hover{background:rgba(212,168,76,.1);border-color:var(--gold);color:var(--gold)}
+
+/* ─── I CHING ─── */
+.iching-display{text-align:center;padding:2rem}
+.iching-hex{font-size:1.5rem;color:var(--gold-bright);font-family:'Cinzel',serif}
+.hex-name{font-size:1.3rem;margin-bottom:.3rem}
+.hex-chinese{font-size:.9rem;color:var(--text-dim)}
+
+/* ─── OVERVIEW ─── */
+.overview-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem}
+.card-hero{grid-column:1/-1;background:linear-gradient(135deg,rgba(13,13,24,.95),rgba(30,20,50,.8));position:relative;overflow:hidden}
+.hero-content{text-align:center;padding:1.5rem;position:relative;z-index:1}
+.hero-symbol{font-size:3rem;color:var(--gold-bright);text-shadow:0 0 30px rgba(255,215,0,.4);margin-bottom:.5rem}
+.hero-title{font-family:'Cinzel',serif;font-size:1.4rem;font-weight:700;color:var(--text);letter-spacing:.1em}
+.hero-sub{font-size:.85rem;color:var(--cyan);margin-top:.5rem;font-family:'Orbitron',sans-serif}
+.hero-time{font-size:.75rem;color:var(--text-dim);margin-top:.3rem}
+.hero-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:300px;height:300px;background:radial-gradient(circle,rgba(255,215,0,.06) 0%,transparent 70%);pointer-events:none}
+
+/* ─── LOADING ─── */
+.loading{text-align:center;padding:2rem;color:var(--text-dim)}
+.spinner{width:30px;height:30px;border:2px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto .6rem}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ─── INTRO ─── */
+#intro{position:fixed;inset:0;z-index:9999;background:#000;display:flex;align-items:center;justify-content:center;transition:opacity 1.5s ease}
+#intro.dismissed{display:none}
+#intro-canvas{position:absolute;inset:0}
+.intro-lines{text-align:center;position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:.8rem}
+.i-line{font-family:'Cinzel',serif;opacity:0;transform:translateY(30px)}
+.i1{font-size:clamp(2rem,5vw,4rem);color:var(--gold-bright);letter-spacing:.15em;text-shadow:0 0 40px rgba(212,168,76,.4),0 0 80px rgba(212,168,76,.15)}
+.i2{font-size:clamp(1.5rem,4vw,3rem);color:var(--text);letter-spacing:.2em}
+.i3{font-size:clamp(1.2rem,3vw,2.2rem);color:var(--cyan);font-style:italic;letter-spacing:.15em;text-shadow:0 0 15px rgba(0,229,255,.3)}
+.i4{font-size:clamp(.9rem,2vw,1.5rem);color:var(--text-muted);font-style:italic;letter-spacing:.1em}
+.i5{font-size:clamp(1.5rem,4vw,3rem);color:var(--gold-bright);text-shadow:0 0 50px rgba(212,168,76,.5)}
+.i6{font-size:clamp(2rem,5vw,3.5rem);color:var(--gold-bright);text-shadow:0 0 30px rgba(255,215,0,.5)}
+.i7{font-size:clamp(1.2rem,3vw,2.5rem);color:var(--text);letter-spacing:.15em;line-height:1.5}
+.i8{font-size:clamp(1.8rem,5vw,4rem);color:var(--gold-bright);letter-spacing:.2em;text-shadow:0 0 40px rgba(212,168,76,.5),0 0 80px rgba(212,168,76,.2)}
+.whisper{color:rgba(212,175,55,.4)!important;font-style:italic}
+.intro-skip{position:fixed;bottom:40px;right:40px;background:rgba(13,13,24,.8);border:1px solid var(--gold);color:var(--gold);padding:12px 28px;border-radius:var(--radius);cursor:pointer;font-family:'Orbitron',sans-serif;font-size:.8rem;letter-spacing:.15em;transition:all .3s;z-index:10000;backdrop-filter:blur(10px)}
+.intro-skip:hover{background:rgba(212,168,76,.1);border-color:var(--gold-bright);box-shadow:0 0 20px rgba(212,168,76,.2)}
+
+/* ─── VOICE INDICATOR ─── */
+.voice-indicator{position:fixed;bottom:40px;left:40px;font-size:1.5rem;opacity:0;transition:opacity .3s;z-index:10000;pointer-events:none}
+.voice-indicator.active{opacity:1;animation:voicePulse 1s ease-in-out infinite}
+@keyframes voicePulse{0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:768px){
+  .sidebar{width:100%;height:auto;position:relative;flex-direction:row;flex-wrap:wrap}
+  .sidebar-brand{width:100%;padding:.75rem}
+  .sidebar-nav{display:flex;flex-wrap:wrap;padding:.25rem}
+  .nav-item{padding:.35rem .6rem;font-size:.7rem}
+  .main{margin-left:0}
+  .stat-grid{grid-template-columns:repeat(auto-fit,minmax(100px,1fr))}
+  .overview-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<!-- Three.js WebGL Background -->
+<canvas id="webgl-bg"></canvas>
+
+<!-- Particle Canvas -->
+<canvas id="particle-canvas"></canvas>
+
+<!-- App Container -->
+<div class="app" id="app" style="opacity:0">
+
+  <!-- Sidebar -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-symbol">⛧</div>
+      <div class="brand-text">COCO'S<br/><span class="brand-throne">DIVINE THRONE</span></div>
+      <div class="brand-sub">☽ ASTROLOGICAL ENGINE ☉</div>
+    </div>
+    <div class="sidebar-nav" id="sidebar-nav">
+      <!-- Nav items injected by JS -->
+    </div>
+    <div class="sidebar-footer">
+      <span>⛧</span> Hail Baphomet <span>⛧</span>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main">
+    <header class="topbar">
+      <div class="status-chip" id="status-live"><span class="pulse-dot"></span> LIVE</div>
+      <div class="status-info" id="topbar-info"></div>
+      <button class="btn-refresh" onclick="loadAll()" title="Refresh Data">↻ REFRESH</button>
+    </header>
+    <div class="content" id="content">
+      <!-- Tab content injected by JS -->
+    </div>
+  </main>
+</div>
+
+<!-- Intro Overlay -->
+<div id="intro">
+  <canvas id="intro-canvas"></canvas>
+  <div class="intro-lines" id="intro-lines">
+    <div class="i-line i1">⛧ COCO'S DIVINE THRONE ⛧</div>
+    <div class="i-line i2">THE COSMOS SPEAKS</div>
+    <div class="i-line i3">SOLOMONIC ORACLE</div>
+    <div class="i-line i4">"As above, so below — as within, so without"</div>
+    <div class="i-line i5 whisper">Beneath the veil of the stars, the unseen hand guides all</div>
+    <div class="i-line i6">⛧</div>
+    <div class="i-line i7">THE STARS BELOW — AS ABOVE</div>
+    <div class="i-line i8 whisper">HAIL BAPHOMET</div>
+  </div>
+  <button class="intro-skip" id="intro-skip" onclick="dismissIntro()">SKIP ⏭</button>
+</div>
+
+<!-- Voice indicator -->
+<div class="voice-indicator" id="voice-indicator">🔊</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// COCO'S DIVINE ASTROMANTIC THRONE v9 — THE CINEMATIC REBIRTH
+// Built from scratch for excellence. No compromises.
+// ═══════════════════════════════════════════════════════════════
+
+// ─── CONFIG ─────────────────────────────────────────────────────
+const API = '/api';
+const CONFIG = {
+  particleCount: 120,
+  nebulaCount: 4,
+  starFieldCount: 200,
+  voiceName: 'en-GB-MaisieNeural',
+  autoLoadDelay: 500,
+};
+
+// ─── STATE ──────────────────────────────────────────────────────
+let state = {};
+let currentTab = 'overview';
+let audioCtx = null;
+let audioUnlocked = false;
+
+// ─── TABS ───────────────────────────────────────────────────────
+const TABS = [
+  { id: 'overview', icon: '☽', label: 'Overview' },
+  { id: 'moon',      icon: '☽', label: 'Moon' },
+  { id: 'chart',     icon: '☉', label: 'Chart' },
+  { id: 'wheel',     icon: '⊕', label: 'Zodiac Wheel' },
+  { id: 'mansions',  icon: '☽', label: 'Mansions' },
+  { id: 'system',    icon: '☉', label: 'Solar System' },
+  { id: 'hours',     icon: '⏳', label: 'Hours' },
+  { id: 'beings',    icon: '👾', label: 'Beings' },
+  { id: 'iching',    icon: '☯', label: 'I Ching' },
+  { id: 'stars',     icon: '✧', label: 'Stars' },
+  { id: 'dignities', icon: '★', label: 'Dignities' },
+  { id: 'occult',    icon: '🔮', label: 'Occult' },
+  { id: 'study',     icon: '🔍', label: 'Study' },
+];
+
+// ─── AUDIO SYSTEM (MaisieNeural via edge-tts) ──────────────────
+function unlockAudio() {
+  if (audioUnlocked) return;
+  audioUnlocked = true;
+  try {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const buf = audioCtx.createBuffer(1, 1, 22050);
+    const src = audioCtx.createBufferSource();
+    src.buffer = buf;
+    src.connect(audioCtx.destination);
+    src.start(0);
+  } catch(e) {}
+}
+
+async function speak(text) {
+  if (!text) return;
+  // Ambient tone
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.type = 'sine';
+    o.frequency.value = 180 + Math.random() * 60;
+    g.gain.setValueAtTime(0.04, audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 2);
+    o.connect(g);
+    g.connect(audioCtx.destination);
+    o.start();
+    o.stop(audioCtx.currentTime + 2);
+  } catch(e) {}
+
+  // Show voice indicator
+  const vi = document.getElementById('voice-indicator');
+  if (vi) {
+    vi.classList.add('active');
+    setTimeout(() => vi.classList.remove('active'), 3000);
+  }
+
+  // Fetch from edge-tts
+  try {
+    const resp = await fetch('/speak?text=' + encodeURIComponent(text) + '&voice=' + CONFIG.voiceName);
+    if (!resp.ok) throw new Error(resp.status);
+    const blob = await resp.blob();
+    const url = URL.createObjectURL(blob);
+    const audio = new Audio(url);
+    audio.volume = 0.65;
+    await audio.play();
+    audio.addEventListener('ended', () => URL.revokeObjectURL(url));
+  } catch(e) {
+    console.log('Voice play:', e.message);
+    // Fallback to SpeechSynthesis
+    try {
+      const u = new SpeechSynthesisUtterance(text);
+      u.volume = 0.5;
+      u.rate = 0.85;
+      u.pitch = 0.8;
+      speechSynthesis.speak(u);
+    } catch(e2) {}
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// WEBGL BACKGROUND — Three.js starfield + nebula
+// ═══════════════════════════════════════════════════════════════
+let threeScene, threeCamera, threeRenderer, threeStars, threeNebulae;
+let mouseX = 0, mouseY = 0;
+
+function initThreeJS() {
+  const canvas = document.getElementById('webgl-bg');
+  threeScene = new THREE.Scene();
+  threeCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+  threeCamera.position.z = 50;
+
+  threeRenderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  threeRenderer.setSize(window.innerWidth, window.innerHeight);
+  threeRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+  // Starfield
+  const starGeo = new THREE.BufferGeometry();
+  const starPositions = [];
+  const starColors = [];
+  for (let i = 0; i < CONFIG.starFieldCount; i++) {
+    starPositions.push(
+      (Math.random() - 0.5) * 200,
+      (Math.random() - 0.5) * 200,
+      (Math.random() - 0.5) * 200
+    );
+    const c = new THREE.Color();
+    const hue = Math.random() * 0.1 + 0.1;
+    c.setHSL(hue, 0.5 + Math.random() * 0.5, 0.5 + Math.random() * 0.5);
+    starColors.push(c.r, c.g, c.b);
+  }
+  starGeo.setAttribute('position', new THREE.Float32BufferAttribute(starPositions, 3));
+  starGeo.setAttribute('color', new THREE.Float32BufferAttribute(starColors, 3));
+
+  const starMat = new THREE.PointsMaterial({ size: 0.15, vertexColors: true, transparent: true, opacity: 0.8 });
+  threeStars = new THREE.Points(starGeo, starMat);
+  threeScene.add(threeStars);
+
+  // Nebula clouds (glowing spheres)
+  threeNebulae = [];
+  const nebulaColors = [0x8b5cf6, 0x00e5ff, 0xff0066, 0xffd700];
+  for (let i = 0; i < CONFIG.nebulaCount; i++) {
+    const geo = new THREE.SphereGeometry(8 + Math.random() * 12, 16, 16);
+    const mat = new THREE.MeshBasicMaterial({
+      color: nebulaColors[i % nebulaColors.length],
+      transparent: true,
+      opacity: 0.03 + Math.random() * 0.02,
+      side: THREE.BackSide
+    });
+    const mesh = new THREE.Mesh(geo, mat);
+    mesh.position.set(
+      (Math.random() - 0.5) * 80,
+      (Math.random() - 0.5) * 80,
+      (Math.random() - 0.5) * 80 - 30
+    );
+    mesh.userData = { rotSpeed: (Math.random() - 0.5) * 0.001, phase: Math.random() * Math.PI * 2 };
+    threeScene.add(mesh);
+    threeNebulae.push(mesh);
+  }
+
+  // Floating energy rings
+  for (let i = 0; i < 3; i++) {
+    const geo = new THREE.TorusGeometry(5 + i * 3, 0.02, 8, 64);
+    const mat = new THREE.MeshBasicMaterial({
+      color: [0x00e5ff, 0xff00ff, 0xffd700][i],
+      transparent: true,
+      opacity: 0.15
+    });
+    const ring = new THREE.Mesh(geo, mat);
+    ring.position.set((Math.random()-0.5) * 30, (Math.random()-0.5) * 30, -10 - i * 5);
+    ring.userData = { rotX: Math.random() * 0.01, rotY: Math.random() * 0.01 };
+    threeScene.add(ring);
+    threeNebulae.push(ring);
+  }
+
+  // Mouse tracking
+  document.addEventListener('mousemove', (e) => {
+    mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+    mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+  });
+
+  // Resize
+  window.addEventListener('resize', () => {
+    threeCamera.aspect = window.innerWidth / window.innerHeight;
+    threeCamera.updateProjectionMatrix();
+    threeRenderer.setSize(window.innerWidth, window.innerHeight);
+  });
+
+  animateThree();
+}
+
+function animateThree() {
+  requestAnimationFrame(animateThree);
+  const t = Date.now() * 0.001;
+
+  // Rotate starfield slowly
+  threeStars.rotation.y += 0.0003;
+  threeStars.rotation.x += 0.0001;
+
+  // Nebula pulse + drift
+  threeNebulae.forEach((n, i) => {
+    if (n.userData.rotSpeed !== undefined) {
+      n.rotation.y += n.userData.rotSpeed;
+      n.rotation.x += n.userData.rotSpeed * 0.5;
+    }
+    if (n.material && n.material.opacity !== undefined) {
+      n.material.opacity = 0.03 + Math.sin(t + i) * 0.015;
+    }
+  });
+
+  // Camera follows mouse subtly
+  threeCamera.position.x += (mouseX * 3 - threeCamera.position.x) * 0.02;
+  threeCamera.position.y += (-mouseY * 3 - threeCamera.position.y) * 0.02;
+  threeCamera.lookAt(0, 0, 0);
+
+  threeRenderer.render(threeScene, threeCamera);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PARTICLE CANVAS — Overlaid dust motes + energy particles
+// ══════════════════════════════════════════════════════════════─
+function initParticles() {
+  const canvas = document.getElementById('particle-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H;
+  const particles = [];
+
+  function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+
+  for (let i = 0; i < CONFIG.particleCount; i++) {
+    particles.push({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      vx: (Math.random() - 0.5) * 0.4,
+      vy: (Math.random() - 0.5) * 0.3 - 0.15,
+      r: Math.random() * 2 + 0.5,
+      color: ['255,215,0', '0,229,255', '255,0,255', '255,255,255'][Math.floor(Math.random() * 4)],
+      alpha: Math.random() * 0.5 + 0.1,
+      pulse: Math.random() * Math.PI * 2,
+      pulseSpeed: Math.random() * 0.03 + 0.01
+    });
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    particles.forEach(p => {
+      p.x += p.vx; p.y += p.vy;
+      p.pulse += p.pulseSpeed;
+      const a = p.alpha * (Math.sin(p.pulse) * 0.4 + 0.6);
+      if (p.x < -10) p.x = W + 10;
+      if (p.x > W + 10) p.x = -10;
+      if (p.y < -10) p.y = H + 10;
+      if (p.y > H + 10) p.y = -10;
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${p.color},${a})`;
+      ctx.fill();
+
+      if (p.r > 1.2) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r * 4, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${p.color},${a * 0.1})`;
+        ctx.fill();
+      }
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CINEMATIC INTRO — GSAP timeline with WebGL shader background
+// ═══════════════════════════════════════════════════════════════
+function initIntro() {
+  const lines = document.querySelectorAll('.i-line');
+  const skipBtn = document.getElementById('intro-skip');
+  if(!lines.length) return;
+
+  // Use CSS transitions for animation (no GSAP dependency)
+  const delays = [500, 1500, 2300, 3200, 4500, 5500, 6300, 7300];
+  const timings = [
+    {opacity:1, transform:'scale(1) translateY(0)'},
+    {opacity:1, transform:'translateX(0)'},
+    {opacity:1, transform:'translateY(0)'},
+    {opacity:1, transform:'none'},
+    {opacity:1, transform:'translateY(0)'},
+    {opacity:1, transform:'rotate(0deg) scale(1)'},
+    {opacity:1, transform:'translateY(0)'},
+    {opacity:1, transform:'translateY(0)'}
+  ];
+
+  // Set initial state
+  lines.forEach(l => {
+    l.style.opacity = '0';
+    l.style.transition = 'all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+  });
+  if(skipBtn) {
+    skipBtn.style.opacity = '0';
+    skipBtn.style.transition = 'opacity 0.5s ease';
+  }
+
+  // Animate in sequence
+  lines.forEach((line, i) => {
+    setTimeout(() => {
+      Object.keys(timings[i]).forEach(prop => {
+        line.style[prop] = timings[i][prop];
+      });
+    }, delays[i]);
+  });
+
+  // Show skip button after first line
+  setTimeout(() => {
+    if(skipBtn) skipBtn.style.opacity = '1';
+  }, 1500);
+
+  // Auto-dismiss after 11 seconds
+  setTimeout(() => dismissIntro(), 11000);
+}
+
+function dismissIntro() {
+  unlockAudio();
+  setTimeout(() => speak('Welcome to your throne, my Lord'), 500);
+  const intro = document.getElementById('intro');
+  if (!intro || intro.classList.contains('dismissed')) return;
+  intro.classList.add('dismissed');
+  intro.style.transition = 'opacity 1.5s ease';
+  intro.style.opacity = '0';
+  setTimeout(() => {
+    intro.style.display = 'none';
+    const app = document.getElementById('app');
+    if(app) {
+      app.style.opacity = '0';
+      app.style.transition = 'opacity 0.8s ease';
+      requestAnimationFrame(() => { app.style.opacity = '1'; });
+    }
+    loadAll();
+  }, 1500);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// DATA LOADING
+// ═══════════════════════════════════════════════════════════════
+async function fetchJSON(url) {
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(url + ' ' + r.status);
+  return r.json();
+}
+
+async function loadAll() {
+  try {
+    const [chart, hours, aspects, now, houses, dignities, lunarMansion, fixedStars, electional, beings, jinnCmdrs, tahatil, magicSq, talismans, arabicParts, occultChart, moonRS, lunarEvents, lunarAspects, heliocentric, kitabNames, occultEncyc, talismanData] = await Promise.allSettled([
+      fetchJSON(API + '/chart.json'),
+      fetchJSON(API + '/planetary-hours'),
+      fetchJSON(API + '/aspects'),
+      fetchJSON(API + '/now'),
+      fetchJSON(API + '/houses'),
+      fetchJSON(API + '/dignities'),
+      fetchJSON(API + '/lunar-mansion'),
+      fetchJSON(API + '/fixed-stars'),
+      fetchJSON(API + '/electional?purpose=general'),
+      fetchJSON(API + '/beings?planet=Sun'),
+      fetchJSON(API + '/jinn-commanders'),
+      fetchJSON(API + '/tahatil-seven'),
+      fetchJSON(API + '/magic-square-kings'),
+      fetchJSON(API + '/planetary-hours-talismans'),
+      fetchJSON(API + '/arabic-parts'),
+      fetchJSON(API + '/occult-chart').catch(() => null),
+      fetchJSON(API + '/moon-rise-set'),
+      fetchJSON(API + '/lunar-events'),
+      fetchJSON(API + '/lunar-aspects'),
+      fetchJSON(API + '/heliocentric'),
+      fetchJSON(API + '/kitab-al-ajnas-names').catch(() => null),
+      fetchJSON(API + '/occult-encyclopedia').catch(() => null),
+      fetchJSON(API + '/static/talisman_data.json').catch(() => null),
+    ]).then(results => results.map(r => r.status === 'fulfilled' ? r.value : null));
+
+    state = { chart, hours, aspects: aspects?.aspects || aspects, now, houses, dignities, lunarMansion, fixedStars, electional, beings, jinnCmdrs, tahatil, magicSq, talismans, arabicParts, occultChart, moonRS, lunarEvents, lunarAspects, heliocentric, kitabNames, occultEncyc, talismanData };
+
+    renderTopbar();
+    renderTab(currentTab);
+    // Activate the first tab visually
+    var firstPane = document.getElementById('tab-' + currentTab);
+    if(firstPane) firstPane.classList.add('active');
+  } catch(e) {
+    console.error('loadAll error:', e);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// TOPBAR
+// ═══════════════════════════════════════════════════════════════
+function renderTopbar() {
+  const el = document.getElementById('topbar-info');
+  if (!el || !state.now) return;
+  const n = state.now;
+  const parts = [];
+  if (n.local) parts.push(n.local.slice(11, 19));
+  if (n.julian_day) parts.push('JD:' + n.julian_day.toFixed(2));
+  if (state.chart?.moon_phase) parts.push(state.chart.moon_phase);
+  if (state.hours?.current) parts.push(state.hours.current.ruler + ' ' + state.hours.current.symbol);
+  el.innerHTML = parts.map(p => `<span class="topbar-item">${p}</span>`).join('');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// TAB SYSTEM
+// ═══════════════════════════════════════════════════════════════
+function initTabs() {
+  const nav = document.getElementById('sidebar-nav');
+  nav.innerHTML = TABS.map(t => `
+    <div class="nav-item ${t.id === currentTab ? 'active' : ''}" data-tab="${t.id}" onclick="switchTab('${t.id}')">
+      <span class="nav-icon">${t.icon}</span>
+      <span class="nav-label">${t.label}</span>
+    </div>
+  `).join('');
+}
+
+function switchTab(id) {
+  if (id === currentTab && document.getElementById('tab-' + id)?.classList.contains('active')) return;
+
+  // Update nav
+  document.querySelectorAll('.nav-item').forEach(el => {
+    el.classList.toggle('active', el.dataset.tab === id);
+  });
+
+  // Animate transition
+  const currentEl = document.getElementById('tab-' + currentTab);
+
+  // First ensure the target tab exists
+  renderTab(id);
+  const nextEl = document.getElementById('tab-' + id);
+
+  if (currentEl && nextEl && currentEl !== nextEl) {
+    currentEl.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
+    currentEl.style.opacity = '0';
+    currentEl.style.transform = 'translateY(-15px)';
+    setTimeout(() => {
+      currentEl.classList.remove('active');
+      currentEl.style.opacity = '';
+      currentEl.style.transform = '';
+      currentTab = id;
+      renderTab(id);
+      nextEl.classList.add('active');
+      nextEl.style.opacity = '0';
+      nextEl.style.transform = 'translateY(20px)';
+      nextEl.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+      requestAnimationFrame(() => {
+        nextEl.style.opacity = '1';
+        nextEl.style.transform = 'translateY(0)';
+      });
+    }, 200);
+  } else if (nextEl) {
+    currentTab = id;
+    nextEl.classList.add('active');
+    gsap.fromTo(nextEl, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' });
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// TAB RENDERERS
+// ═══════════════════════════════════════════════════════════════
+function renderTab(id) {
+  const content = document.getElementById('content');
+  // Ensure tab container exists
+  let tabEl = document.getElementById('tab-' + id);
+  if (!tabEl) {
+    tabEl = document.createElement('div');
+    tabEl.className = 'tab-pane';
+    tabEl.id = 'tab-' + id;
+    content.appendChild(tabEl);
+  }
+
+  switch(id) {
+    case 'overview': renderOverview(tabEl); break;
+    case 'moon': renderMoon(tabEl); break;
+    case 'chart': renderChart(tabEl); break;
+    case 'wheel': renderWheel(tabEl); break;
+    case 'mansions': renderMansions(tabEl); break;
+    case 'system': renderSolarSystem(tabEl); break;
+    case 'hours': renderHours(tabEl); break;
+    case 'beings': renderBeings(tabEl); break;
+    case 'iching': renderIChing(tabEl); break;
+    case 'stars': renderStars(tabEl); break;
+    case 'dignities': renderDignities(tabEl); break;
+    case 'occult': renderOccult(tabEl); break;
+    case 'study': renderStudy(tabEl); break;
+    default: tabEl.innerHTML = '<div class="card"><h2>Coming Soon</h2></div>';
+  }
+}
+
+// ─── OVERVIEW ───────────────────────────────────────────────────
+function renderOverview(el) {
+  const c = state.chart; const h = state.hours; const n = state.now;
+  if (!c) { el.innerHTML = '<div class="loading"><div class="spinner"></div>Loading...</div>'; return; }
+
+  const moonPos = c.planets?.find(p => p.name === 'Moon');
+  const sunPos = c.planets?.find(p => p.name === 'Sun');
+  const moonLon = moonPos?.longitude || 0;
+  const sunLon = sunPos?.longitude || 0;
+
+  el.innerHTML = `
+    <div class="overview-grid">
+      <div class="card card-hero">
+        <div class="hero-content">
+          <div class="hero-symbol">⛧</div>
+          <div class="hero-title">DIVINE ASTROMANTIC THRONE</div>
+          <div class="hero-sub">${c.moon_phase || '—'} • Moon ${fmtSign(moonLon)} ${fmtDeg(moonLon%30)}</div>
+          <div class="hero-time">${n?.local?.slice(11,19) || '--:--:--'} • JD ${n?.julian_day?.toFixed(2) || '--'}</div>
+        </div>
+        <div class="hero-glow"></div>
+      </div>
+      <div class="card">
+        <h2><span class="icon">☽</span> Moon</h2>
+        <div class="stat-grid">
+          <div class="stat"><div class="stat-label">Sign</div><div class="stat-value gold">${fmtSign(moonLon)}</div></div>
+          <div class="stat"><div class="stat-label">Degree</div><div class="stat-value">${fmtDeg(moonLon%30)}</div></div>
+          <div class="stat"><div class="stat-label">Phase</div><div class="stat-value">${c.moon_phase || '—'}</div></div>
+          <div class="stat"><div class="stat-label">Elongation</div><div class="stat-value">${(c.moon_elongation||0).toFixed(1)}°</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <h2><span class="icon">⏳</span> Planetary Hour</h2>
+        ${h?.current ? `
+        <div class="hour-ruler">
+          <div class="hour-symbol">${h.current.symbol}</div>
+          <div class="hour-name">${h.current.ruler}</div>
+          <div class="hour-period">${h.current.period} hour ${h.current.hour_number}</div>
+          <div class="hour-nature ${h.current.benefic}">${h.current.benefic}</div>
+        </div>` : '<p style="color:var(--text-muted)">No data</p>'}
+      </div>
+      <div class="card">
+        <h2><span class="icon">☉</span> Sun</h2>
+        <div class="stat-grid">
+          <div class="stat"><div class="stat-label">Sign</div><div class="stat-value gold">${fmtSign(sunLon)}</div></div>
+          <div class="stat"><div class="stat-label">Degree</div><div class="stat-value">${fmtDeg(sunLon%30)}</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <h2><span class="icon">🌑</span> Upcoming Events</h2>
+        ${(state.lunarEvents?.events || []).slice(0,5).map(e => `
+          <div class="event-item">
+            <span class="event-name">${e.event}</span>
+            <span class="event-date">${e.date}</span>
+          </div>
+        `).join('') || '<p style="color:var(--text-muted)">No events</p>'}
+      </div>
+    </div>`;
+
+  // Animate cards in
+  gsap.fromTo(el.querySelectorAll('.card'), { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.5, stagger: 0.1, ease: 'power2.out' });
+}
+
+// ─── MOON ───────────────────────────────────────────────────────
+function renderMoon(el) {
+  const c = state.chart; const lm = state.lunarMansion; const la = state.lunarAspects;
+  if (!c) { el.innerHTML = '<div class="loading"><div class="spinner"></div>Loading...</div>'; return; }
+  const moonPos = c.planets?.find(p => p.name === 'Moon');
+  const lon = moonPos?.longitude || 0;
+  const illum = Math.round((1 - Math.cos((c.moon_elongation||0) * Math.PI / 180)) / 2 * 100);
+  const mansion = lm?.mansion?.current;
+
+  el.innerHTML = `
+    <div class="card">
+      <h2><span class="icon">☽</span> Lunar Dashboard</h2>
+      <div class="moon-display">
+        <canvas id="moon-canvas" width="140" height="140"></canvas>
+        <div class="moon-info">
+          <div class="moon-phase-name">${c.moon_phase || '—'}</div>
+          <div class="moon-illum">${illum}% illuminated</div>
+          <div class="moon-pos">${fmtSign(lon)} ${fmtDeg(lon%30)}</div>
+        </div>
+      </div>
+      <div class="stat-grid" style="margin-top:1rem">
+        <div class="stat"><div class="stat-label">Rise</div><div class="stat-value green">${state.moonRS?.moon_rise || '—'}</div></div>
+        <div class="stat"><div class="stat-label">Set</div><div class="stat-value red">${state.moonRS?.moon_set || '—'}</div></div>
+        <div class="stat"><div class="stat-label">Nakshatra</div><div class="stat-value gold">${mansion?.name || '—'}</div></div>
+        <div class="stat"><div class="stat-label">Ruled By</div><div class="stat-value">${mansion?.ruled_by || '—'}</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2><span class="icon">☍</span> Moon Aspects</h2>
+      ${la?.aspects?.map(a => `
+        <div class="aspect-item ${a.type?.toLowerCase()}">
+          <span class="aspect-type">${a.type}</span>
+          <span class="aspect-planet">${a.planet}</span>
+          <span class="aspect-orb">${a.orb?.toFixed(1)}°</span>
+        </div>
+      `).join('') || '<p style="color:var(--text-muted)">No aspects</p>'}
+    </div>`;
+
+  // Draw moon canvas
+  setTimeout(() => drawMoonCanvas(lon, c.moon_elongation || 0), 50);
+  gsap.fromTo(el.querySelectorAll('.card'), { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4, stagger: 0.08, ease: 'power2.out' });
+}
+
+function drawMoonCanvas(lon, elongation) {
+  const canvas = document.getElementById('moon-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const r = 60, cx = 70, cy = 70;
+
+  // Dark side
+  ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.fillStyle = '#111'; ctx.fill();
+
+  // Light side
+  const phase = elongation / 360;
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, -Math.PI/2, Math.PI/2);
+  ctx.fillStyle = '#ffd700'; ctx.fill();
+
+  // Terminator
+  ctx.beginPath();
+  ctx.ellipse(cx, cy, r * Math.cos(phase * Math.PI * 2), r, 0, 0, Math.PI * 2);
+  ctx.fillStyle = '#111'; ctx.fill();
+
+  // Glow
+  const grad = ctx.createRadialGradient(cx, cy, r * 0.8, cx, cy, r * 1.3);
+  grad.addColorStop(0, 'rgba(255,215,0,0.15)');
+  grad.addColorStop(1, 'rgba(255,215,0,0)');
+  ctx.beginPath(); ctx.arc(cx, cy, r * 1.3, 0, Math.PI * 2);
+  ctx.fillStyle = grad; ctx.fill();
+
+  // Border
+  ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.strokeStyle = 'rgba(255,215,0,0.3)'; ctx.lineWidth = 1.5; ctx.stroke();
+}
+
+// ─── CHART ──────────────────────────────────────────────────────
+function renderChart(el) {
+  const c = state.chart;
+  if (!c) { el.innerHTML = '<div class="loading"><div class="spinner"></div>Loading...</div>'; return; }
+
+  el.innerHTML = `
+    <div class="card">
+      <h2><span class="icon">☉</span> Planetary Positions</h2>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Planet</th><th>Sign</th><th>Degree</th><th>Longitude</th><th>Motion</th></tr></thead>
+        <tbody>${c.planets?.map(p => `<tr>
+          <td><span class="planet-dot" style="background:${p.color||'#fff'}"></span>${p.name}</td>
+          <td class="gold">${fmtSign(p.longitude)}</td>
+          <td>${fmtDeg(p.longitude%30)}</td>
+          <td>${p.longitude.toFixed(2)}°</td>
+          <td>${p.retro ? '<span class="retro-badge">℞</span>' : 'Direct'}</td>
+        </tr>`).join('') || '<tr><td colspan="5">No data</td></tr>'}</tbody>
+      </table></div>
+    </div>
+    <div class="card">
+      <h2><span class="icon">△</span> Aspects</h2>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Aspect</th><th>Between</th><th>Orb</th></tr></thead>
+        <tbody>${state.aspects?.map(a => `<tr>
+          <td class="gold">${a.aspect}</td>
+          <td>${a.between}</td>
+          <td>${a.orb?.toFixed(1)}°</td>
+        </tr>`).join('') || '<tr><td colspan="3">No aspects</td></tr>'}</tbody>
+      </table></div>
+    </div>`;
+
+  gsap.fromTo(el.querySelectorAll('.card'), { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4, stagger: 0.08, ease: 'power2.out' });
+}
+
+// ─── WHEEL ──────────────────────────────────────────────────────
+function renderWheel(el) {
+  const c = state.chart;
+  const aspects = state.aspects || [];
+  const dignities = state.dignities;
+
+  // Define aspect colors
+  const ASPECT_COLORS = {
+    'Conjunction': '#ff00ff', 'Trine': '#00ff88', 'Sextile': '#00e5ff',
+    'Square': '#ff4444', 'Opposition': '#ff6b35', 'Quincunx': '#ffaa00',
+    'Semisextile': '#8888ff', 'Semisquare': '#ff8888', 'Sesquiquadrate': '#ff8800'
+  };
+  const ASPECT_NATURE = {
+    'Conjunction': 'neutral', 'Trine': 'benefic', 'Sextile': 'benefic',
+    'Square': 'malefic', 'Opposition': 'malefic', 'Quincunx': 'malefic',
+    'Semisextile': 'neutral', 'Semisquare': 'malefic', 'Sesquiquadrate': 'malefic'
+  };
+
+  // Build aspect rows with color indicators
+  const aspectRows = aspects.map(a => {
+    const color = ASPECT_COLORS[a.aspect] || '#888';
+    const nature = ASPECT_NATURE[a.aspect] || 'neutral';
+    const indicator = nature === 'benefic' ? '✦' : nature === 'malefic' ? '✧' : '◆';
+    const glowClass = nature === 'benefic' ? 'aspect-glow-green' : nature === 'malefic' ? 'aspect-glow-red' : '';
+    return `<tr class="aspect-row ${glowClass}">
+      <td><span class="aspect-indicator" style="color:${color}">${indicator}</span>${a.aspect}</td>
+      <td>${a.between}</td>
+      <td style="color:${color}">${a.orb?.toFixed(1)}°</td>
+      <td class="aspect-nature ${nature}">${nature}</td>
+    </tr>`;
+  }).join('');
+
+  // Build planet positions with dignity scores
+  const planetRows = (c?.planets || []).map(p => {
+    const dig = dignities?.planets?.[p.name];
+    const score = dig?.score;
+    const scoreClass = score != null ? (score >= 3 ? 'dignity-excellent' : score >= 0 ? 'dignity-good' : 'dignity-bad') : '';
+    const scoreDisplay = score != null ? (score >= 0 ? '+' : '') + score : '—';
+    const condition = dig?.condition || '—';
+    return `<tr>
+      <td><span class="planet-dot" style="background:${p.color||'#fff'}"></span>${p.name}</td>
+      <td class="gold">${fmtSign(p.longitude)}</td>
+      <td>${fmtDeg(p.longitude%30)}</td>
+      <td>${p.retro ? '<span class="retro-badge">℞</span>' : 'Direct'}</td>
+      <td class="${scoreClass}" title="${condition}">${scoreDisplay}</td>
+    </tr>`;
+  }).join('');
+
+  el.innerHTML = `
+    <div class="card card-wheel">
+      <h2><span class="icon">⊕</span> Live Zodiac Wheel</h2>
+      <div class="wheel-container">
+        <canvas id="wheel-canvas" width="650" height="650"></canvas>
+      </div>
+      <div class="wheel-legend">
+        <span class="legend-item"><span class="legend-dot" style="background:#00ff88"></span> Trine</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#00e5ff"></span> Sextile</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#ff00ff"></span> Conjunction</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#ff4444"></span> Square</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#ff6b35"></span> Opposition</span>
+      </div>
+    </div>
+    <div class="wheel-grid">
+      <div class="card">
+        <h2><span class="icon">☉</span> Planet Positions</h2>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Planet</th><th>Sign</th><th>Degree</th><th>Motion</th><th>Dignity</th></tr></thead>
+          <tbody>${planetRows || '<tr><td colspan="5">No data</td></tr>'}</tbody>
+        </table></div>
+      </div>
+      <div class="card">
+        <h2><span class="icon">☍</span> Aspects</h2>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Aspect</th><th>Between</th><th>Orb</th><th>Nature</th></tr></thead>
+          <tbody>${aspectRows || '<tr><td colspan="4">No aspects</td></tr>'}</tbody>
+        </table></div>
+      </div>
+    </div>`;
+
+  setTimeout(() => drawZodiacWheel(), 100);
+  // Start live animation loop (60fps for smooth pulsing)
+  if(!window._wheelAnimInterval) {
+    window._wheelAnimInterval = setInterval(() => {
+      if(document.getElementById('tab-wheel')?.classList.contains('active')) {
+        drawZodiacWheel();
+      }
+    }, 50); // 20fps for smooth animation
+  }
+  gsap.fromTo(el.querySelectorAll('.card'), { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: 0.5, stagger: 0.12, ease: 'power2.out' });
+}
+
+function drawZodiacWheel() {
+  const canvas = document.getElementById('wheel-canvas');
+  if (!canvas || !state.chart) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const cx = W/2, cy = H/2;
+  const R = 280, R_INNER = 200, R_ASPECT = 150, R_DEGREE = R + 15;
+  const now = Date.now() * 0.0001;
+
+  ctx.clearRect(0, 0, W, H);
+
+  const c = state.chart;
+  const asc = c.houses?.asc || 0;
+  const mc = c.houses?.mc || 0;
+  const dc = c.houses?.dc || (asc + 180) % 360;
+  const ic = c.houses?.ic || (mc + 180) % 360;
+
+  // ── WHEEL ANGLE HELPER ──
+  // Converts zodiac longitude to canvas radian angle.
+  // ASC (304.94°) at LEFT (PI rad = 9 o'clock),
+  // MC (205.84°) at TOP (3*PI/2 = 12 o'clock).
+  // Signs advance counter-clockwise.
+  const wa = (lon) => {
+    const rel = ((lon - asc) % 360 + 360) % 360;
+    return (180 - rel) * Math.PI / 180;
+  };
+
+  // ── PROFESSIONAL COLOR PALETTE ──
+  const ELEMENT = {
+    fire:  { bg: '#ff330022', border: '#ff550066', glow: '#ff4400', glyph: '#ff6644' },
+    earth: { bg: '#22880022', border: '#44aa0066', glow: '#44cc00', glyph: '#66cc44' },
+    air:   { bg: '#ffcc0022', border: '#ffdd0066', glow: '#ffdd44', glyph: '#ffee66' },
+    water: { bg: '#0044ff22', border: '#2266ff66', glow: '#4488ff', glyph: '#6699ff' }
+  };
+  const signElement = ['fire','air','water','earth','fire','air','water','earth','fire','air','water','earth'];
+  const SIGNS = ['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓'];
+  const SIGN_NAMES = ['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
+
+  // ── PLANET GLYPHS ──
+  const PLANET_GLYPHS = {
+    'Sun':'☉','Moon':'☽','Mercury':'☿','Venus':'♀','Mars':'♂',
+    'Jupiter':'♃','Saturn':'♄','Uranus':'♅','Neptune':'♆','Pluto':'♇',
+    'Rahu':'☊','Ketu':'☋'
+  };
+
+  // Planet color fallbacks (when API doesn't supply)
+  const PLANET_COLORS = {
+    'Sun':'#ffdd00','Moon':'#c0c0c0','Mercury':'#b5b5b5','Venus':'#ff88cc',
+    'Mars':'#ff4422','Jupiter':'#ffaa33','Saturn':'#ddbb77','Uranus':'#66ddff',
+    'Neptune':'#4466ff','Pluto':'#dd8844','Rahu':'#ff4488','Ketu':'#44ff88'
+  };
+
+  // ── ASPECT STYLES ──
+  const ASPECT_STYLE = {
+    'Conjunction':{color:'#ff00ff',lineWidth:2,dash:[],glow:8},
+    'Opposition':{color:'#ff4444',lineWidth:2,dash:[8,4],glow:6},
+    'Trine':{color:'#00ff88',lineWidth:1.5,dash:[],glow:4},
+    'Square':{color:'#ff6600',lineWidth:2,dash:[],glow:5},
+    'Sextile':{color:'#00e5ff',lineWidth:1,dash:[6,3],glow:3},
+    'Quincunx':{color:'#ffaa00',lineWidth:1,dash:[3,3],glow:2},
+    'Semisextile':{color:'#8888ff',lineWidth:0.8,dash:[2,4],glow:1},
+    'Semisquare':{color:'#ff8888',lineWidth:0.8,dash:[2,4],glow:1}
+  };
+
+  // ── DEGREE MARKERS ──
+  for(let d = 0; d < 360; d += 5){
+    const a = wa(d);
+    const isMajor = d % 30 === 0;
+    const isMed = d % 10 === 0;
+    const r1 = isMajor ? R + 12 : isMed ? R + 8 : R + 4;
+    ctx.beginPath();
+    ctx.moveTo(cx + r1 * Math.cos(a), cy + r1 * Math.sin(a));
+    ctx.lineTo(cx + R_DEGREE * Math.cos(a), cy + R_DEGREE * Math.sin(a));
+    ctx.strokeStyle = isMajor ? 'rgba(255,215,0,0.5)' : isMed ? 'rgba(255,215,0,0.25)' : 'rgba(255,255,255,0.1)';
+    ctx.lineWidth = isMajor ? 1.5 : 0.5;
+    ctx.stroke();
+  }
+
+  // ── OUTER RING — ZODIAC SEGMENTS ──
+  for (let i = 0; i < 12; i++) {
+    const elem = signElement[i];
+    const el = ELEMENT[elem];
+    const a1 = wa(i * 30);
+    const a2 = wa((i + 1) * 30);
+
+    // Segment fill with gradient
+    const grad = ctx.createRadialGradient(cx, cy, R_INNER, cx, cy, R);
+    grad.addColorStop(0, 'transparent');
+    grad.addColorStop(0.5, el.bg);
+    grad.addColorStop(1, el.bg);
+    ctx.beginPath();
+    ctx.moveTo(cx + R_INNER * Math.cos(a1), cy + R_INNER * Math.sin(a1));
+    ctx.arc(cx, cy, R, a1, a2);
+    ctx.arc(cx, cy, R_INNER, a2, a1, true);
+    ctx.closePath();
+    ctx.fillStyle = grad;
+    ctx.fill();
+    ctx.strokeStyle = el.border;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    // Sign name (abbreviated)
+    const mid = (a1 + a2) / 2;
+    const sr = (R + R_INNER) / 2;
+    ctx.save();
+    ctx.shadowColor = el.glow;
+    ctx.shadowBlur = 10;
+    ctx.font = 'bold 14px Rajdhani, sans-serif';
+    ctx.fillStyle = el.glyph;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(SIGN_NAMES[i].slice(0,4), cx + sr * Math.cos(mid), cy + sr * Math.sin(mid));
+    ctx.restore();
+
+    // Glyph next to name
+    ctx.save();
+    ctx.shadowColor = el.glow;
+    ctx.shadowBlur = 6;
+    ctx.font = '18px serif';
+    ctx.fillStyle = '#fff';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'bottom';
+    ctx.fillText(SIGNS[i], cx + (sr - 20) * Math.cos(mid), cy + (sr - 20) * Math.sin(mid));
+    ctx.restore();
+  }
+
+  // ── INNER RING — HOUSE NUMBERS + CUSP LINES ──
+  if (c.houses?.cusps) {
+    const cusps = Object.values(c.houses.cusps).map(Number);
+    // Draw cusp lines (thick, glowing)
+    for (let i = 0; i < 12; i++) {
+      const a1 = wa(cusps[i]);
+      ctx.beginPath();
+      ctx.moveTo(cx + 20 * Math.cos(a1), cy + 20 * Math.sin(a1));
+      ctx.lineTo(cx + R_INNER * Math.cos(a1), cy + R_INNER * Math.sin(a1));
+      ctx.strokeStyle = i % 3 === 0 ? 'rgba(255,215,0,0.5)' : 'rgba(255,215,0,0.2)';
+      ctx.lineWidth = i % 3 === 0 ? 2 : 1;
+      ctx.shadowColor = '#ffd700';
+      ctx.shadowBlur = i % 3 === 0 ? 8 : 2;
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+    }
+    // House numbers
+    for (let i = 0; i < 12; i++) {
+      const a1 = wa(cusps[i]);
+      const a2 = wa(cusps[(i+1) % 12]);
+      const mid = (a1 + a2) / 2;
+      const hr = R_INNER - 18;
+      ctx.save();
+      ctx.shadowColor = '#ffd700';
+      ctx.shadowBlur = 4;
+      ctx.font = 'bold 12px Orbitron, sans-serif';
+      ctx.fillStyle = '#ffd700';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('H' + (i+1), cx + hr * Math.cos(mid), cy + hr * Math.sin(mid));
+      ctx.restore();
+    }
+  }
+
+  // ── ANGLE MARKERS (ASC/MC/DC/IC at fixed cardinal positions) ──
+  // In standard chart orientation:
+  //   ASC = LEFT (9 o'clock), MC = TOP (12 o'clock)
+  //   DC = RIGHT (3 o'clock),  IC = BOTTOM (6 o'clock)
+  const anglePositions = [
+    {lon: asc, label: 'ASC', color: '#ffd700', glow: '#ffd700', angle: Math.PI},
+    {lon: mc,  label: 'MC',  color: '#00e5ff', glow: '#00e5ff', angle: 3*Math.PI/2},
+    {lon: dc,  label: 'DC',  color: '#ff6b88', glow: '#ff6b88', angle: 0},
+    {lon: ic,  label: 'IC',  color: '#ff8800', glow: '#ff8800', angle: Math.PI/2}
+  ];
+  anglePositions.forEach(m => {
+    const a = m.angle;
+    // Dashed line from center to edge
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + R * Math.cos(a), cy + R * Math.sin(a));
+    ctx.strokeStyle = m.color + '44';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4, 6]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Label at rim (cardinal name)
+    const lx = cx + (R + 22) * Math.cos(a);
+    const ly = cy + (R + 22) * Math.sin(a);
+    ctx.save();
+    ctx.shadowColor = m.glow;
+    ctx.shadowBlur = 14;
+    ctx.font = 'bold 14px Orbitron, sans-serif';
+    ctx.fillStyle = m.color;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(m.label, lx, ly);
+    ctx.restore();
+
+    // Sign/degree label below cardinal name
+    const signNum = Math.floor(m.lon / 30);
+    const deg = (m.lon % 30).toFixed(1);
+    const signName = SIGN_NAMES[signNum];
+    const sx = cx + (R + 36) * Math.cos(a);
+    const sy = cy + (R + 36) * Math.sin(a);
+    ctx.save();
+    ctx.font = '9px Rajdhani, sans-serif';
+    ctx.fillStyle = m.color + 'aa';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(`${signName} ${deg}°`, sx, sy);
+    ctx.restore();
+  });
+
+  // ── PLANETS WITH GLYPHS + COLORS ──
+  if (c.planets) {
+    c.planets.forEach(p => {
+      const a = wa(p.longitude);
+      const pr = R_INNER - 30;
+      const px = cx + pr * Math.cos(a);
+      const py = cy + pr * Math.sin(a);
+      const glyph = PLANET_GLYPHS[p.name] || p.name.slice(0,2);
+      const pColor = p.color || PLANET_COLORS[p.name] || '#fff';
+
+      // Glow halo
+      const grad = ctx.createRadialGradient(px, py, 0, px, py, 22);
+      grad.addColorStop(0, pColor + '66');
+      grad.addColorStop(1, pColor + '00');
+      ctx.beginPath(); ctx.arc(px, py, 22, 0, Math.PI * 2);
+      ctx.fillStyle = grad; ctx.fill();
+
+      // Planet glyph
+      ctx.save();
+      ctx.shadowColor = pColor;
+      ctx.shadowBlur = 10;
+      ctx.font = '20px serif';
+      ctx.fillStyle = '#fff';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(glyph, px, py);
+      ctx.restore();
+
+      // Retro badge
+      if (p.retro) {
+        ctx.save();
+        ctx.font = 'bold 10px Rajdhani, sans-serif';
+        ctx.fillStyle = '#ff4444';
+        ctx.textAlign = 'center';
+        ctx.shadowColor = '#ff4444';
+        ctx.shadowBlur = 4;
+        ctx.fillText('℞', px, py - 20);
+        ctx.restore();
+      }
+
+      // Planet name
+      ctx.save();
+      ctx.font = 'bold 10px Rajdhani, sans-serif';
+      ctx.fillStyle = pColor;
+      ctx.textAlign = 'center';
+      ctx.shadowColor = pColor;
+      ctx.shadowBlur = 3;
+      ctx.fillText(p.name, px, py + 20);
+      ctx.restore();
+    });
+  }
+
+  // ── ASPECT LINES ──
+  const aspects = state.aspects || [];
+  if (aspects.length && c.planets) {
+    aspects.forEach(a => {
+      const parts = a.between?.split(' ') || [];
+      let p1 = null, p2 = null;
+      const planetNames = c.planets.map(p => p.name);
+      for (let i = 0; i < parts.length; i++) {
+        if (planetNames.includes(parts[i])) {
+          if (!p1) p1 = parts[i]; else p2 = parts[i];
+        }
+      }
+      if (!p1 || !p2) return;
+      const pl1 = c.planets.find(p => p.name === p1);
+      const pl2 = c.planets.find(p => p.name === p2);
+      if (!pl1 || !pl2) return;
+
+      const a1 = wa(pl1.longitude);
+      const a2 = wa(pl2.longitude);
+      const style = ASPECT_STYLE[a.aspect] || {color:'#888',lineWidth:1,dash:[],glow:1};
+      const tightness = a.orb < 2 ? 1 : a.orb < 4 ? 0.6 : 0.3;
+      const pulse = Math.sin(now * 3 + (a.orb * 7)) * 0.3 + 0.7;
+
+      ctx.save();
+      ctx.setLineDash(style.dash);
+      ctx.beginPath();
+      ctx.moveTo(cx + R_ASPECT * Math.cos(a1), cy + R_ASPECT * Math.sin(a1));
+      ctx.lineTo(cx + R_ASPECT * Math.cos(a2), cy + R_ASPECT * Math.sin(a2));
+      ctx.strokeStyle = style.color + Math.floor(tightness * pulse * 99).toString(16).padStart(2,'0');
+      ctx.lineWidth = style.lineWidth;
+      ctx.shadowColor = style.color;
+      ctx.shadowBlur = style.glow * pulse;
+      ctx.stroke();
+      ctx.restore();
+    });
+  }
+
+  // ── ARABIC PARTS (glowing stars on rim) ──
+  const PART_COLORS = {
+    'Part_of_Fortune': '#ffd700',
+    'Part_of_Spirit': '#ff44ff',
+    'Part_of_Marriage': '#ff6688',
+    'Part_of_Father': '#44ddff',
+    'Part_of_Mother': '#ff88cc',
+    'Part_of_Children': '#66ff66',
+    'Part_of_Sickness': '#ff4444',
+    'Part_of_Death': '#8844ff'
+  };
+  const PART_LABELS = {
+    'Part_of_Fortune': 'Fo',
+    'Part_of_Spirit': 'Sp',
+    'Part_of_Marriage': 'Ma',
+    'Part_of_Father': 'Fa',
+    'Part_of_Mother': 'Mo',
+    'Part_of_Children': 'Ch',
+    'Part_of_Sickness': 'Si',
+    'Part_of_Death': 'De'
+  };
+  const arabParts = c.arabic_parts?.parts || (typeof c.arabic_parts === 'object' && c.arabic_parts && !c.arabic_parts.parts ? c.arabic_parts : null);
+  if (arabParts && typeof arabParts === 'object') {
+    Object.entries(arabParts).forEach(([name, data]) => {
+      const lon = typeof data === 'object' ? data.longitude : data;
+      if (lon == null) return;
+      const a = wa(lon);
+      const pr = R + 16;
+      const px = cx + pr * Math.cos(a);
+      const py = cy + pr * Math.sin(a);
+      const color = PART_COLORS[name] || '#ffd700';
+      const label = PART_LABELS[name] || name.replace('Part_of_','').slice(0,2);
+
+      // Glowing star marker
+      ctx.save();
+      ctx.shadowColor = color;
+      ctx.shadowBlur = 10;
+      // Draw a 4-pointed star
+      const starSize = 6;
+      ctx.beginPath();
+      for (let j = 0; j < 4; j++) {
+        const sa = a + j * Math.PI / 2;
+        ctx.lineTo(px + starSize * Math.cos(sa), py + starSize * Math.sin(sa));
+        const sa2 = a + j * Math.PI / 2 + Math.PI / 4;
+        ctx.lineTo(px + starSize * 0.4 * Math.cos(sa2), py + starSize * 0.4 * Math.sin(sa2));
+      }
+      ctx.closePath();
+      ctx.fillStyle = color;
+      ctx.fill();
+      ctx.restore();
+
+      // Tiny label
+      ctx.save();
+      ctx.font = '7px Rajdhani, sans-serif';
+      ctx.fillStyle = color;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'top';
+      ctx.fillText(label, px + 8 * Math.cos(a), py + 8 * Math.sin(a));
+      ctx.restore();
+    });
+  }
+
+  // ── CENTER — pulsing gold ──
+  const pulse = Math.sin(now * 2) * 0.3 + 0.7;
+  ctx.beginPath(); ctx.arc(cx, cy, 5, 0, Math.PI * 2);
+  ctx.fillStyle = '#ffd700';
+  ctx.shadowColor = '#ffd700';
+  ctx.shadowBlur = 15 * pulse;
+  ctx.fill();
+  ctx.shadowBlur = 0;
+}
+
+  // ─── MANSIONS
+function renderMansions(el) {
+  const lm = state.lunarMansion;
+  el.innerHTML = `
+    <div class="card">
+      <h2><span class="icon">☽</span> Lunar Mansion Wheel</h2>
+      <div class="wheel-container">
+        <canvas id="mansion-canvas" width="500" height="500"></canvas>
+      </div>
+    </div>
+    ${lm?.mansion?.current ? `
+    <div class="card">
+      <h2>Current Mansion</h2>
+      <div class="stat-grid">
+        <div class="stat"><div class="stat-label">Number</div><div class="stat-value gold">${lm.mansion.current.number}</div></div>
+        <div class="stat"><div class="stat-label">Name</div><div class="stat-value">${lm.mansion.current.name}</div></div>
+        <div class="stat"><div class="stat-label">Ruled By</div><div class="stat-value">${lm.mansion.current.ruled_by || '—'}</div></div>
+        <div class="stat"><div class="stat-label">Degree</div><div class="stat-value">${lm.mansion.current.longitude?.toFixed(1) || '—'}°</div></div>
+      </div>
+    </div>` : ''}`;
+  setTimeout(() => drawMansionWheel(), 100);
+  gsap.fromTo(el.querySelectorAll('.card'), { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4, stagger: 0.08, ease: 'power2.out' });
+}
+
+function drawMansionWheel() {
+  const canvas = document.getElementById('mansion-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const cx = W/2, cy = H/2;
+  const R = 200, R_INNER = 120;
+  ctx.clearRect(0, 0, W, H);
+
+  const mSpan = 360 / 28;
+  for (let i = 0; i < 28; i++) {
+    const a1 = (i * mSpan - 90) * Math.PI / 180;
+    const a2 = ((i + 1) * mSpan - 90) * Math.PI / 180;
+    ctx.beginPath();
+    ctx.moveTo(cx + R_INNER * Math.cos(a1), cy + R_INNER * Math.sin(a1));
+    ctx.arc(cx, cy, R, a1, a2);
+    ctx.arc(cx, cy, R_INNER, a2, a1, true);
+    ctx.closePath();
+    ctx.fillStyle = `hsl(${i * 12.86}, 60%, 50%)10`;
+    ctx.fill();
+    ctx.strokeStyle = `hsl(${i * 12.86}, 60%, 50%)40`;
+    ctx.lineWidth = 0.5;
+    ctx.stroke();
+  }
+
+  // Moon position
+  if (state.lunarMansion?.mansion?.current?.longitude) {
+    const lon = state.lunarMansion.mansion.current.longitude;
+    const a = (lon - 90) * Math.PI / 180;
+    const pr = (R + R_INNER) / 2;
+    ctx.beginPath(); ctx.arc(cx + pr * Math.cos(a), cy + pr * Math.sin(a), 8, 0, Math.PI * 2);
+    ctx.fillStyle = '#ffd700'; ctx.fill();
+    ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
+  }
+}
+
+// ─── SOLAR SYSTEM ───────────────────────────────────────────────
+function renderSolarSystem(el) {
+  el.innerHTML = `
+    <div class="card" style="padding:0;overflow:hidden">
+      <div id="solar-container" style="width:100%;height:550px;position:relative;">
+        <canvas id="solar-canvas" style="width:100%;height:100%"></canvas>
+        <div class="solar-controls">
+          <div class="sc-title">CONTROLS</div>
+          <div class="sc-row"><label>Speed</label><input type="range" id="solar-speed" min="0" max="5" step="0.1" value="1" onchange="updateSolarSpeed(this.value)"></div>
+          <button class="sc-btn" onclick="solarReset()">⟲ Reset</button>
+          <button class="sc-btn" onclick="solarPause()">⏸ Pause</button>
+        </div>
+      </div>
+    </div>`;
+  setTimeout(() => initSolarSystem(), 100);
+  gsap.fromTo(el.querySelector('.card'), { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' });
+}
+
+// ─── HOURS ──────────────────────────────────────────────────────
+function renderHours(el) {
+  const h = state.hours;
+  if (!h) { el.innerHTML = '<div class="loading"><div class="spinner"></div>Loading...</div>'; return; }
+
+  el.innerHTML = `
+    <div class="card">
+      <h2><span class="icon">⏳</span> Current Hour</h2>
+      ${h.current ? `
+      <div class="hour-ruler">
+        <div class="hour-symbol">${h.current.symbol}</div>
+        <div class="hour-name">${h.current.ruler}</div>
+        <div class="hour-period">${h.current.period} — Hour ${h.current.hour_number}</div>
+        <div class="hour-nature ${h.current.benefic}">${h.current.benefic}</div>
+        <div class="hour-time">${h.current.start} — ${h.current.end}</div>
+      </div>` : '<p style="color:var(--text-muted)">No data</p>'}
+    </div>
+    <div class="card">
+      <h2>24-Hour Cycle</h2>
+      <div class="table-wrap"><table>
+        <thead><tr><th>#</th><th>Ruler</th><th>Start</th><th>End</th><th>Status</th></tr></thead>
+        <tbody>${(h.hours||[]).map(hr => `<tr class="${hr.active ? 'active-row' : ''}">
+          <td>${hr.hour_number}</td>
+          <td class="gold">${hr.ruler} ${hr.symbol}</td>
+          <td>${hr.start}</td>
+          <td>${hr.end}</td>
+          <td>${hr.active ? '<span class="benefic">★ Active</span>' : ''}</td>
+        </tr>`).join('')}</tbody>
+      </table></div>
+    </div>`;
+
+  gsap.fromTo(el.querySelectorAll('.card'), { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4, stagger: 0.08, ease: 'power2.out' });
+}
+
+// ─── BEINGS ─────────────────────────────────────────────────────
+function renderBeings(el) {
+  const b = state.beings; const h = state.hours;
+  el.innerHTML = `
+    <div class="card">
+      <h2><span class="icon">👾</span> Planetary Beings</h2>
+      ${b ? `<div class="stat-grid">
+        ${[{l:'Planet',v:b.planet},{l:'Angel',v:b.angel},{l:'Intelligence',v:b.intelligence},{l:'Spirit',v:b.spirit},{l:'Incense',v:b.incense}].filter(i=>i.v).map(i =>
+          `<div class="stat"><div class="stat-label">${i.l}</div><div class="stat-value gold">${i.v}</div></div>`
+        ).join('')}
+      </div>` : '<p style="color:var(--text-muted)">No data</p>'}
+    </div>
+    ${state.jinnCmdrs?.commanders ? `
+    <div class="card">
+      <h2><span class="icon">⚔️</span> Jinn Commanders</h2>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Name</th><th>Description</th></tr></thead>
+        <tbody>${(Array.isArray(state.jinnCmdrs.commanders) ? state.jinnCmdrs.commanders : Object.entries(state.jinnCmdrs.commanders).map(([n,d])=>({name:n,description:d}))).map(c =>
+          `<tr><td class="gold">${c.name}</td><td>${c.description||'—'}</td></tr>`
+        ).join('')}</tbody>
+      </table></div>
+    </div>` : ''}`;
+
+  gsap.fromTo(el.querySelectorAll('.card'), { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4, stagger: 0.08, ease: 'power2.out' });
+}
+
+// ─── I CHING ────────────────────────────────────────────────────
+function renderIChing(el) {
+  el.innerHTML = `
+    <div class="card">
+      <h2><span class="icon">☯</span> I Ching Oracle</h2>
+      <div class="iching-display">
+        <div class="iching-hex" id="iching-hex">Cast your hexagram</div>
+        <button class="btn-refresh" onclick="castIChing()" style="margin-top:1rem">🎲 Cast Hexagram</button>
+      </div>
+    </div>`;
+  gsap.fromTo(el.querySelector('.card'), { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' });
+}
+
+function castIChing() {
+  const hexagrams = [
+    {lines:[3,3,3,3,3,3],name:"THE CREATIVE",chinese:"乾 Qián"},
+    {lines:[2,2,2,2,2,2],name:"THE RECEPTIVE",chinese:"坤 Kūn"},
+    {lines:[3,2,2,2,3,2],name:"DIFFICULTY AT THE BEGINNING",chinese:"屯 Zhūn"},
+    {lines:[2,3,2,2,2,3],name:"YOUTHFUL FOLLY",chinese:"蒙 Méng"},
+    {lines:[3,3,3,2,3,2],name:"WAITING",chinese:"需 Xū"},
+    {lines:[2,3,2,3,3,3],name:"CONFLICT",chinese:"訟 Sòng"},
+  ];
+  const h = hexagrams[Math.floor(Math.random() * hexagrams.length)];
+  const el = document.getElementById('iching-hex');
+  if (el) {
+    el.innerHTML = `<div class="hex-name">${h.name}</div><div class="hex-chinese">${h.chinese}</div>`;
+    gsap.fromTo(el, { scale: 0.8, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: 'back.out(1.7)' });
+  }
+}
+
+// ─── STARS ──────────────────────────────────────────────────────
+function renderStars(el) {
+  const fs = state.fixedStars;
+  el.innerHTML = `
+    <div class="card">
+      <h2><span class="icon">✧</span> Fixed Stars</h2>
+      ${fs?.conjunctions ? `<div class="table-wrap"><table>
+        <thead><tr><th>Star</th><th>Planet</th><th>Orb</th><th>Nature</th></tr></thead>
+        <tbody>${fs.conjunctions.slice(0,20).map(s =>
+          `<tr><td class="gold">${s.star}</td><td>${s.planet}</td><td>${s.orb?.toFixed(2)}°</td><td>${s.star_nature||'—'}</td></tr>`
+        ).join('')}</tbody>
+      </table></div>` : '<p style="color:var(--text-muted)">No data</p>'}
+    </div>`;
+  gsap.fromTo(el.querySelector('.card'), { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' });
+}
+
+// ─── DIGNITIES ──────────────────────────────────────────────────
+function renderDignities(el) {
+  const d = state.dignities;
+  el.innerHTML = `
+    <div class="card">
+      <h2><span class="icon">★</span> Essential Dignities</h2>
+      ${d?.planets ? `<div class="table-wrap"><table>
+        <thead><tr><th>Planet</th><th>Sign</th><th>Deg</th><th>Score</th><th>Condition</th></tr></thead>
+        <tbody>${Object.entries(d.planets || {}).map(([name,p]) => `<tr>
+          <td class="gold">${name}</td><td>${p.sign||'—'}</td><td>${p.degree!=null?fmtDeg(p.degree):'—'}</td>
+          <td class="${(p.score||0)>=0?'benefic':'malefic'}">${p.score||0}</td>
+          <td>${p.condition||'—'}</td>
+        </tr>`).join('')}</tbody>
+      </table></div>` : '<p style="color:var(--text-muted)">No data</p>'}
+    </div>`;
+  gsap.fromTo(el.querySelector('.card'), { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' });
+}
+
+// ─── OCCULT ─────────────────────────────────────────────────────
+function renderOccult(el) {
+  const oc = state.occultChart;
+  el.innerHTML = `
+    <div class="card">
+      <h2><span class="icon">🔮</span> Occult Chart</h2>
+      ${oc ? `<pre style="color:var(--text-dim);font-size:.8rem;white-space:pre-wrap">${JSON.stringify(oc,null,2)}</pre>` : '<p style="color:var(--text-muted)">No data</p>'}
+    </div>`;
+  gsap.fromTo(el.querySelector('.card'), { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' });
+}
+
+// ─── STUDY ──────────────────────────────────────────────────────
+function renderStudy(el) {
+  el.innerHTML = `
+    <div class="card">
+      <h2><span class="icon">🔍</span> Chart Study</h2>
+      <p style="color:var(--text-muted)">Advanced chart analysis coming soon.</p>
+    </div>`;
+  gsap.fromTo(el.querySelector('.card'), { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SOLAR SYSTEM (Three.js)
+// ═══════════════════════════════════════════════════════════════
+let solarScene, solarCamera, solarRenderer, solarPlanets = [], solarPaused = false, solarSpeed = 1;
+
+function initSolarSystem() {
+  const container = document.getElementById('solar-container');
+  if (!container) return;
+  const canvas = document.getElementById('solar-canvas');
+
+  solarScene = new THREE.Scene();
+  solarCamera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 1000);
+  solarCamera.position.set(0, 30, 50);
+  solarCamera.lookAt(0, 0, 0);
+
+  solarRenderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  solarRenderer.setSize(container.clientWidth, container.clientHeight);
+
+  // Sun
+  const sunGeo = new THREE.SphereGeometry(3, 32, 32);
+  const sunMat = new THREE.MeshBasicMaterial({ color: 0xffd700 });
+  const sun = new THREE.Mesh(sunGeo, sunMat);
+  solarScene.add(sun);
+
+  // Sun glow
+  const glowGeo = new THREE.SphereGeometry(4, 32, 32);
+  const glowMat = new THREE.MeshBasicMaterial({ color: 0xffd700, transparent: true, opacity: 0.15 });
+  solarScene.add(new THREE.Mesh(glowGeo, glowMat));
+
+  // Planets
+  const planetData = [
+    { name: 'Mercury', r: 8, size: 0.4, color: 0xb0a0d0, speed: 0.04 },
+    { name: 'Venus', r: 12, size: 0.6, color: 0xf0a0c0, speed: 0.03 },
+    { name: 'Earth', r: 16, size: 0.7, color: 0x4488ff, speed: 0.02 },
+    { name: 'Mars', r: 21, size: 0.5, color: 0xe05050, speed: 0.016 },
+    { name: 'Jupiter', r: 28, size: 1.5, color: 0xd4a017, speed: 0.008 },
+    { name: 'Saturn', r: 35, size: 1.2, color: 0xc8a860, speed: 0.005 },
+  ];
+
+  planetData.forEach(p => {
+    const geo = new THREE.SphereGeometry(p.size, 16, 16);
+    const mat = new THREE.MeshBasicMaterial({ color: p.color });
+    const mesh = new THREE.Mesh(geo, mat);
+    mesh.userData = { r: p.r, speed: p.speed, angle: Math.random() * Math.PI * 2, name: p.name };
+    solarScene.add(mesh);
+    solarPlanets.push(mesh);
+
+    // Orbit ring
+    const orbitGeo = new THREE.RingGeometry(p.r - 0.05, p.r + 0.05, 64);
+    const orbitMat = new THREE.MeshBasicMaterial({ color: p.color, transparent: true, opacity: 0.08, side: THREE.DoubleSide });
+    const orbit = new THREE.Mesh(orbitGeo, orbitMat);
+    orbit.rotation.x = Math.PI / 2;
+    solarScene.add(orbit);
+  });
+
+  // Stars
+  const starGeo = new THREE.BufferGeometry();
+  const starPos = [];
+  for (let i = 0; i < 500; i++) {
+    starPos.push((Math.random()-0.5)*200, (Math.random()-0.5)*200, (Math.random()-0.5)*200);
+  }
+  starGeo.setAttribute('position', new THREE.Float32BufferAttribute(starPos, 3));
+  const starMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.1 });
+  solarScene.add(new THREE.Points(starGeo, starMat));
+
+  animateSolar();
+}
+
+function animateSolar() {
+  if (!solarRenderer) return;
+  requestAnimationFrame(animateSolar);
+  if (!solarPaused) {
+    solarPlanets.forEach(p => {
+      p.userData.angle += p.userData.speed * solarSpeed;
+      p.position.x = p.userData.r * Math.cos(p.userData.angle);
+      p.position.z = p.userData.r * Math.sin(p.userData.angle);
+    });
+  }
+  solarRenderer.render(solarScene, solarCamera);
+}
+
+function updateSolarSpeed(v) { solarSpeed = parseFloat(v); }
+function solarPause() { solarPaused = !solarPaused; }
+function solarReset() {
+  solarPlanets.forEach(p => { p.userData.angle = Math.random() * Math.PI * 2; });
+  solarPaused = false; solarSpeed = 1;
+  const sp = document.getElementById('solar-speed');
+  if (sp) sp.value = 1;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// UTILITY
+// ═══════════════════════════════════════════════════════════════
+const SIGNS = ['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
+const SIGN_SYM = ['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓'];
+
+function fmtSign(lon) { return SIGNS[Math.floor(((lon%360)+360)%360/30)] || '?'; }
+function fmtDeg(d) { return Math.floor(d) + '°' + Math.floor((d%1)*60) + "'"; }
+
+function $(id) { return document.getElementById(id); }
+
+// ═══════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════
+// DOM already loaded (script at end of body) — run directly
+// Init tabs and intro FIRST (critical path), then visual layers
+initTabs();
+initIntro();
+try { initThreeJS(); } catch(e) { console.warn('Three.js:', e.message); }
+try { initParticles(); } catch(e) { console.warn('Particles:', e.message); }
+</script>
+</body>
+</html>

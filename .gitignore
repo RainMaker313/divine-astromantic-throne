@@ -42,3 +42,6 @@ fastsdcpu/
 
 # OCR temp
 Documents/ocr-temp/
+
+# Whole .hermes directory — local config, not for public repo
+.hermes/
