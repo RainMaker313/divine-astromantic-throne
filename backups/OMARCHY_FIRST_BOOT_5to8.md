@@ -183,10 +183,8 @@ done
 # (it's a custom code, not in the essentials snapshot). See the section
 # "throne backend source" at the end.
 
-# 8.5 Enable the wallpaper pulse timer (paired with .service)
-systemctl --user enable --now coco-wallpaper-pulse.timer
-systemctl --user list-timers --all | grep -i wallpaper
-# expect: "coco-wallpaper-pulse.timer ... n/a ..."
+# 8.5 (coco-wallpaper-pulse.timer SKIPPED — my lord uses his own lewd coco pics,
+# not the generated wallpaper. Unit files stay in ~/.config/systemd/user/ for later.)
 
 # 8.6 Smoke-test all 5 gateways in one shot
 echo "=== gateway status ==="

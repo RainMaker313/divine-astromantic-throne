@@ -60,7 +60,9 @@ for s in hermes-gateway-default hermes-gateway-discordia hermes-gateway-metatron
          http-server-8091 occult-search; do
   systemctl --user enable --now "$s.service" 2>/dev/null && echo "$s: ok" || echo "$s: skipped"
 done
-systemctl --user enable --now coco-wallpaper-pulse.timer
+# NOTE: coco-wallpaper-pulse.service + .timer intentionally skipped
+# (my lord uses his own lewd coco pics as wallpaper, not the generated one)
+# The unit files are still in ~/.config/systemd/user/ if he changes his mind.
 
 echo "=== STEP 6: verify ==="
 for p in default discordia metatron-coco uriel-coco opencode; do
